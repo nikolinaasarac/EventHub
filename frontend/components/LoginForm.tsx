@@ -40,7 +40,7 @@ export function LoginForm({
 								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
           							${errors.email && touched.email
 									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:#7d6552"}`}
+									: "border-gray-300 focus:border-[#7d6552]"}`}
 							/>
 							<div className="text-red-500 text-sm h-1">
 								<ErrorMessage
@@ -61,7 +61,7 @@ export function LoginForm({
 								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
           							${errors.email && touched.password
 									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:#7d6552"}`}
+									: "border-gray-300 focus:border-[#7d6552]"}`}
 							/>
 							<div className="text-red-500 text-sm h-1">
 								<ErrorMessage
