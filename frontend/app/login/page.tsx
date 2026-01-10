@@ -15,7 +15,7 @@ export default function LoginPage() {
 				<div className="flex items-center justify-center h-full">
 					<div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
 						<div className="lg:hidden flex justify-center">
-							<img src="/logo.png" alt="Logo" className="h-50 w-auto" />
+							<img src="/logo.png" alt="Logo" className="h-30 w-auto" />
 						</div>
 						<LoginForm />
 					</div>
