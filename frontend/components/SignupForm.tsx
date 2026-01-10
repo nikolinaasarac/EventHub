@@ -40,7 +40,7 @@ export function SignupForm({
 										className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
           							${errors.name && touched.name
 											? "border-red-500 focus:ring-red-400"
-											: "border-gray-300 focus:border-[#7d6552]"}`}
+											: "border-gray-300 focus:ring-[#7d6552]"}`}
 									/>
 									<div className="text-red-500 text-sm h-1">
 										<ErrorMessage
@@ -59,7 +59,7 @@ export function SignupForm({
 										className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
           							${errors.surname && touched.surname
 											? "border-red-500 focus:ring-red-400"
-											: "border-gray-300 focus:border-[#7d6552]"}`}
+											: "border-gray-300 focus:ring-[#7d6552]"}`}
 									/>
 									<div className="text-red-500 text-sm h-1">
 										<ErrorMessage
@@ -80,7 +80,7 @@ export function SignupForm({
 								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
           							${errors.email && touched.email
 									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:border-[#7d6552]"}`}
+									: "border-gray-300 focus:ring-[#7d6552]"}`}
 							/>
 							<div className="text-red-500 text-sm h-1">
 								<ErrorMessage
@@ -99,7 +99,7 @@ export function SignupForm({
 								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
           							${errors.password && touched.password
 									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:border-[#7d6552]"}`}
+									: "border-gray-300 focus:ring-[#7d6552]"}`}
 							/>
 							<div className="text-red-500 text-sm h-1">
 								<ErrorMessage
@@ -114,11 +114,11 @@ export function SignupForm({
 							<FormikField
 								type="password"
 								name="confirmPassword"
-								placeholder="Unesite ime..."
+								placeholder="Ponovo unesite lozinku..."
 								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
           							${errors.confirmPassword && touched.confirmPassword
 									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:border-[#7d6552]"}`}
+									: "border-gray-300 focus:ring-[#7d6552]"}`}
 							/>
 							<div className="text-red-500 text-sm h-1">
 								<ErrorMessage
@@ -129,7 +129,13 @@ export function SignupForm({
 							</div>
 						</Field>
 						<Field>
-							<LoadingButton type="submit">Kreirajte nalog</LoadingButton>
+							<LoadingButton
+								className="mt-3 cursor-pointer"
+								type="submit"
+								loading={isSubmitting}
+							>
+								Kreiraj nalog
+							</LoadingButton>
 						</Field>
 						<FieldDescription className="px-6 text-center">
 							Već imate nalog? <a href="/login">Prijavite se</a>
