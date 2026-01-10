@@ -6,6 +6,7 @@ import {
 	FieldLabel,
 } from "@/components/ui/field"
 import {Form, Formik, Field as FormikField, ErrorMessage} from "formik";
+import {signupSchema} from "@/schemas/signup.schema";
 import {LoadingButton} from "@/components/LoadingButton";
 
 export function SignupForm({
@@ -13,7 +14,9 @@ export function SignupForm({
 							   ...props
 						   }: React.ComponentProps<"form">) {
 	return (
-		<Formik initialValues={} onSubmit={}>
+		<Formik initialValues={{name: "", surname: "", email: "", password: "", confirmPassword: ""}}
+				validationSchema={signupSchema}
+				onSubmit={(values) => console.log(values.name, values.surname, values.email, values.password, values.confirmPassword)}>
 			{({isSubmitting, errors, touched}) => (
 				<Form className={cn("flex flex-col gap-6", className)} {...props}>
 					<FieldGroup>
@@ -124,9 +127,9 @@ export function SignupForm({
 						<Field>
 							<LoadingButton type="submit">Kreirajte nalog</LoadingButton>
 						</Field>
-							<FieldDescription className="px-6 text-center">
-								Već imate nalog? <a href="#">Prijavite se</a>
-							</FieldDescription>
+						<FieldDescription className="px-6 text-center">
+							Već imate nalog? <a href="#">Prijavite se</a>
+						</FieldDescription>
 					</FieldGroup>
 				</Form>
 			)}
