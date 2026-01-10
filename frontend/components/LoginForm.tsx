@@ -83,7 +83,7 @@ export function LoginForm({
 						<FieldDescription className="text-center">
 							Nemate nalog?{" "}
 							<a href="/signup" className="underline underline-offset-4">
-								Napravite nalog
+								Kreirajte nalog
 							</a>
 						</FieldDescription>
 					</FieldGroup>
