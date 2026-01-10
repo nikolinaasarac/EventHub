@@ -1,3 +1,5 @@
+"use client"
+
 import {cn} from "@/lib/utils"
 import {
 	Field,
@@ -26,43 +28,48 @@ export function SignupForm({
 								Popunite naredna polja da biste kreirali nalog
 							</p>
 						</div>
+
 						<Field>
-							<FieldLabel htmlFor="name">Ime</FieldLabel>
-							<FormikField
-								type="text"
-								name="name"
-								placeholder="Unesite ime..."
-								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
+							<Field className="grid grid-cols-2 gap-4">
+								<Field>
+									<FieldLabel htmlFor="name">Ime</FieldLabel>
+									<FormikField
+										type="text"
+										name="name"
+										placeholder="Unesite ime..."
+										className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
           							${errors.name && touched.name
-									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:border-[#7d6552]"}`}
-							/>
-							<div className="text-red-500 text-sm h-1">
-								<ErrorMessage
-									name="name"
-									component="p"
-									className="text-red-500 text-sm"
-								/>
-							</div>
-						</Field>
-						<Field>
-							<FieldLabel htmlFor="surname">Prezime</FieldLabel>
-							<FormikField
-								type="text"
-								name="surname"
-								placeholder="Unesite prezime..."
-								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
+											? "border-red-500 focus:ring-red-400"
+											: "border-gray-300 focus:border-[#7d6552]"}`}
+									/>
+									<div className="text-red-500 text-sm h-1">
+										<ErrorMessage
+											name="name"
+											component="p"
+											className="text-red-500 text-sm"
+										/>
+									</div>
+								</Field>
+								<Field>
+									<FieldLabel htmlFor="surname">Prezime</FieldLabel>
+									<FormikField
+										type="text"
+										name="surname"
+										placeholder="Unesite prezime..."
+										className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
           							${errors.surname && touched.surname
-									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:border-[#7d6552]"}`}
-							/>
-							<div className="text-red-500 text-sm h-1">
-								<ErrorMessage
-									name="surname"
-									component="p"
-									className="text-red-500 text-sm"
-								/>
-							</div>
+											? "border-red-500 focus:ring-red-400"
+											: "border-gray-300 focus:border-[#7d6552]"}`}
+									/>
+									<div className="text-red-500 text-sm h-1">
+										<ErrorMessage
+											name="surname"
+											component="p"
+											className="text-red-500 text-sm"
+										/>
+									</div>
+								</Field>
+							</Field>
 						</Field>
 						<Field>
 							<FieldLabel htmlFor="email">Email</FieldLabel>
@@ -94,9 +101,6 @@ export function SignupForm({
 									? "border-red-500 focus:ring-red-400"
 									: "border-gray-300 focus:border-[#7d6552]"}`}
 							/>
-							<FieldDescription>
-								Lozinka mora imati najmanje 8 karaktera.
-							</FieldDescription>
 							<div className="text-red-500 text-sm h-1">
 								<ErrorMessage
 									name="password"
@@ -128,7 +132,7 @@ export function SignupForm({
 							<LoadingButton type="submit">Kreirajte nalog</LoadingButton>
 						</Field>
 						<FieldDescription className="px-6 text-center">
-							Već imate nalog? <a href="#">Prijavite se</a>
+							Već imate nalog? <a href="/login">Prijavite se</a>
 						</FieldDescription>
 					</FieldGroup>
 				</Form>

@@ -82,7 +82,7 @@ export function LoginForm({
 						</Field>
 						<FieldDescription className="text-center">
 							Nemate nalog?{" "}
-							<a href="#" className="underline underline-offset-4">
+							<a href="/signup" className="underline underline-offset-4">
 								Napravite nalog
 							</a>
 						</FieldDescription>
