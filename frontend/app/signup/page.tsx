@@ -1,6 +1,6 @@
-import { LoginForm } from "@/components/LoginForm"
+import {SignupForm} from "@/components/SignupForm";
 
-export default function LoginPage() {
+export default function SignupPage() {
 	return (
 		<div className="grid min-h-screen lg:grid-cols-2">
 			<div className="bg-muted hidden lg:flex justify-center items-center h-screen w-full">
@@ -17,7 +17,7 @@ export default function LoginPage() {
 						<div className="lg:hidden flex justify-center">
 							<img src="/logo.png" alt="Logo" className="h-30 w-auto" />
 						</div>
-						<LoginForm />
+						<SignupForm />
 					</div>
 				</div>
 			</div>
