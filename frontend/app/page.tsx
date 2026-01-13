@@ -1,65 +1,159 @@
-import Image from "next/image";
+import React from 'react';
+import {
+	Search,
+	MapPin,
+	Calendar as CalendarIcon,
+	Music,
+	Mic2,
+	Trophy,
+	Laptop,
+	ArrowRight
+} from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {CategoryCard} from "@/components/CategoryCard";
+import {EventCard} from "@/components/EventCard";
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+const categories = [
+	{ name: 'Koncerti', icon: <Music className="w-6 h-6" />, color: 'bg-blue-100 text-blue-600' },
+	{ name: 'Konferencije', icon: <Laptop className="w-6 h-6" />, color: 'bg-purple-100 text-purple-600' },
+	{ name: 'Nastupi', icon: <Mic2 className="w-6 h-6" />, color: 'bg-pink-100 text-pink-600' },
+	{ name: 'Sport', icon: <Trophy className="w-6 h-6" />, color: 'bg-orange-100 text-orange-600' },
+];
+
+const featuredEvents = [
+	{
+		id: 1,
+		title: "Belgrade Music Week",
+		date: "25. Avg - 27. Avg",
+		location: "Ušće, Beograd",
+		price: "Od 2.500 RSD",
+		image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80&w=500",
+		category: "Koncert"
+	},
+	{
+		id: 2,
+		title: "Tech Summit 2024",
+		date: "15. Oktobar",
+		location: "MTS Dvorana, Beograd",
+		price: "Besplatno",
+		image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80&w=500",
+		category: "Edukacija"
+	},
+	{
+		id: 3,
+		title: "Vinski Maraton",
+		date: "10. Septembar",
+		location: "Palić, Subotica",
+		price: "1.200 RSD",
+		image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80&w=500",
+		category: "Lifestyle"
+	}
+];
+
+export default function HomePage() {
+	return (
+		<div className="min-h-screen bg-slate-50">
+			<section className="relative h-[600px] flex items-center justify-center bg-slate-900 text-white overflow-hidden">
+				<div className="absolute inset-0 opacity-40">
+					<img
+						src="/background.png"
+						className="w-full h-full object-cover"
+						alt="Pozadina"
+					/>
+				</div>
+				<div className="relative z-10 container mx-auto px-4 text-center">
+					<h1 className="text-4xl md:text-6xl font-bold mb-6">Tražiš događaj?</h1>
+					<p className="text-lg md:text-xl mb-10 text-slate-200">Moram smisliti neki podnaslov ovdje</p>
+
+					<div className="bg-white shadow-2xl p-2 md:p-4 rounded-xl flex flex-col md:flex-row gap-2 max-w-4xl mx-auto items-center">
+						<div className="relative w-full flex-1">
+							<Search className="absolute left-3 top-3 text-slate-400 w-5 h-5" />
+							<Input className="pl-10 h-12 border-none text-slate-900 focus-visible:ring-0" placeholder="Šta tražiš?" />
+						</div>
+						<div className="hidden md:block w-[1px] h-8 bg-slate-200" />
+						<div className="relative w-full flex-1">
+							<MapPin className="absolute left-3 top-3 text-slate-400 w-5 h-5" />
+							<Input className="pl-10 h-12 border-none text-slate-900 focus-visible:ring-0" placeholder="Gdje?" />
+						</div>
+						<div className="hidden md:block w-[1px] h-8 bg-slate-200" />
+						<div className="relative w-full flex-1">
+							<CalendarIcon className="absolute left-3 top-3 text-slate-400 w-5 h-5" />
+							<Input className="pl-10 h-12 border-none text-slate-900 focus-visible:ring-0" placeholder="Kada?" />
+						</div>
+						<Button className="w-full md:w-auto h-12 px-8 bg-indigo-600  hover:bg-indigo-700">
+							Pretraži
+						</Button>
+					</div>
+				</div>
+			</section>
+
+			<section className="py-16 container mx-auto px-4">
+				<h2 className="text-xl md:text-2xl font-bold mb-8">Kategorije</h2>
+				<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+					{categories.map((cat) => (
+						<CategoryCard key={cat.name} name={cat.name} icon={cat.icon} color={cat.color} />
+					))}
+				</div>
+			</section>
+
+			<section className="py-16 bg-white">
+				<div className="container mx-auto px-4">
+					<div className="flex justify-between items-end mb-8">
+						<div>
+							<h2 className="text-3xl font-bold">Najnoviji događaji</h2>
+						</div>
+						<Button variant="ghost" className="text-indigo-600">Vidi sve <ArrowRight className="ml-2 w-4 h-4" /></Button>
+					</div>
+
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+						{featuredEvents.map((event) => (
+							<EventCard
+								key={event.id}
+								id={event.id}
+								title={event.title}
+								image={event.image}
+								category={event.category}
+								date={event.date}
+								location={event.location}
+							/>
+						))}
+					</div>
+				</div>
+			</section>
+
+			<section className="py-20 container mx-auto px-4 text-center">
+				<h2 className="text-3xl font-bold mb-12">Kako funkcioniše?</h2>
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+					<div className="flex flex-col items-center">
+						<div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600 mb-4 text-2xl font-bold">1</div>
+						<h3 className="text-xl font-semibold mb-2">Pronađi</h3>
+						<p className="text-slate-500">Pretražite događaje.</p>
+					</div>
+					<div className="flex flex-col items-center">
+						<div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600 mb-4 text-2xl font-bold">2</div>
+						<h3 className="text-xl font-semibold mb-2">Rezerviši</h3>
+						<p className="text-slate-500">Kupi kartu sigurno i brzo u par klikova.</p>
+					</div>
+					<div className="flex flex-col items-center">
+						<div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600 mb-4 text-2xl font-bold">3</div>
+						<h3 className="text-xl font-semibold mb-2">Uživaj</h3>
+						<p className="text-slate-500">Pokaži QR kod na ulazu!</p>
+					</div>
+				</div>
+			</section>
+
+			<section className="bg-indigo-600 py-16">
+				<div className="container mx-auto px-4 text-center text-white">
+					<h2 className="text-3xl font-bold mb-4">Organizujete sopstveni događaj?</h2>
+					<p className="mb-8 text-indigo-100">Postanite organizator i kreirajte događaj</p>
+					<Button size="lg" variant="secondary" className="bg-white text-indigo-600 hover:bg-slate-100">
+						Kreiraj događaj
+					</Button>
+				</div>
+			</section>
+		</div>
+	);
 }
