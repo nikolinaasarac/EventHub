@@ -1,26 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEventTypeDto } from './dto/create-event-type.dto';
 import { UpdateEventTypeDto } from './dto/update-event-type.dto';
+import { Repository } from 'typeorm';
+import { EventType } from './entities/event-type.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class EventTypesService {
-  create(createEventTypeDto: CreateEventTypeDto) {
-    return 'This action adds a new eventType';
+  constructor(
+    @InjectRepository(EventType)
+    private readonly eventTypesRepository: Repository<EventType>,
+  ) {}
+  async create(createEventTypeDto: CreateEventTypeDto) {
+    const eventType = this.eventTypesRepository.create(createEventTypeDto);
+    return await this.eventTypesRepository.save(eventType);
   }
 
-  findAll() {
-    return `This action returns all eventTypes`;
+  async findAll() {
+    return await this.eventTypesRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} eventType`;
+  async findOne(id: number) {
+    return await this.eventTypesRepository.findOne({
+      where: { id },
+    });
   }
 
-  update(id: number, updateEventTypeDto: UpdateEventTypeDto) {
-    return `This action updates a #${id} eventType`;
+  async update(id: number, updateEventTypeDto: UpdateEventTypeDto) {
+    const eventType = await this.findOne(id);
+    if (!eventType) throw new NotFoundException();
+    Object.assign(eventType, updateEventTypeDto);
+    return this.eventTypesRepository.save(eventType);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} eventType`;
+  async remove(id: number) {
+    return await this.eventTypesRepository.delete(id);
   }
 }
