@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { EventTypesService } from './event-types.service';
 import { CreateEventTypeDto } from './dto/create-event-type.dto';
 import { UpdateEventTypeDto } from './dto/update-event-type.dto';
@@ -23,7 +31,10 @@ export class EventTypesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventTypeDto: UpdateEventTypeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateEventTypeDto: UpdateEventTypeDto,
+  ) {
     return this.eventTypesService.update(+id, updateEventTypeDto);
   }
 
