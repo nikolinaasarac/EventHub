@@ -153,7 +153,6 @@ export default function Page() {
 					</div>
 				</div>
 			</section>
-
 			<section className="bg-indigo-600 py-16">
 				<div className="container mx-auto px-4 text-center text-white">
 					<h2 className="text-3xl font-bold mb-4">Organizujete sopstveni događaj?</h2>
