@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Venue } from '../../venues/entities/venue.entity';
 
 @Entity({ name: 'cities' })
 export class City {
@@ -10,4 +11,7 @@ export class City {
 
   @Column({ type: 'text', nullable: true })
   description: string;
+
+  @OneToMany(() => Venue, (venue) => venue.city)
+  venues: Venue[];
 }

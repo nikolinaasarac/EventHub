@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventTypesModule } from './event-types/event-types.module';
 import { CitiesModule } from './cities/cities.module';
+import { VenuesModule } from './venues/venues.module';
 import typeormConfig from './config/typeorm';
 import Joi from 'joi';
 
@@ -24,6 +25,7 @@ import Joi from 'joi';
     }),
     EventTypesModule,
     CitiesModule,
+    VenuesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
