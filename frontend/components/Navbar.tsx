@@ -49,6 +49,14 @@ export function NavBar() {
 									<Link href="/news">Novosti</Link>
 								</NavigationMenuLink>
 							</NavigationMenuItem>
+							<NavigationMenuItem>
+								<NavigationMenuLink
+									asChild
+									className={navigationMenuTriggerStyle()}
+								>
+									<Link href="/locations">Lokacije</Link>
+								</NavigationMenuLink>
+							</NavigationMenuItem>
 						</NavigationMenuList>
 					</NavigationMenu>
 				</div>
