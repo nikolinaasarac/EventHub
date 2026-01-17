@@ -26,6 +26,10 @@ export class CreateVenueDto {
   @IsNotEmpty()
   cityId: number;
 
+  @IsInt()
+  @IsNotEmpty()
+  venueTypeId: number;
+
   @IsNumber()
   @IsNotEmpty()
   latitude: number;

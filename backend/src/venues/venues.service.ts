@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Venue } from './entities/venue.entity';
 import { Repository } from 'typeorm';
 import { CitiesService } from '../cities/cities.service';
+import { VenueTypesService } from '../venue-types/venue-types.service';
 
 @Injectable()
 export class VenuesService {
@@ -12,10 +13,14 @@ export class VenuesService {
     @InjectRepository(Venue)
     private readonly venuesRepository: Repository<Venue>,
     private readonly citiesService: CitiesService,
+    private readonly venueTypesService: VenueTypesService,
   ) {}
 
   async create(createVenueDto: CreateVenueDto) {
     const city = await this.citiesService.findOne(createVenueDto.cityId);
+    const venueType = await this.venueTypesService.findOne(
+      createVenueDto.venueTypeId,
+    );
 
     if (!city) {
       throw new NotFoundException(
@@ -23,7 +28,17 @@ export class VenuesService {
       );
     }
 
-    const venue = this.venuesRepository.create({ ...createVenueDto, city });
+    if (!venueType) {
+      throw new NotFoundException(
+        `Venue type with id ${createVenueDto.venueTypeId} ot found`,
+      );
+    }
+
+    const venue = this.venuesRepository.create({
+      ...createVenueDto,
+      city,
+      venueType,
+    });
     return await this.venuesRepository.save(venue);
   }
 
@@ -31,6 +46,7 @@ export class VenuesService {
     return await this.venuesRepository.find({
       relations: {
         city: true,
+        venueType: true,
       },
     });
   }
@@ -40,6 +56,7 @@ export class VenuesService {
       where: { id },
       relations: {
         city: true,
+        venueType: true,
       },
     });
   }

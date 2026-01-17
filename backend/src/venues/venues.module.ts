@@ -4,9 +4,10 @@ import { VenuesController } from './venues.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Venue } from './entities/venue.entity';
 import { CitiesModule } from '../cities/cities.module';
+import { VenueTypesModule } from '../venue-types/venue-types.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Venue]), CitiesModule],
+  imports: [TypeOrmModule.forFeature([Venue]), CitiesModule, VenueTypesModule],
   controllers: [VenuesController],
   providers: [VenuesService],
 })

@@ -34,7 +34,7 @@ export function LocationCard({ location }: Props) {
 							{location.name}
 						</CardTitle>
 						<span className="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">
-							Tip lokacije
+							{location.venueType.name}
 						</span>
 					</div>
 				</CardHeader>

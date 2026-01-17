@@ -22,27 +22,6 @@ export default function LocationsPage() {
 		fetchVenues();
 	}, [])
 
-	const locations = [
-		{
-			id: 1,
-			name: "Dvorana Peki",
-			type: "Sportska dvorana",
-			address: "Majke Jugovića bb, Pale",
-			capacity: "2.500 mjesta",
-			description: "Moderna sportska dvorana na Palama, idealna za košarkaške utakmice, koncerte i sajmove. Posjeduje vrhunsku akustiku i parking.",
-			image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=600"
-		},
-		{
-			id: 2,
-			name: "Stadion FK Slavija",
-			type: "Stadion",
-			address: "Istočno Sarajevo",
-			capacity: "6.000 mjesta",
-			description: "Glavni gradski stadion sa prirodnom travom. Često domaćin velikih muzičkih koncerata na otvorenom.",
-			image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=600"
-		}
-	];
-
 	return (
 		<div className="min-h-screen bg-slate-50 py-12">
 			<div className="container mx-auto px-4">

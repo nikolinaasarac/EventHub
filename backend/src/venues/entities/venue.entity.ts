@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { City } from '../../cities/entities/city.entity';
+import { VenueType } from '../../venue-types/entities/venue-type.entity';
 
 @Entity('venues')
 export class Venue {
@@ -24,6 +25,11 @@ export class Venue {
 
   @ManyToOne(() => City, (city) => city.venues, { nullable: false })
   city: City;
+
+  @ManyToOne(() => VenueType, (venueType) => venueType.venues, {
+    nullable: false,
+  })
+  venueType: VenueType;
 
   @Column({ type: 'decimal', precision: 9, scale: 6, nullable: false })
   latitude: number;
