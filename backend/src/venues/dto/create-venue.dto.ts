@@ -1,9 +1,12 @@
 import {
+  IsArray,
+  IsEmail,
   IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
   MaxLength,
 } from 'class-validator';
 
@@ -45,4 +48,34 @@ export class CreateVenueDto {
   @IsString()
   @IsOptional()
   imageUrl?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(150)
+  phone?: string;
+
+  @IsEmail()
+  @IsOptional()
+  @MaxLength(150)
+  email?: string;
+
+  @IsUrl()
+  @IsOptional()
+  @MaxLength(150)
+  websiteUrl?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(150)
+  instagram?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(150)
+  facebook?: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  amenities?: string[];
 }
