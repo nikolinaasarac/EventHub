@@ -43,6 +43,24 @@ export class Venue {
   @Column({ length: 255, nullable: true })
   imageUrl: string;
 
+  @Column({ length: 150, nullable: true })
+  phone: string;
+
+  @Column({ length: 150, nullable: true })
+  email: string;
+
+  @Column({ length: 150, nullable: true })
+  websiteUrl: string;
+
+  @Column({ length: 150, nullable: true })
+  instagram: string;
+
+  @Column({ length: 150, nullable: true })
+  facebook: string;
+
+  @Column('text', { array: true, default: '{}' })
+  amenities: string[];
+
   @CreateDateColumn()
   createdAt: Date;
 

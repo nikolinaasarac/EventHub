@@ -14,16 +14,24 @@ const markerIcon = new L.Icon({
 });
 
 interface Props {
-	venues: Venue[];
+	venues?: Venue[];
+	venue?: Venue;
+	height?: string;
 }
 
-export default function VenueMap({venues}: Props) {
+export default function VenueMap({venues, venue, height = "500px"}: Props) {
 	const router = useRouter();
+	const markers = venue ? [venue] : venues || [];
+
+	const center: [number, number] = markers.length
+		? [Number(markers[0].latitude), Number(markers[0].longitude)]
+		: [43.85, 18.38];
+
 	return (
 		<MapContainer
-			center={[43.85, 18.38]}
+			center={center}
 			zoom={12}
-			style={{height: "500px", width: "100%"}}
+			style={{height, width: "100%"}}
 			className="rounded-xl"
 		>
 			<TileLayer
@@ -31,7 +39,7 @@ export default function VenueMap({venues}: Props) {
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
 
-			{venues.map((v) => (
+			{markers.map((v) => (
 				<Marker
 					key={v.id}
 					position={[Number(v.latitude), Number(v.longitude)]}

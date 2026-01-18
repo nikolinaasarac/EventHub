@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react';
 import { MapPin, Users, ChevronRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -9,12 +11,15 @@ import {
 	CardTitle
 } from "@/components/ui/card";
 import { Venue } from "@/models/venue.model";
+import {useRouter} from "next/navigation";
 
 interface Props {
 	location: Venue
 }
 
 export function LocationCard({ location }: Props) {
+
+	const router = useRouter();
 	return (
 		<Card className="group overflow-hidden border-slate-200 hover:shadow-xl transition-all duration-300 flex flex-col md:flex-row p-0">
 
@@ -58,6 +63,7 @@ export function LocationCard({ location }: Props) {
 
 				<CardFooter className="mt-auto pt-4 border-t border-slate-50 flex justify-end">
 					<Button
+						onClick={() => router.push(`/locations/${location.id}`)}
 						variant="outline"
 						size="sm"
 						className="group/btn border-indigo-100 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all"

@@ -20,7 +20,6 @@ export default function LocationsPage() {
 		const fetchVenues = async () => {
 			try {
 				const response = await VenueService.getVenues();
-				console.log(response);
 				setVenues(response);
 			} catch (e) {
 				console.error(e);

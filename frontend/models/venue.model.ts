@@ -14,4 +14,10 @@ export interface Venue {
 	imageUrl: string
 	createdAt: string
 	updatedAt: string
+	phone: string
+	websiteUrl: string
+	email: string
+	facebook: string
+	instagram: string
+	amenities: string[]
 }
