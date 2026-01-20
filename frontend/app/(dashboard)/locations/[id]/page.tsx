@@ -53,7 +53,7 @@ export default function VenueDetailsPage() {
 				</div>
 			</div>
 
-			<main className="flex-1 container mx-auto px-4 py-8">
+			<main className="flex-1 container mx-auto px-4 py-8 mb-2">
 				<div className="max-w-6xl mx-auto">
 
 					<div className="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden mb-8">
@@ -146,12 +146,6 @@ export default function VenueDetailsPage() {
 						</div>
 					</div>
 				</div>
-				<Button
-					className="bg-indigo-600 hover:bg-indigo-700 h-12 px-8 rounded-xl font-bold transition-all"
-					onClick={() => setShowMapModal(true)}
-				>
-					Prikaži na mapi
-				</Button>
 
 				<Dialog open={showMapModal} onOpenChange={setShowMapModal}>
 					<DialogContent className="max-w-4xl p-0 overflow-hidden border-none rounded-[2rem]">

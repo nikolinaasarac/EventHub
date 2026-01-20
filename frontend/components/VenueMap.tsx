@@ -46,7 +46,7 @@ export default function VenueMap({venues, venue, height = "500px"}: Props) {
 					icon={markerIcon}
 				>
 					<Popup>
-						<div onClick={() => router.push(`/events`)} className="cursor-pointer p-1">
+						<div onClick={() => router.push(`/locations/${v.id}`)} className="cursor-pointer p-1">
 							<p className="font-semibold">{v.name} {v.city.name}</p>
 							<p className="text-sm text-gray-500">{v.address}</p>
 						</div>

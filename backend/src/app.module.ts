@@ -7,8 +7,11 @@ import { EventTypesModule } from './event-types/event-types.module';
 import { CitiesModule } from './cities/cities.module';
 import { VenuesModule } from './venues/venues.module';
 import { VenueTypesModule } from './venue-types/venue-types.module';
+import { EventsModule } from './events/events.module';
 import typeormConfig from './config/typeorm';
 import Joi from 'joi';
+import { EventCategoriesModule } from './event-categories/event-categories.module';
+import { EventSubcategoriesModule } from './event-subcategories/event-subcategories.module';
 
 @Module({
   imports: [
@@ -28,6 +31,9 @@ import Joi from 'joi';
     CitiesModule,
     VenuesModule,
     VenueTypesModule,
+    EventsModule,
+    EventCategoriesModule,
+    EventSubcategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

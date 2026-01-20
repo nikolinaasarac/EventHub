@@ -65,10 +65,7 @@ export class VenuesService {
     const venue = await this.findOne(id);
     if (!venue) throw new NotFoundException(`Venue with id ${id} not found`);
 
-    console.log(updateVenueDto);
     Object.assign(venue, updateVenueDto);
-    await this.venuesRepository.save(venue);
-
     return await this.venuesRepository.save(venue);
   }
 

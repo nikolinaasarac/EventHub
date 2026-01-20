@@ -8,9 +8,10 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { CalendarIcon, MapPin } from "lucide-react";
+import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
+import {CalendarIcon, MapPin} from "lucide-react";
+import {useRouter} from "next/navigation";
 
 type Props = {
 	id: string | number;
@@ -29,6 +30,7 @@ export function EventCard({
 							  date,
 							  location,
 						  }: Props) {
+	const router = useRouter();
 	return (
 		<Card className="overflow-hidden border-none shadow-lg group">
 			<div className="relative h-48 overflow-hidden">
@@ -43,19 +45,20 @@ export function EventCard({
 			</div>
 			<CardHeader>
 				<div className="flex items-center text-indigo-600 text-sm font-semibold mb-2">
-					<CalendarIcon className="w-4 h-4 mr-2" />
+					<CalendarIcon className="w-4 h-4 mr-2"/>
 					{date}
 				</div>
 				<CardTitle className="text-xl">{title}</CardTitle>
 			</CardHeader>
 
 			<CardContent className="text-slate-500 flex items-center">
-				<MapPin className="w-4 h-4 mr-2" />
+				<MapPin className="w-4 h-4 mr-2"/>
 				{location}
 			</CardContent>
 
 			<CardFooter className="border-t pt-4 flex justify-end gap-2">
-				<Button size="sm" className="bg-indigo-600  hover:bg-indigo-700" onClick={() => console.log("Detalji za event:", id)}>
+				<Button size="sm" className="bg-indigo-600  hover:bg-indigo-700"
+						onClick={() => router.push(`/events/${id}`)}>
 					Prikaži detalje
 				</Button>
 			</CardFooter>
