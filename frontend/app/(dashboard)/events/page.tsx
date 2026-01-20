@@ -1,7 +1,13 @@
+"use client"
+
 import {Search} from "lucide-react";
 import {EventCard} from "@/components/EventCard";
 import {MultiSelect} from "@/components/MultiSelect";
 import {EventTypes} from "@/shared/globals";
+import {useEffect, useState} from "react";
+import EventService from "@/services/event.service";
+import {Event} from "@/models/event.model"
+import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
 
 export default function EventsPage() {
 	const featuredEvents = [
@@ -141,6 +147,20 @@ export default function EventsPage() {
 			category: "Lifestyle"
 		}
 	];
+	const [events, setEvents] = useState<Event[]>([]);
+
+	useEffect(() => {
+		const fetchEvents = async () => {
+			try {
+				const response = await EventService.getEvents();
+				setEvents(response);
+				console.log(response);
+			} catch (e) {
+				console.error(e);
+			}
+		}
+		fetchEvents();
+	}, [])
 	return (
 		<section className="py-16 bg-white">
 			<div className="container mx-auto px-4">
@@ -159,17 +179,16 @@ export default function EventsPage() {
 									 }}/>
 					</div>
 				</div>
-
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-					{featuredEvents.map((event) => (
+					{events.map((event) => (
 						<EventCard
 							key={event.id}
 							id={event.id}
 							title={event.title}
-							image={event.image}
-							category={event.category}
-							date={event.date}
-							location={event.location}
+							image={event.imageUrl}
+							category={event.eventSubcategory.eventCategory.name}
+							date={DateTimeHelper.formatDate(event.startDate)}
+							location={event.venue.name}
 						/>
 					))}
 				</div>

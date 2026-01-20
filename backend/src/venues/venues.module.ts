@@ -10,5 +10,6 @@ import { VenueTypesModule } from '../venue-types/venue-types.module';
   imports: [TypeOrmModule.forFeature([Venue]), CitiesModule, VenueTypesModule],
   controllers: [VenuesController],
   providers: [VenuesService],
+  exports: [VenuesService],
 })
 export class VenuesModule {}
