@@ -8,6 +8,8 @@ import { CitiesService } from '../cities/cities.service';
 import { VenueTypesService } from '../venue-types/venue-types.service';
 import { PaginationDto } from '../../shared/pagination/pagination.dto';
 import { paginate } from '../../shared/pagination/pagination-helper';
+import { ParamsDto } from '../../shared/params.dto';
+import { applyQueryOptions } from '../../shared/query-builder.helper';
 
 @Injectable()
 export class VenuesService {
@@ -44,18 +46,22 @@ export class VenuesService {
     return await this.venuesRepository.save(venue);
   }
 
-  async findAll(paginationDto: PaginationDto) {
-    const { page, limit } = paginationDto;
-    const [data, total] = await this.venuesRepository.findAndCount({
-      take: limit,
-      skip: limit * (page - 1),
-      relations: {
-        city: true,
-        venueType: true,
-      },
+  async findAll(paramsDto: ParamsDto) {
+    const qb = this.venuesRepository
+      .createQueryBuilder('venue')
+      .leftJoinAndSelect('venue.city', 'city')
+      .leftJoinAndSelect('venue.venueType', 'venueType');
+
+    applyQueryOptions(qb, {
+      search: paramsDto.search,
+      searchFields: ['venue.name'],
+      page: paramsDto.page,
+      limit: paramsDto.limit,
+      order: { 'venue.name': 'ASC' },
     });
 
-    return paginate(data, total, page, limit);
+    const [data, total] = await qb.getManyAndCount();
+    return paginate(data, total, paramsDto.page, paramsDto.limit);
   }
 
   async findOne(id: number) {

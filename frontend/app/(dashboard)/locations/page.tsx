@@ -7,6 +7,8 @@ import {Venue} from "@/models/venue.model";
 import VenueService from "@/services/venue.service";
 import dynamic from "next/dynamic";
 import {PaginationComponent} from "@/components/Pagination";
+import {SearchInput} from "@/components/SearchInput";
+import {useRouter, useSearchParams} from "next/navigation";
 
 const VenueMap = dynamic(
 	() => import("@/components/VenueMap"),
@@ -14,24 +16,43 @@ const VenueMap = dynamic(
 );
 
 export default function LocationsPage() {
+	const searchParams = useSearchParams();
+	const router = useRouter();
+
 	const [venues, setVenues] = useState<Venue[]>([]);
 	const [showMap, setShowMap] = useState(false);
 	const [page, setPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
 
+	const initialSearch = searchParams.get("search") || "";
+	const [search, setSearch] = useState(initialSearch);
+	const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+
+
+	useEffect(() => {
+		const handler = setTimeout(() => setDebouncedSearch(search), 500);
+		return () => clearTimeout(handler);
+	}, [search]);
+
+	useEffect(() => {
+		const params = new URLSearchParams();
+		if (debouncedSearch) params.set("search", debouncedSearch);
+		if (page > 1) params.set("page", page.toString());
+		router.replace(`?${params.toString()}`);
+	}, [debouncedSearch, page, router]);
+
 	useEffect(() => {
 		const fetchVenues = async () => {
 			try {
-				const response = await VenueService.getVenues({page, limit: 2});
+				const response = await VenueService.getVenues({page, limit: 2, search: debouncedSearch});
 				setVenues(response.data);
 				setTotalPages(response.meta.totalPages);
-				console.log(response);
 			} catch (e) {
 				console.error(e);
 			}
-		}
+		};
 		fetchVenues();
-	}, [page])
+	}, [page, debouncedSearch]);
 
 	return (
 		<div className="min-h-screen bg-slate-50 py-12">
@@ -43,12 +64,11 @@ export default function LocationsPage() {
 				</div>
 
 				<div className="flex flex-col md:flex-row gap-4 mb-8">
-					<div className="relative flex-1">
-						<Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"/>
-						<input
-							type="text"
+					<div className="flex-1">
+						<SearchInput
+							value={search}
+							onChange={setSearch}
 							placeholder="Pretraži dvorane, stadione..."
-							className="w-full pl-9 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all"
 						/>
 					</div>
 					<button
