@@ -11,7 +11,7 @@ import {
 import { VenuesService } from './venues.service';
 import { CreateVenueDto } from './dto/create-venue.dto';
 import { UpdateVenueDto } from './dto/update-venue.dto';
-import { PaginationDto } from '../../shared/pagination/pagination.dto';
+import { ParamsDto } from '../../shared/params.dto';
 
 @Controller('venues')
 export class VenuesController {
@@ -23,8 +23,8 @@ export class VenuesController {
   }
 
   @Get()
-  findAll(@Query() paginationDto: PaginationDto) {
-    return this.venuesService.findAll(paginationDto);
+  findAll(@Query() paramsDto: ParamsDto) {
+    return this.venuesService.findAll(paramsDto);
   }
 
   @Get(':id')
