@@ -6,27 +6,32 @@ import {useEffect, useState} from "react";
 import {Venue} from "@/models/venue.model";
 import VenueService from "@/services/venue.service";
 import dynamic from "next/dynamic";
+import {PaginationComponent} from "@/components/Pagination";
 
 const VenueMap = dynamic(
 	() => import("@/components/VenueMap"),
-	{ ssr: false }
+	{ssr: false}
 );
 
 export default function LocationsPage() {
 	const [venues, setVenues] = useState<Venue[]>([]);
 	const [showMap, setShowMap] = useState(false);
+	const [page, setPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
 
 	useEffect(() => {
 		const fetchVenues = async () => {
 			try {
-				const response = await VenueService.getVenues();
-				setVenues(response);
+				const response = await VenueService.getVenues({page, limit: 2});
+				setVenues(response.data);
+				setTotalPages(response.meta.totalPages);
+				console.log(response);
 			} catch (e) {
 				console.error(e);
 			}
 		}
 		fetchVenues();
-	}, [])
+	}, [page])
 
 	return (
 		<div className="min-h-screen bg-slate-50 py-12">
@@ -56,7 +61,7 @@ export default function LocationsPage() {
 				</div>
 				{showMap && (
 					<div className="mb-10">
-						<VenueMap venues={venues} />
+						<VenueMap venues={venues}/>
 					</div>
 				)}
 				<div className="flex flex-col gap-6">
@@ -64,7 +69,13 @@ export default function LocationsPage() {
 						<LocationCard key={loc.id} location={loc}/>
 					))}
 				</div>
-
+			</div>
+			<div className="py-6 flex justify-center">
+				<PaginationComponent
+					currentPage={page}
+					totalPages={totalPages}
+					onPageChange={setPage}
+				/>
 			</div>
 		</div>
 	);
