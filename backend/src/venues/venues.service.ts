@@ -6,6 +6,8 @@ import { Venue } from './entities/venue.entity';
 import { Repository } from 'typeorm';
 import { CitiesService } from '../cities/cities.service';
 import { VenueTypesService } from '../venue-types/venue-types.service';
+import { PaginationDto } from '../../shared/pagination/pagination.dto';
+import { paginate } from '../../shared/pagination/pagination-helper';
 
 @Injectable()
 export class VenuesService {
@@ -42,13 +44,20 @@ export class VenuesService {
     return await this.venuesRepository.save(venue);
   }
 
-  async findAll() {
-    return await this.venuesRepository.find({
+  async findAll(paginationDto: PaginationDto) {
+    const { page, limit } = paginationDto;
+    console.log(limit);
+    console.log(page);
+    const [data, total] = await this.venuesRepository.findAndCount({
+      take: limit,
+      skip: limit * (page - 1),
       relations: {
         city: true,
         venueType: true,
       },
     });
+
+    return paginate(data, total, page, limit);
   }
 
   async findOne(id: number) {
