@@ -46,8 +46,6 @@ export class VenuesService {
 
   async findAll(paginationDto: PaginationDto) {
     const { page, limit } = paginationDto;
-    console.log(limit);
-    console.log(page);
     const [data, total] = await this.venuesRepository.findAndCount({
       take: limit,
       skip: limit * (page - 1),
