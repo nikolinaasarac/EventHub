@@ -33,7 +33,11 @@ export function applyQueryOptions<T extends ObjectLiteral>(
 
   if (filters) {
     Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
+      if (value === undefined || value === null) return;
+
+      if (Array.isArray(value) && value.length) {
+        qb.andWhere(`${key} IN (:...${key})`, { [key]: value });
+      } else {
         qb.andWhere(`${key} = :${key}`, { [key]: value });
       }
     });

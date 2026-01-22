@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Query } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,9 @@ import { Repository } from 'typeorm';
 import { EventSubcategoriesService } from '../event-subcategories/event-subcategories.service';
 import { SUBCATEGORY_METADATA_CONFIG } from '../../shared/constants/event-metadata.registry';
 import { VenuesService } from '../venues/venues.service';
+import { applyQueryOptions } from '../../shared/query-builder.helper';
+import { ParamsDto } from '../../shared/params.dto';
+import { paginate } from '../../shared/pagination/pagination-helper';
 
 @Injectable()
 export class EventsService {
@@ -54,14 +57,25 @@ export class EventsService {
     return await this.eventsRepository.save(event);
   }
 
-  async findAll() {
-    return await this.eventsRepository.find({
-      relations: [
-        'eventSubcategory',
-        'venue',
-        'eventSubcategory.eventCategory',
-      ],
+  async findAll(paramsDto: ParamsDto) {
+    const qb = this.eventsRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.venue', 'venue')
+      .leftJoinAndSelect('event.eventSubcategory', 'eventSubcategory')
+      .leftJoinAndSelect('eventSubcategory.eventCategory', 'eventCategory');
+
+    applyQueryOptions(qb, {
+      search: paramsDto.search,
+      searchFields: ['event.title'],
+      page: paramsDto.page,
+      limit: paramsDto.limit,
+      order: { 'event.createdAt': 'DESC' },
+      filters: {
+        'eventSubcategory.eventCategory.id': paramsDto.categories,
+      },
     });
+    const [data, total] = await qb.getManyAndCount();
+    return paginate(data, total, paramsDto.page, paramsDto.limit);
   }
 
   async findOne(id: number) {
