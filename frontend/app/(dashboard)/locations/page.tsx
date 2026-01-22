@@ -1,6 +1,6 @@
 "use client"
 
-import {Search, MapPin as MapPinIcon} from "lucide-react";
+import {MapPin as MapPinIcon} from "lucide-react";
 import {LocationCard} from "@/components/LocationCard";
 import {useEffect, useState} from "react";
 import {Venue} from "@/models/venue.model";
@@ -8,7 +8,7 @@ import VenueService from "@/services/venue.service";
 import dynamic from "next/dynamic";
 import {PaginationComponent} from "@/components/Pagination";
 import {SearchInput} from "@/components/SearchInput";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useQueryFilters} from "@/shared/hooks/use-query-filters.hook";
 
 const VenueMap = dynamic(
 	() => import("@/components/VenueMap"),
@@ -16,35 +16,20 @@ const VenueMap = dynamic(
 );
 
 export default function LocationsPage() {
-	const searchParams = useSearchParams();
-	const router = useRouter();
+	const {search, setSearch, page, updatePage, urlSearch, urlPage} = useQueryFilters();
 
 	const [venues, setVenues] = useState<Venue[]>([]);
 	const [showMap, setShowMap] = useState(false);
-	const [page, setPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
-
-	const initialSearch = searchParams.get("search") || "";
-	const [search, setSearch] = useState(initialSearch);
-	const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
-
-
-	useEffect(() => {
-		const handler = setTimeout(() => setDebouncedSearch(search), 500);
-		return () => clearTimeout(handler);
-	}, [search]);
-
-	useEffect(() => {
-		const params = new URLSearchParams();
-		if (debouncedSearch) params.set("search", debouncedSearch);
-		if (page > 1) params.set("page", page.toString());
-		router.replace(`?${params.toString()}`);
-	}, [debouncedSearch, page, router]);
 
 	useEffect(() => {
 		const fetchVenues = async () => {
 			try {
-				const response = await VenueService.getVenues({page, limit: 2, search: debouncedSearch});
+				const response = await VenueService.getVenues({
+					page: urlPage,
+					limit: 2,
+					search: urlSearch
+				});
 				setVenues(response.data);
 				setTotalPages(response.meta.totalPages);
 			} catch (e) {
@@ -52,7 +37,7 @@ export default function LocationsPage() {
 			}
 		};
 		fetchVenues();
-	}, [page, debouncedSearch]);
+	}, [urlPage, urlSearch]);
 
 	return (
 		<div className="min-h-screen bg-slate-50 py-12">
@@ -94,7 +79,7 @@ export default function LocationsPage() {
 				<PaginationComponent
 					currentPage={page}
 					totalPages={totalPages}
-					onPageChange={setPage}
+					onPageChange={updatePage}
 				/>
 			</div>
 		</div>
