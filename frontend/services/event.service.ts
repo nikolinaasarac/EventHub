@@ -1,11 +1,13 @@
 import BaseService from "@/services/base.service";
 import {Event} from "@/models/event.model";
+import {QueryParams} from "@/models/query-params.model";
+import {PaginatedResponse} from "@/models/paginated.model";
 
 export default class EventService {
 	static readonly ENDPOINT = "/events"
 
-	static async getEvents() {
-		return BaseService.fetchList<Event[]>(`${this.ENDPOINT}`);
+	static async getEvents(queryParams: QueryParams): Promise<PaginatedResponse<Event>> {
+		return BaseService.fetchList(`${this.ENDPOINT}`, queryParams);
 	}
 
 	static async getEvent(id: string) {
