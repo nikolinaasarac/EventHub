@@ -1,8 +1,7 @@
 
-export const EventTypes = [
-	{ key: "1", value: "Koncerti" },
-	{ key: "2", value: "Konferencije" },
-	{ key: "3", value: "Sport" },
+export const EventCategoriesSelectOptions = [
+	{ key: "1", value: "Kultura i zabava" },
+	{ key: "2", value: "Sport" },
 ];
 
 

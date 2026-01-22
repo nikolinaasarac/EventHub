@@ -70,6 +70,9 @@ export class EventsService {
       page: paramsDto.page,
       limit: paramsDto.limit,
       order: { 'event.createdAt': 'DESC' },
+      filters: {
+        'eventSubcategory.eventCategory.id': paramsDto.categories,
+      },
     });
     const [data, total] = await qb.getManyAndCount();
     return paginate(data, total, paramsDto.page, paramsDto.limit);
