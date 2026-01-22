@@ -7,11 +7,22 @@ import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
 import {useQueryFilters} from "@/shared/hooks/use-query-filters.hook";
 import {PaginationComponent} from "@/components/Pagination";
 import {SearchInput} from "@/components/SearchInput";
-import {EventCategoriesMultiSelect} from "@/components/EventCategorySelect";
+import {EventCategoriesMultiSelect} from "@/components/EventCategoriesMultiSelect";
 import {QueryParams} from "@/models/query-params.model";
+import {CitiesMultiSelect} from "@/components/CitiesMultiSelect";
 
 export default function EventsPage() {
-	const {search, setSearch, page, updatePage, urlSearch, urlPage, filters, setCategories} = useQueryFilters();
+	const {
+		search,
+		setSearch,
+		page,
+		updatePage,
+		urlSearch,
+		urlPage,
+		filters,
+		setCategories,
+		setCities
+	} = useQueryFilters();
 	const [events, setEvents] = useState<Event[]>([]);
 	const [totalPages, setTotalPages] = useState(1);
 
@@ -19,12 +30,15 @@ export default function EventsPage() {
 	useEffect(() => {
 		const fetchEvents = async (
 			eventCategories: string[] = filters.categories,
+			cities: string[] = filters.cities
 		) => {
 			const params: QueryParams = {page: urlPage, limit: 10, search: urlSearch};
 			try {
 				if (eventCategories.length) params.categories = eventCategories.join(",");
+				if(cities.length > 0) params.cities = cities.join(",");
 				const response = await EventService.getEvents(params);
 				console.log(filters.categories);
+				console.log(filters.cities);
 				setEvents(response.data);
 				setTotalPages(response.meta.totalPages);
 				console.log(response);
@@ -33,7 +47,7 @@ export default function EventsPage() {
 			}
 		}
 		fetchEvents();
-	}, [urlPage, urlSearch, filters.categories])
+	}, [urlPage, urlSearch, filters.categories, filters.cities])
 	return (
 		<section className="py-16 bg-white">
 			<div className="container mx-auto px-4">
@@ -44,6 +58,7 @@ export default function EventsPage() {
 					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
 						<EventCategoriesMultiSelect handleSelectChange={setCategories}
 													selectedCategories={filters.categories}/>
+						<CitiesMultiSelect handleSelectChange={setCities} selectedCities={filters.cities}/>
 					</div>
 				</div>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">

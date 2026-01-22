@@ -9,6 +9,8 @@ import dynamic from "next/dynamic";
 import {PaginationComponent} from "@/components/Pagination";
 import {SearchInput} from "@/components/SearchInput";
 import {useQueryFilters} from "@/shared/hooks/use-query-filters.hook";
+import {CitiesMultiSelect} from "@/components/CitiesMultiSelect";
+import {QueryParams} from "@/models/query-params.model";
 
 const VenueMap = dynamic(
 	() => import("@/components/VenueMap"),
@@ -16,20 +18,18 @@ const VenueMap = dynamic(
 );
 
 export default function LocationsPage() {
-	const {search, setSearch, page, updatePage, urlSearch, urlPage} = useQueryFilters();
+	const {search, setSearch, page, updatePage, urlSearch, urlPage, filters, setCities} = useQueryFilters();
 
 	const [venues, setVenues] = useState<Venue[]>([]);
 	const [showMap, setShowMap] = useState(false);
 	const [totalPages, setTotalPages] = useState(1);
 
 	useEffect(() => {
-		const fetchVenues = async () => {
+		const fetchVenues = async (cities: string[] = filters.cities) => {
+			const params: QueryParams = {page: urlPage, limit: 2, search: urlSearch};
 			try {
-				const response = await VenueService.getVenues({
-					page: urlPage,
-					limit: 2,
-					search: urlSearch
-				});
+				if (cities.length > 0) params.cities = cities.join(",");
+				const response = await VenueService.getVenues(params);
 				setVenues(response.data);
 				setTotalPages(response.meta.totalPages);
 			} catch (e) {
@@ -37,15 +37,15 @@ export default function LocationsPage() {
 			}
 		};
 		fetchVenues();
-	}, [urlPage, urlSearch]);
+	}, [urlPage, urlSearch, filters.cities]);
 
 	return (
 		<div className="min-h-screen bg-slate-50 py-12">
 			<div className="container mx-auto px-4">
 
-				<div className="mb-12">
+				<div className="mb-3">
 					<h1 className="text-3xl font-bold text-slate-900 mb-2">Lokacije</h1>
-					<p className="text-slate-500">Istražite lokacije</p>
+					<CitiesMultiSelect handleSelectChange={setCities} selectedCities={filters.cities}/>
 				</div>
 
 				<div className="flex flex-col md:flex-row gap-4 mb-8">

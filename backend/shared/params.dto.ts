@@ -10,4 +10,8 @@ export class ParamsDto extends PaginationDto {
   @IsOptional()
   @CommaSeparatedStringArray()
   categories?: string[];
+
+  @IsOptional()
+  @CommaSeparatedStringArray()
+  cities?: string[];
 }

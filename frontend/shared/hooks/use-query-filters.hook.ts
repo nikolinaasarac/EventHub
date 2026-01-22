@@ -8,7 +8,8 @@ export function useQueryFilters(debounceDelay = 500) {
 
 	const filters = useMemo(() => {
 		const categories = searchParams.get("categories")?.split(",") || [];
-		return {categories};
+		const cities = searchParams.get("cities")?.split(",") || [];
+		return {categories, cities};
 	}, [searchParams]);
 
 	const [search, setSearch] = useState(searchParams.get("search") || "");
@@ -16,10 +17,14 @@ export function useQueryFilters(debounceDelay = 500) {
 
 	const updateFilters = (newFilters: Partial<{
 		categories: string[];
+		cities: string[];
 	}>) => {
 		const normalizedFilters = {
 			categories: newFilters.categories
 				? [...newFilters.categories].sort()
+				: undefined,
+			cities: newFilters.cities
+				? [...newFilters.cities].sort()
 				: undefined,
 		};
 
@@ -38,6 +43,7 @@ export function useQueryFilters(debounceDelay = 500) {
 
 	const setCategories = (categories: string[]) =>
 		updateFilters({categories});
+	const setCities = (cities: string[]) => updateFilters({cities});
 
 	const createQueryString = useCallback(
 		(params: Record<string, string | number | null>) => {
@@ -79,6 +85,7 @@ export function useQueryFilters(debounceDelay = 500) {
 		setSearch,
 		filters,
 		setCategories,
+		setCities,
 		page,
 		updatePage,
 		urlSearch: searchParams.get("search") || "",
