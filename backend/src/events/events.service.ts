@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, Query } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -61,6 +61,7 @@ export class EventsService {
     const qb = this.eventsRepository
       .createQueryBuilder('event')
       .leftJoinAndSelect('event.venue', 'venue')
+      .leftJoinAndSelect('venue.city', 'city')
       .leftJoinAndSelect('event.eventSubcategory', 'eventSubcategory')
       .leftJoinAndSelect('eventSubcategory.eventCategory', 'eventCategory');
 
@@ -72,6 +73,7 @@ export class EventsService {
       order: { 'event.createdAt': 'DESC' },
       filters: {
         'eventSubcategory.eventCategory.id': paramsDto.categories,
+        'venue.city.id': paramsDto.cities,
       },
     });
     const [data, total] = await qb.getManyAndCount();

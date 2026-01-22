@@ -6,7 +6,6 @@ import { Venue } from './entities/venue.entity';
 import { Repository } from 'typeorm';
 import { CitiesService } from '../cities/cities.service';
 import { VenueTypesService } from '../venue-types/venue-types.service';
-import { PaginationDto } from '../../shared/pagination/pagination.dto';
 import { paginate } from '../../shared/pagination/pagination-helper';
 import { ParamsDto } from '../../shared/params.dto';
 import { applyQueryOptions } from '../../shared/query-builder.helper';
@@ -58,6 +57,9 @@ export class VenuesService {
       page: paramsDto.page,
       limit: paramsDto.limit,
       order: { 'venue.name': 'ASC' },
+      filters: {
+        'city.id': paramsDto.cities,
+      },
     });
 
     const [data, total] = await qb.getManyAndCount();

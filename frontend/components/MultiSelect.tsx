@@ -69,7 +69,7 @@ export function MultiSelect({title, options, selectedValues = [], onSelectChange
 						onClick={() => onSelectChange([])}
 						className={'relative flex cursor-pointer select-none items-center px-2 py-3 sm:py-1.5 text-base lg:text-sm outline-none data-[disabled=true]:pointer-events-none hover:bg-accent hover:text-accent-foreground data-[disabled=true]:opacity-50 w-full justify-center'}
 					>
-						{('Clear filters')}
+						{('Očisti filtere')}
 					</button>
 				</div>
 			)}
@@ -86,7 +86,7 @@ export function MultiSelect({title, options, selectedValues = [], onSelectChange
 						<>
 							<Separator orientation="vertical" className="mx-2 h-4"/>
 							<Badge variant="secondary" className="rounded-sm px-2 font-normal">
-								{selectedValues.length} selected
+								Izabrano: {selectedValues.length}
 							</Badge>
 						</>
 					)}

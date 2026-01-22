@@ -1,6 +1,6 @@
 import { PaginationDto } from './pagination/pagination.dto';
 import { IsOptional, IsString } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { CommaSeparatedStringArray } from './decorators/comma-separated-string.decorator';
 
 export class ParamsDto extends PaginationDto {
   @IsOptional()
@@ -8,10 +8,10 @@ export class ParamsDto extends PaginationDto {
   search?: string;
 
   @IsOptional()
-  @Transform(({ value }) =>
-    Array.isArray(value)
-      ? value.map(Number)
-      : String(value).split(',').map(Number),
-  )
+  @CommaSeparatedStringArray()
   categories?: string[];
+
+  @IsOptional()
+  @CommaSeparatedStringArray()
+  cities?: string[];
 }
