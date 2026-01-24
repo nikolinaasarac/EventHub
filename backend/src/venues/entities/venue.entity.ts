@@ -5,9 +5,12 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { City } from '../../cities/entities/city.entity';
 import { VenueType } from '../../venue-types/entities/venue-type.entity';
+import { Amenity } from '../../amenities/entities/amenity.entity';
 
 @Entity('venues')
 export class Venue {
@@ -57,9 +60,6 @@ export class Venue {
 
   @Column({ length: 150, nullable: true })
   facebook: string;
-
-  @Column('text', { array: true, default: '{}' })
-  amenities: string[];
 
   @CreateDateColumn()
   createdAt: Date;

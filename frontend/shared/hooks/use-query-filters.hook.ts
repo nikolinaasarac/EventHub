@@ -15,26 +15,18 @@ export function useQueryFilters(debounceDelay = 500) {
 	const [search, setSearch] = useState(searchParams.get("search") || "");
 	const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
 
-	const updateFilters = (newFilters: Partial<{
-		categories: string[];
-		cities: string[];
-	}>) => {
+	const updateFilters = (newFilters: Partial<{ categories: string[]; cities: string[] }>) => {
+		const currentCategories = filters.categories;
+		const currentCities = filters.cities;
+
 		const normalizedFilters = {
-			categories: newFilters.categories
-				? [...newFilters.categories].sort()
-				: undefined,
-			cities: newFilters.cities
-				? [...newFilters.cities].sort()
-				: undefined,
+			categories: newFilters.categories !== undefined ? [...newFilters.categories].sort() : currentCategories,
+			cities: newFilters.cities !== undefined ? [...newFilters.cities].sort() : currentCities,
 		};
 
 		const query = createQueryString({
-			...Object.fromEntries(
-				Object.entries(normalizedFilters).map(([key, value]) => [
-					key,
-					value?.length ? value.join(",") : null,
-				])
-			),
+			categories: normalizedFilters.categories.length ? normalizedFilters.categories.join(",") : null,
+			cities: normalizedFilters.cities.length ? normalizedFilters.cities.join(",") : null,
 			page: 1,
 		});
 

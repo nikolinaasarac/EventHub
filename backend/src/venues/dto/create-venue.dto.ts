@@ -1,5 +1,4 @@
 import {
-  IsArray,
   IsEmail,
   IsInt,
   IsNotEmpty,
@@ -73,9 +72,4 @@ export class CreateVenueDto {
   @IsOptional()
   @MaxLength(150)
   facebook?: string;
-
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  amenities?: string[];
 }
