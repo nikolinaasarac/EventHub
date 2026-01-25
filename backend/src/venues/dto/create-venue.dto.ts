@@ -8,6 +8,7 @@ import {
   IsUrl,
   MaxLength,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateVenueDto {
   @IsString()
@@ -24,22 +25,27 @@ export class CreateVenueDto {
   @MaxLength(255)
   address: string;
 
+  @Type(() => Number)
   @IsInt()
   @IsNotEmpty()
   cityId: number;
 
+  @Type(() => Number)
   @IsInt()
   @IsNotEmpty()
   venueTypeId: number;
 
+  @Type(() => Number)
   @IsNumber()
   @IsNotEmpty()
   latitude: number;
 
+  @Type(() => Number)
   @IsNumber()
   @IsNotEmpty()
   longitude: number;
 
+  @Type(() => Number)
   @IsInt()
   @IsOptional()
   capacity?: number;

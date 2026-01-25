@@ -18,14 +18,12 @@ export const venueSchema = yup.object({
 	cityId: yup
 		.number()
 		.nullable()
-		.required('Grad je obavezan')
-		.integer(),
+		.required('Grad je obavezan'),
 
 	venueTypeId: yup
 		.number()
 		.nullable()
-		.required('Tip lokacije je obavezan')
-		.integer(),
+		.required('Tip lokacije je obavezan'),
 
 	latitude: yup
 		.number()
@@ -39,6 +37,7 @@ export const venueSchema = yup.object({
 
 	capacity: yup
 		.number()
+		.transform((value, originalValue) => (originalValue === '' ? null : value))
 		.nullable()
 		.optional(),
 
@@ -46,30 +45,41 @@ export const venueSchema = yup.object({
 		.string()
 		.optional(),
 
+	image: yup
+		.mixed()
+		.required('Slika je obavezna')
+		.test('fileSize', 'Slika je prevelika', (value: any) => {
+			if (!value) return true;
+			return value.size <= 2000000;
+		}),
+
 	phone: yup
 		.string()
+		.transform((value) => (value === '' ? undefined : value))
 		.max(150, 'Telefon može imati najviše 150 karaktera')
 		.optional(),
 
 	email: yup
 		.string()
+		.transform((value) => (value === '' ? undefined : value))
 		.email('Email nije validan')
-		.max(150, 'Email može imati najviše 150 karaktera')
 		.optional(),
 
 	websiteUrl: yup
 		.string()
-		.url('URL sajta nije validan')
-		.max(150, 'URL sajta može imati najviše 150 karaktera')
+		.transform((value) => (value === '' ? undefined : value))
+		.url('URL mora početi sa http:// ili https://')
 		.optional(),
 
 	instagram: yup
 		.string()
-		.max(150, 'Instagram može imati najviše 150 karaktera')
+		.transform((value) => (value === '' ? undefined : value))
+		.max(150, 'Maksimalno 150 karaktera')
 		.optional(),
 
 	facebook: yup
 		.string()
-		.max(150, 'Facebook može imati najviše 150 karaktera')
+		.transform((value) => (value === '' ? undefined : value))
+		.max(150, 'Maksimalno 150 karaktera')
 		.optional(),
 });

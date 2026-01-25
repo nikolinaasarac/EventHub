@@ -34,10 +34,10 @@ export function InputField({
 				name={name}
 				type={type}
 				placeholder={placeholder}
-				className={`w-full bg-white border h-10 rounded-md px-4 py-2 focus:outline-none focus:ring-2
+				className={`w-full bg-white border h-10 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 outline-none
           ${className}`}
 			/>
-			<div className="text-red-500 text-sm h-2">
+			<div className="text-red-500 text-sm h-1">
 				<ErrorMessage
 					name={name}
 					component="p"

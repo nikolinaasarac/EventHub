@@ -9,7 +9,7 @@ export default class BaseService {
 		return ApiClient.get(endpoint, config).then((response) => response.data);
 	}
 
-	static async create<T>(endpoint: string, body: T | any): Promise<T> {
-		return ApiClient.post(endpoint, body).then((response) => response.data);
+	static async create<T>(endpoint: string, body: any, config = {}): Promise<T> {
+		return ApiClient.post(endpoint, body, config).then((response) => response.data);
 	}
 }

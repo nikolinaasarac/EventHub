@@ -15,7 +15,7 @@ export default class VenueService {
 		return BaseService.fetch<Venue>(`${this.ENDPOINT}/${id}`);
 	}
 
-	static async createVenue(venue: CreateVenueDto) {
-		return BaseService.create(`${this.ENDPOINT}`, venue);
+	static async createVenue(formData: FormData) {
+		return BaseService.create(`${this.ENDPOINT}`, formData);
 	}
 }

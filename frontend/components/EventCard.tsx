@@ -35,7 +35,7 @@ export function EventCard({
 		<Card className="overflow-hidden border-none shadow-lg group">
 			<div className="relative h-48 overflow-hidden">
 				<img
-					src={image}
+					src={`${process.env.NEXT_PUBLIC_API_BASE_URL}public/${image}`}
 					alt={title}
 					className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
 				/>

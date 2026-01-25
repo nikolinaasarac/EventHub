@@ -12,7 +12,7 @@ import VenueService from "@/services/venue.service";
 import {useParams, useRouter} from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 
 const VenueMap = dynamic(
 	() => import("@/components/VenueMap"),
@@ -62,7 +62,7 @@ export default function VenueDetailsPage() {
 								<div
 									className="relative aspect-[4/3] rounded-[1.5rem] overflow-hidden shadow-inner bg-slate-100">
 									<img
-										src={`/${venue.imageUrl}`}
+										src={`${process.env.NEXT_PUBLIC_API_BASE_URL}public/${venue.imageUrl}`}
 										alt={venue.name}
 										className="w-full h-full object-cover"
 									/>
@@ -130,12 +130,14 @@ export default function VenueDetailsPage() {
 				</div>
 
 				<Dialog open={showMapModal} onOpenChange={setShowMapModal}>
-					<DialogContent className="max-w-4xl p-0 overflow-hidden border-none rounded-[2rem]">
+					<DialogContent aria-describedby='map-description' className="max-w-4xl p-0 overflow-hidden border-none rounded-[2rem]">
+						<DialogDescription>
+							Ovaj dijalog služi za prikaz detalja lokacije
+						</DialogDescription>
 						<DialogHeader
 							className="p-6 absolute top-0 left-0 z-10 bg-white/80 backdrop-blur-md w-full border-b">
 							<DialogTitle className="font-black text-slate-900">{venue.name}</DialogTitle>
 						</DialogHeader>
-
 						<div className="mt-16">
 							<VenueMap venue={venue} height="500px"/>
 						</div>

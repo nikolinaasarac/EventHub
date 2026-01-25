@@ -21,9 +21,7 @@ export default class ApiClient {
 		});
 	}
 
-	static async post(endpoint: string, body: any, queryParams = {}): Promise<AxiosResponse> {
-		return axiosInstance.post(endpoint, body, {
-			params: queryParams,
-		});
+	static async post(endpoint: string, body: any, config = {}): Promise<AxiosResponse> {
+		return axiosInstance.post(endpoint, body, config);
 	}
 }

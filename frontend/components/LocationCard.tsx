@@ -25,7 +25,7 @@ export function LocationCard({ location }: Props) {
 
 			<div className="relative w-full md:w-72 h-48 md:h-auto overflow-hidden">
 				<img
-					src={location.imageUrl}
+					src={`${process.env.NEXT_PUBLIC_API_BASE_URL}public/${location.imageUrl}`}
 					alt={location.name}
 					className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
 				/>

@@ -6,11 +6,11 @@ export interface CreateVenueDto {
 	venueTypeId: number | undefined;
 	latitude?: number | undefined;
 	longitude?: number | undefined;
-	capacity?: number | string;
+	capacity?: number | string | null;
 	imageUrl: string;
-	phone?: string;
-	email?: string;
-	websiteUrl?: string;
-	instagram?: string;
-	facebook?: string;
+	phone?: string | null;
+	email?: string | null;
+	websiteUrl?: string | null;
+	instagram?: string | null;
+	facebook?: string | null;
 }
