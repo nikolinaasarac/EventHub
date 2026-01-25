@@ -11,9 +11,8 @@ import {Venue} from '@/models/venue.model'
 import VenueService from "@/services/venue.service";
 import {useParams, useRouter} from "next/navigation";
 import Link from "next/link";
-import {AMENITY_ICONS, DEFAULT_AMENITY_ICON} from "@/shared/constants/amenity-icons";
 import dynamic from "next/dynamic";
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 
 const VenueMap = dynamic(
 	() => import("@/components/VenueMap"),
@@ -63,7 +62,7 @@ export default function VenueDetailsPage() {
 								<div
 									className="relative aspect-[4/3] rounded-[1.5rem] overflow-hidden shadow-inner bg-slate-100">
 									<img
-										src={`/${venue.imageUrl}`}
+										src={`${process.env.NEXT_PUBLIC_API_BASE_URL}public/${venue.imageUrl}`}
 										alt={venue.name}
 										className="w-full h-full object-cover"
 									/>
@@ -95,8 +94,8 @@ export default function VenueDetailsPage() {
 											<Users className="w-5 h-5 text-indigo-600 shrink-0 mt-1"/>
 											<div>
 												<p className="text-[10px] text-slate-400 font-bold uppercase">Maks.
-													Kapacitet</p>
-												<p className="text-slate-700 font-semibold">{venue.capacity} mjesta</p>
+													kapacitet</p>
+												<p className="text-slate-700 font-semibold">{venue.capacity}</p>
 											</div>
 										</div>
 									</div>
@@ -120,40 +119,25 @@ export default function VenueDetailsPage() {
 							<div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
 								<h2 className="text-xl font-black text-slate-900 flex items-center gap-2 mb-6">
 									<Building2 className="w-5 h-5 text-indigo-600"/>
-									O objektu
+									Osnovne informacije o lokaciji
 								</h2>
 								<p className="text-justify text-slate-600 text-lg leading-relaxed">
 									{venue.description}
 								</p>
 							</div>
 						</div>
-
-						<div className="lg:col-span-1">
-							<div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
-								<h2 className="text-xl font-black text-slate-900 mb-6 uppercase tracking-tight">Sadržaji</h2>
-								<div className="space-y-3">
-									{venue.amenities.map((item) => (
-										<div key={item}
-											 className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-											<div className="text-indigo-600">
-												{AMENITY_ICONS[item] || DEFAULT_AMENITY_ICON}
-											</div>
-											<span className="font-bold text-slate-700 text-xs">{item}</span>
-										</div>
-									))}
-								</div>
-							</div>
-						</div>
 					</div>
 				</div>
 
 				<Dialog open={showMapModal} onOpenChange={setShowMapModal}>
-					<DialogContent className="max-w-4xl p-0 overflow-hidden border-none rounded-[2rem]">
+					<DialogContent aria-describedby='map-description' className="max-w-4xl p-0 overflow-hidden border-none rounded-[2rem]">
+						<DialogDescription>
+							Ovaj dijalog služi za prikaz detalja lokacije
+						</DialogDescription>
 						<DialogHeader
 							className="p-6 absolute top-0 left-0 z-10 bg-white/80 backdrop-blur-md w-full border-b">
 							<DialogTitle className="font-black text-slate-900">{venue.name}</DialogTitle>
 						</DialogHeader>
-
 						<div className="mt-16">
 							<VenueMap venue={venue} height="500px"/>
 						</div>

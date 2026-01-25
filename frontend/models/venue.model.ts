@@ -2,7 +2,7 @@ import {City} from "@/models/city.model";
 import {VenueType} from "@/models/venue-type.model";
 
 export interface Venue {
-	id: number
+	id?: number
 	name: string
 	description: string
 	address: string

@@ -12,6 +12,7 @@ import typeormConfig from './config/typeorm';
 import Joi from 'joi';
 import { EventCategoriesModule } from './event-categories/event-categories.module';
 import { EventSubcategoriesModule } from './event-subcategories/event-subcategories.module';
+import { AmenitiesModule } from './amenities/amenities.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { EventSubcategoriesModule } from './event-subcategories/event-subcategor
     EventsModule,
     EventCategoriesModule,
     EventSubcategoriesModule,
+    AmenitiesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

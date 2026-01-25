@@ -20,4 +20,8 @@ export default class ApiClient {
 			params: queryParams,
 		});
 	}
+
+	static async post(endpoint: string, body: any, config = {}): Promise<AxiosResponse> {
+		return axiosInstance.post(endpoint, body, config);
+	}
 }

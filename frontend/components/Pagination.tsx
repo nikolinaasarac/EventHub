@@ -27,7 +27,7 @@ export function PaginationComponent({currentPage, totalPages, onPageChange}: Pro
 							"cursor-pointer",
 							currentPage === 1 && "pointer-events-none opacity-50"
 						)}
-					/>
+					>Prethodna</PaginationPrevious>
 				</PaginationItem>
 
 				{Array.from({length: totalPages}).map((_, i) => {
@@ -52,7 +52,7 @@ export function PaginationComponent({currentPage, totalPages, onPageChange}: Pro
 							"cursor-pointer",
 							currentPage === totalPages && "pointer-events-none opacity-50"
 						)}
-					/>
+					>Sljedeća</PaginationNext>
 				</PaginationItem>
 			</PaginationContent>
 		</Pagination>

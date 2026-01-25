@@ -11,6 +11,8 @@ import {SearchInput} from "@/components/SearchInput";
 import {useQueryFilters} from "@/shared/hooks/use-query-filters.hook";
 import {CitiesMultiSelect} from "@/components/CitiesMultiSelect";
 import {QueryParams} from "@/models/query-params.model";
+import {Button} from "@/components/ui/button";
+import {useRouter} from "next/navigation";
 
 const VenueMap = dynamic(
 	() => import("@/components/VenueMap"),
@@ -18,6 +20,7 @@ const VenueMap = dynamic(
 );
 
 export default function LocationsPage() {
+	const router = useRouter();
 	const {search, setSearch, page, updatePage, urlSearch, urlPage, filters, setCities} = useQueryFilters();
 
 	const [venues, setVenues] = useState<Venue[]>([]);
@@ -44,7 +47,10 @@ export default function LocationsPage() {
 			<div className="container mx-auto px-4">
 
 				<div className="mb-3">
-					<h1 className="text-3xl font-bold text-slate-900 mb-2">Lokacije</h1>
+					<div className="flex items-center justify-between">
+						<h1 className="text-3xl font-bold text-slate-900 mb-2">Lokacije</h1>
+						<Button className="bg-indigo-600 hover:bg-indigo-700" onClick={() => router.push('/locations/add-location')}>Dodaj lokaciju</Button>
+					</div>
 					<CitiesMultiSelect handleSelectChange={setCities} selectedCities={filters.cities}/>
 				</div>
 

@@ -53,7 +53,7 @@ export default function EventDetailsPage() {
 
 						<div className="relative h-[350px] md:h-[500px] overflow-hidden shadow-xl">
 							<img
-								src={`/${event.imageUrl}`}
+								src={`${process.env.NEXT_PUBLIC_API_BASE_URL}public/${event.imageUrl}`}
 								className="w-full h-full object-cover"
 								alt={event.title}
 							/>
