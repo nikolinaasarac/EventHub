@@ -138,8 +138,8 @@ export default function VenueDetailsPage() {
 							className="p-6 absolute top-0 left-0 z-10 bg-white/80 backdrop-blur-md w-full border-b">
 							<DialogTitle className="font-black text-slate-900">{venue.name}</DialogTitle>
 						</DialogHeader>
-						<div className="mt-16">
-							<VenueMap venue={venue} height="500px"/>
+						<div className="mt-5">
+							<VenueMap venue={venue} height="500px" onClose={() => setShowMapModal(false)}/>
 						</div>
 					</DialogContent>
 				</Dialog>
