@@ -45,6 +45,11 @@ export class VenuesController {
     return this.venuesService.findAll(paramsDto);
   }
 
+  @Get('get-all')
+  findAllVenues() {
+    return this.venuesService.findAllVenues();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.venuesService.findOne(+id);

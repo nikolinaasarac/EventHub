@@ -11,6 +11,10 @@ export default class VenueService {
 		return BaseService.fetchList(`${this.ENDPOINT}`, queryParams);
 	}
 
+	static async getAllVenues(): Promise<Venue[]> {
+		return BaseService.fetchList<Venue[]>(`${this.ENDPOINT}/get-all`);
+	}
+
 	static async getVenue(id: string): Promise<Venue> {
 		return BaseService.fetch<Venue>(`${this.ENDPOINT}/${id}`);
 	}

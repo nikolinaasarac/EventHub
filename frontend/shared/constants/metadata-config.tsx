@@ -13,3 +13,61 @@ export const metadataConfig: Record<
 };
 
 export const defaultMetadataIcon = <Square className="text-slate-500"/>;
+
+
+export interface MetadataField {
+	name: string;
+	label: string;
+	placeholder: string;
+	type: string;
+	icon: React.ReactNode;
+}
+
+export const METADATA_FIELDS_BY_SUBCATEGORY: Record<string, MetadataField[]> = {
+	"Fudbal": [
+		{
+			name: "homeTeam",
+			label: "Domaći tim",
+			placeholder: "npr. FK Slavija",
+			type: "text",
+			icon: <Home className="text-slate-500"/>
+		},
+		{
+			name: "awayTeam",
+			label: "Gostujući tim",
+			placeholder: "npr. FK Romanija",
+			type: "text",
+			icon: <Users className="text-slate-500"/>
+		},
+		{
+			name: "referee",
+			label: "Glavni sudija",
+			placeholder: "Ime i prezime",
+			type: "text",
+			icon: <Activity className="text-slate-500"/>
+		}
+	],
+	"Koncert": [
+		{
+			name: "performer",
+			label: "Izvođač",
+			placeholder: "npr. Zdravko Čolić",
+			type: "text",
+			icon: <Users className="text-slate-500"/>
+		},
+		{
+			name: "genre",
+			label: "Žanr",
+			placeholder: "Pop, Rock, Techno...",
+			type: "text",
+			icon: <Users className="text-slate-500"/>
+		},
+		{
+			name: "gatesOpen",
+			label: "Ulaz od",
+			placeholder: "npr. 19:00",
+			type: "text",
+			icon: <Users className="text-slate-500"/>
+		}
+	]
+};

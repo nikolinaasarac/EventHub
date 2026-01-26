@@ -8,6 +8,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { EventStatus } from '../../../shared/enums/event-status.enum';
+import { Transform } from 'class-transformer';
 
 export class CreateEventDto {
   @IsString()
@@ -42,5 +43,16 @@ export class CreateEventDto {
   imageUrl?: string;
 
   @IsOptional()
+  @Transform(({ value }) => {
+    if (!value) return undefined;
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value) as Record<string, unknown>;
+      } catch (err) {
+        return undefined;
+      }
+    }
+    return value as Record<string, unknown>;
+  })
   metadata?: Record<string, unknown>;
 }

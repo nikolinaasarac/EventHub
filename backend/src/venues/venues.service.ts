@@ -61,6 +61,25 @@ export class VenuesService {
     return paginate(data, total, paramsDto.page, paramsDto.limit);
   }
 
+  async findAllVenues() {
+    return this.venuesRepository.find({
+      select: {
+        id: true,
+        name: true,
+        city: {
+          id: true,
+          name: true,
+        },
+      },
+      relations: {
+        city: true,
+      },
+      order: {
+        name: 'ASC',
+      },
+    });
+  }
+
   async findOne(id: number) {
     return await this.venuesRepository.findOne({
       where: { id },
