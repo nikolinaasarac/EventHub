@@ -53,6 +53,7 @@ export class VenuesService {
       order: { 'venue.name': 'ASC' },
       filters: {
         'city.id': paramsDto.cities,
+        'venue.venueType': paramsDto.venueTypes,
       },
     });
 

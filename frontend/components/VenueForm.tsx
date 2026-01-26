@@ -5,7 +5,7 @@ import {Form, Formik, ErrorMessage} from "formik";
 import {venueSchema} from '@/schemas/venue.schema';
 import {Label} from "@/components/ui/label";
 import {Card} from "@/components/ui/card";
-import {ImagePlus, MapPin, Globe, Instagram, Facebook, Phone, Mail, X} from 'lucide-react';
+import {MapPin, Globe, Instagram, Facebook, Phone, Mail, X} from 'lucide-react';
 import dynamic from 'next/dynamic';
 import {InputField} from "@/components/InputField";
 import {SelectBox} from "@/components/SelectBox";
@@ -16,8 +16,8 @@ import VenueTypesService from "@/services/venue-types.service";
 import VenueService from "@/services/venue.service";
 import {LoadingButton} from "@/components/LoadingButton";
 import {Field} from "@/components/ui/field";
-import {AspectRatio} from "@/components/ui/aspect-ratio";
 import {ImageUpload} from "@/components/ImageUpload";
+import {toast} from "sonner";
 
 const MapPicker = dynamic(() => import("./MapPicker").then(mod => mod.MapPicker), {ssr: false});
 
@@ -112,9 +112,11 @@ export function VenueForm({}: React.ComponentProps<"form">) {
 									formData.append('facebook', values.facebook);
 
 								await VenueService.createVenue(formData);
+								toast.success("Lokacija uspješno kreirana!")
 								console.log('Venue uploaded:', formData);
 							} catch (err) {
 								console.error(err);
+								toast.error("Greška prilikom kreiranja lokacije!")
 							}
 						}}
 					>

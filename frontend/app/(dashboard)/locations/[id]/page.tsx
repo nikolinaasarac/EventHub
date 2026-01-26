@@ -145,10 +145,10 @@ export default function VenueDetailsPage() {
 				</Dialog>
 			</main>
 
-			<footer className="bg-slate-900 text-white rounded-t-[3.5rem] mt-12">
+			<footer className="bg-slate-900 text-white rounded-t-[1.5rem]">
 				<div className="container mx-auto px-6 md:px-12 py-20">
 					<div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-						<div className="space-y-8 lg:col-span-2">
+						<div className="space-y-4 lg:col-span-2">
 							<div>
 								<h3 className="text-indigo-400 font-bold uppercase tracking-widest text-xs mb-8">Kontakt
 									centar</h3>

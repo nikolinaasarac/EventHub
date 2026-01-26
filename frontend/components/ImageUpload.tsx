@@ -1,8 +1,11 @@
-import { useFormikContext } from "formik";
-import { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { ImagePlus, X } from "lucide-react";
+"use client"
+
+import {useFormikContext} from "formik";
+import {useState} from "react";
+import {Label} from "@/components/ui/label";
+import {AspectRatio} from "@/components/ui/aspect-ratio";
+import {ImagePlus, X} from "lucide-react";
+import {Button} from "@/components/ui/button";
 
 type Props = {
 	name: string;
@@ -10,8 +13,8 @@ type Props = {
 	aspectRatio?: number;
 };
 
-export function ImageUpload({ name, label, aspectRatio = 2 }: Props) {
-	const { setFieldValue } = useFormikContext<any>();
+export function ImageUpload({name, label, aspectRatio = 2}: Props) {
+	const {setFieldValue} = useFormikContext<any>();
 	const [preview, setPreview] = useState<string | null>(null);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,36 +37,41 @@ export function ImageUpload({ name, label, aspectRatio = 2 }: Props) {
 			<div className="relative group">
 				<AspectRatio
 					ratio={aspectRatio}
-					className="flex items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 overflow-hidden"
+					className="relative flex items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 overflow-hidden"
 				>
 					{preview ? (
 						<>
-							<img src={preview} className="w-full h-full object-cover" />
-							<button
-								type="button"
-								onClick={() => {
+							<img src={preview} className="w-full h-full object-cover"/>
+
+							<Button
+								onClick={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
+
 									setPreview(null);
 									setFieldValue(name, null);
 								}}
-								className="absolute top-2 right-2 bg-white/90 p-1.5 rounded-full text-red-500 shadow-md"
+								className="absolute top-2 right-2 z-20 bg-white/90 p-1.5 rounded-full text-red-500 shadow-md"
 							>
-								<X className="w-4 h-4" />
-							</button>
+								<X className="w-4 h-4"/>
+							</Button>
 						</>
 					) : (
 						<div className="flex flex-col items-center text-slate-400">
-							<ImagePlus className="w-10 h-10 mb-2" />
+							<ImagePlus className="w-10 h-10 mb-2"/>
 							<span className="text-xs italic">Klikni za odabir slike</span>
 						</div>
 					)}
-				</AspectRatio>
 
-				<input
-					type="file"
-					accept="image/*"
-					className="absolute inset-0 opacity-0 cursor-pointer"
-					onChange={handleChange}
-				/>
+					{!preview && (
+						<input
+							type="file"
+							accept="image/*"
+							className="absolute inset-0 opacity-0 cursor-pointer z-10"
+							onChange={handleChange}
+						/>
+					)}
+				</AspectRatio>
 			</div>
 		</div>
 	);

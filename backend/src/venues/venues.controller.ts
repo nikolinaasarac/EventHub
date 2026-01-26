@@ -35,7 +35,7 @@ export class VenuesController {
     }),
   )
   create(@UploadedFile() file: Express.Multer.File, @Body() body: any) {
-    console.log('Fajl primljen:', file); // Ovo sad ne smije biti undefined
+    console.log('Fajl primljen:', file);
     const imageUrl = file ? `uploads/${file.filename}` : undefined;
     return this.venuesService.create(body, imageUrl);
   }

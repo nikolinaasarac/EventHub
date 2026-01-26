@@ -13,6 +13,7 @@ import {CitiesMultiSelect} from "@/components/CitiesMultiSelect";
 import {QueryParams} from "@/models/query-params.model";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
+import {VenueTypesMultiSelect} from "@/components/VenueTypesMultiSelect";
 
 const VenueMap = dynamic(
 	() => import("@/components/VenueMap"),
@@ -21,17 +22,28 @@ const VenueMap = dynamic(
 
 export default function LocationsPage() {
 	const router = useRouter();
-	const {search, setSearch, page, updatePage, urlSearch, urlPage, filters, setCities} = useQueryFilters();
+	const {
+		search,
+		setSearch,
+		page,
+		updatePage,
+		urlSearch,
+		urlPage,
+		filters,
+		setCities,
+		setVenueTypes
+	} = useQueryFilters();
 
 	const [venues, setVenues] = useState<Venue[]>([]);
 	const [showMap, setShowMap] = useState(false);
 	const [totalPages, setTotalPages] = useState(1);
 
 	useEffect(() => {
-		const fetchVenues = async (cities: string[] = filters.cities) => {
-			const params: QueryParams = {page: urlPage, limit: 2, search: urlSearch};
+		const fetchVenues = async (cities: string[] = filters.cities, venueTypes: string[] = filters.venueTypes) => {
+			const params: QueryParams = {page: urlPage, limit: 10, search: urlSearch};
 			try {
 				if (cities.length > 0) params.cities = cities.join(",");
+				if (venueTypes.length > 0) params.venueTypes = venueTypes.join(",");
 				const response = await VenueService.getVenues(params);
 				setVenues(response.data);
 				setTotalPages(response.meta.totalPages);
@@ -40,7 +52,7 @@ export default function LocationsPage() {
 			}
 		};
 		fetchVenues();
-	}, [urlPage, urlSearch, filters.cities]);
+	}, [urlPage, urlSearch, filters.cities, filters.venueTypes]);
 
 	return (
 		<div className="min-h-screen bg-slate-50 py-12">
@@ -49,9 +61,13 @@ export default function LocationsPage() {
 				<div className="mb-3">
 					<div className="flex items-center justify-between">
 						<h1 className="text-3xl font-bold text-slate-900 mb-2">Lokacije</h1>
-						<Button className="bg-indigo-600 hover:bg-indigo-700" onClick={() => router.push('/locations/add-location')}>Dodaj lokaciju</Button>
+						<Button className="bg-indigo-600 hover:bg-indigo-700"
+								onClick={() => router.push('/locations/add-location')}>Dodaj lokaciju</Button>
 					</div>
+					<div className="flex flex-row gap-4">
 					<CitiesMultiSelect handleSelectChange={setCities} selectedCities={filters.cities}/>
+					<VenueTypesMultiSelect handleSelectChange={setVenueTypes} selectedVenueTypes={filters.venueTypes}/>
+					</div>
 				</div>
 
 				<div className="flex flex-col md:flex-row gap-4 mb-8">
