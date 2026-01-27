@@ -3,7 +3,7 @@ export const eventSchema = yup.object({
 	title: yup.string().required("Naslov je obavezan"),
 	description: yup.string().required("Opis je obavezan"),
 	startDate: yup.string().required("Datum i vrijeme početka su obavezni"),
-	endDate: yup.string().nullable(),
+	endDate: yup.string().nullable().optional(),
 	imageUrl: yup
 		.string()
 		.optional(),

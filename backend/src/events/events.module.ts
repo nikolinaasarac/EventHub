@@ -14,5 +14,6 @@ import { VenuesModule } from '../venues/venues.module';
   ],
   controllers: [EventsController],
   providers: [EventsService],
+  exports: [EventsService],
 })
 export class EventsModule {}
