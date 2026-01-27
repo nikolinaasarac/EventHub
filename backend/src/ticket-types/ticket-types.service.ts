@@ -28,6 +28,7 @@ export class TicketTypesService {
       event,
       soldQuantity: 0,
     });
+    console.log(ticketType);
 
     return await this.ticketTypesRepository.save(ticketType);
   }

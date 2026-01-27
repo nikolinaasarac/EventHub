@@ -62,7 +62,14 @@ export function EventForm() {
 						endDate: null,
 						image: null,
 						venueId: undefined,
-						metadata: {} as Record<string, any>
+						metadata: {} as Record<string, any>,
+						ticketTypes: [
+							{
+								name: '',
+								price: '',
+								totalQuantity: '',
+							},
+						],
 					}}
 					validationSchema={eventSchema}
 					onSubmit={async (values) => {

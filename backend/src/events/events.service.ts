@@ -89,6 +89,7 @@ export class EventsService {
         'eventSubcategory',
         'venue',
         'eventSubcategory.eventCategory',
+        'ticketTypes',
       ],
     });
   }
