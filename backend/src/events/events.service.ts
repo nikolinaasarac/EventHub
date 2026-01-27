@@ -20,7 +20,8 @@ export class EventsService {
     private readonly venuesService: VenuesService,
   ) {}
 
-  async create(createEventDto: CreateEventDto) {
+  async create(createEventDto: CreateEventDto, imageUrl?: string) {
+    console.log(createEventDto);
     const eventSubcategory = await this.eventSubcategoriesService.findOne(
       createEventDto.eventSubcategoryId,
     );
@@ -52,6 +53,7 @@ export class EventsService {
     const event = this.eventsRepository.create({
       ...createEventDto,
       venue,
+      imageUrl,
       eventSubcategory,
     });
     return await this.eventsRepository.save(event);
@@ -87,6 +89,7 @@ export class EventsService {
         'eventSubcategory',
         'venue',
         'eventSubcategory.eventCategory',
+        'ticketTypes',
       ],
     });
   }

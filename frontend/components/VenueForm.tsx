@@ -5,7 +5,7 @@ import {Form, Formik, ErrorMessage} from "formik";
 import {venueSchema} from '@/schemas/venue.schema';
 import {Label} from "@/components/ui/label";
 import {Card} from "@/components/ui/card";
-import {ImagePlus, MapPin, Globe, Instagram, Facebook, Phone, Mail, X} from 'lucide-react';
+import {MapPin, Globe, Instagram, Facebook, Phone, Mail, X} from 'lucide-react';
 import dynamic from 'next/dynamic';
 import {InputField} from "@/components/InputField";
 import {SelectBox} from "@/components/SelectBox";
@@ -14,10 +14,10 @@ import {VenueType} from "@/models/venue-type.model";
 import CitiesService from "@/services/cities.service";
 import VenueTypesService from "@/services/venue-types.service";
 import VenueService from "@/services/venue.service";
-import {CreateVenueDto} from "@/models/dto/create-venue.dto";
 import {LoadingButton} from "@/components/LoadingButton";
 import {Field} from "@/components/ui/field";
-import {AspectRatio} from "@/components/ui/aspect-ratio";
+import {ImageUpload} from "@/components/ImageUpload";
+import {toast} from "sonner";
 
 const MapPicker = dynamic(() => import("./MapPicker").then(mod => mod.MapPicker), {ssr: false});
 
@@ -69,6 +69,13 @@ export function VenueForm({}: React.ComponentProps<"form">) {
 							venueTypeId: undefined,
 							latitude: undefined,
 							longitude: undefined,
+							capacity: undefined,
+
+							phone: '',
+							email: '',
+							websiteUrl: '',
+							instagram: '',
+							facebook: '',
 							image: null,
 						}}
 						validationSchema={venueSchema}
@@ -86,14 +93,30 @@ export function VenueForm({}: React.ComponentProps<"form">) {
 								if (values.image) {
 									formData.append('image', values.image);
 								}
+								if (values.capacity)
+									formData.append('capacity', String(values.capacity));
 
-								console.log(values.image); // Trebalo bi da vidiš File objekat
-								console.log(formData.get('image')); // Trebalo bi da vidiš File objekat
+								if (values.phone)
+									formData.append('phone', values.phone);
+
+								if (values.email)
+									formData.append('email', values.email);
+
+								if (values.websiteUrl)
+									formData.append('websiteUrl', values.websiteUrl);
+
+								if (values.instagram)
+									formData.append('instagram', values.instagram);
+
+								if (values.facebook)
+									formData.append('facebook', values.facebook);
 
 								await VenueService.createVenue(formData);
+								toast.success("Lokacija uspješno kreirana!")
 								console.log('Venue uploaded:', formData);
 							} catch (err) {
 								console.error(err);
+								toast.error("Greška prilikom kreiranja lokacije!")
 							}
 						}}
 					>
@@ -102,46 +125,11 @@ export function VenueForm({}: React.ComponentProps<"form">) {
 								<div className="p-8 rounded-[2rem] border shadow-xl shadow-slate-200/50">
 									<div className="flex flex-col gap-10">
 										<div className="space-y-4">
-											<Label
-												className="text-xs font-bold uppercase tracking-wider text-slate-400">Slika
-												objekta</Label>
-											<div className="relative group">
-												<AspectRatio ratio={2}
-															 className="flex items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 overflow-hidden">
-													{imagePreview ? (
-														<>
-															<img
-																src={imagePreview}
-																alt="Preview"
-																className="w-full h-full object-cover"
-															/>
-															<button
-																type="button"
-																onClick={() => setImagePreview(null)}
-																className="absolute top-2 right-2 bg-white/90 p-1.5 rounded-full text-red-500 shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
-															>
-																<X className="w-4 h-4"/>
-															</button>
-														</>
-													) : (
-														<div
-															className="flex flex-col items-center justify-center text-slate-400 p-4">
-															<ImagePlus className="w-10 h-10 mb-2"/>
-															<span
-																className="text-xs italic">Klikni za odabir slike</span>
-														</div>
-													)}
-												</AspectRatio>
-												<input
-													type="file"
-													accept="image/*"
-													className="absolute inset-0 opacity-0 cursor-pointer"
-													onChange={(e) => handleImageChange(e, setFieldValue)}
-												/>
-											</div>
-											<div className="text-[10px] text-red-500 italic"><ErrorMessage
-												name="imageUrl"/>
-											</div>
+											<ImageUpload
+												name="image"
+												label="Slika objekta"
+												aspectRatio={2}
+											/>
 										</div>
 										<InputField
 											name="name"

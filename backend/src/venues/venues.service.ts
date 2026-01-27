@@ -53,11 +53,31 @@ export class VenuesService {
       order: { 'venue.name': 'ASC' },
       filters: {
         'city.id': paramsDto.cities,
+        'venue.venueType': paramsDto.venueTypes,
       },
     });
 
     const [data, total] = await qb.getManyAndCount();
     return paginate(data, total, paramsDto.page, paramsDto.limit);
+  }
+
+  async findAllVenues() {
+    return this.venuesRepository.find({
+      select: {
+        id: true,
+        name: true,
+        city: {
+          id: true,
+          name: true,
+        },
+      },
+      relations: {
+        city: true,
+      },
+      order: {
+        name: 'ASC',
+      },
+    });
   }
 
   async findOne(id: number) {

@@ -18,6 +18,7 @@ interface Props {
 	value: number | null;
 	setFieldValue: (field: string, value: number | null) => void;
 	placeholder: string;
+	disabled?: boolean;
 }
 
 export function SelectBox({
@@ -26,6 +27,7 @@ export function SelectBox({
 							  value,
 							  setFieldValue,
 							  placeholder,
+							  disabled = false
 						  }: Props) {
 	const selectedOption = options.find(o => o.value === value);
 
@@ -37,12 +39,14 @@ export function SelectBox({
 				if (!val) return;
 				setFieldValue(name, val);
 			}}
+			disabled={disabled}
 		>
 			<ComboboxInput
 				placeholder={placeholder}
 				value={selectedOption ? String(selectedOption.label) : ""}
 				onChange={() => {
 				}}
+				className={disabled ? "cursor-not-allowed opacity-50" : ""}
 			/>
 			<ComboboxContent>
 				<ComboboxEmpty>Nema podataka</ComboboxEmpty>

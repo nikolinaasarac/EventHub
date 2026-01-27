@@ -10,6 +10,8 @@ import {SearchInput} from "@/components/SearchInput";
 import {EventCategoriesMultiSelect} from "@/components/EventCategoriesMultiSelect";
 import {QueryParams} from "@/models/query-params.model";
 import {CitiesMultiSelect} from "@/components/CitiesMultiSelect";
+import {Button} from "@/components/ui/button";
+import {useRouter} from "next/navigation";
 
 export default function EventsPage() {
 	const {
@@ -25,6 +27,7 @@ export default function EventsPage() {
 	} = useQueryFilters();
 	const [events, setEvents] = useState<Event[]>([]);
 	const [totalPages, setTotalPages] = useState(1);
+	const router = useRouter();
 
 
 	useEffect(() => {
@@ -49,16 +52,21 @@ export default function EventsPage() {
 		fetchEvents();
 	}, [urlPage, urlSearch, filters.categories, filters.cities])
 	return (
-		<section className="py-16 bg-white">
+		<section className="min-h-screen bg-white py-12">
 			<div className="container mx-auto px-4">
-				<div className="flex justify-between items-end mb-8">
-					<div className="relative flex-1 min-w-[200px]">
-						<SearchInput value={search} onChange={setSearch} placeholder="Šta tražite?"/>
+				<div className="flex flex-col mb-8">
+					<div className="flex items-center justify-between">
+						<h1 className="text-3xl font-bold text-slate-900 mb-2">Događaji</h1>
+						<Button className="bg-indigo-600 hover:bg-indigo-700"
+								onClick={() => router.push('/events/add-event')}>Dodaj događaj</Button>
 					</div>
-					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-2">
 						<EventCategoriesMultiSelect handleSelectChange={setCategories}
 													selectedCategories={filters.categories}/>
 						<CitiesMultiSelect handleSelectChange={setCities} selectedCities={filters.cities}/>
+					</div>
+					<div className="flex-1 min-w-[200px] mb-4">
+						<SearchInput value={search} onChange={setSearch} placeholder="Šta tražite?"/>
 					</div>
 				</div>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">

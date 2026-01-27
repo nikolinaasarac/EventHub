@@ -13,6 +13,7 @@ import Joi from 'joi';
 import { EventCategoriesModule } from './event-categories/event-categories.module';
 import { EventSubcategoriesModule } from './event-subcategories/event-subcategories.module';
 import { AmenitiesModule } from './amenities/amenities.module';
+import { TicketTypesModule } from './ticket-types/ticket-types.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AmenitiesModule } from './amenities/amenities.module';
     EventCategoriesModule,
     EventSubcategoriesModule,
     AmenitiesModule,
+    TicketTypesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

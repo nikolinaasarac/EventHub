@@ -11,7 +11,7 @@ import { EventSubcategoriesService } from './event-subcategories.service';
 import { CreateEventSubcategoryDto } from './dto/create-event-subcategory.dto';
 import { UpdateEventSubcategoryDto } from './dto/update-event-subcategory.dto';
 
-@Controller('subcategories')
+@Controller('event-subcategories')
 export class EventSubcategoriesController {
   constructor(
     private readonly subcategoriesService: EventSubcategoriesService,

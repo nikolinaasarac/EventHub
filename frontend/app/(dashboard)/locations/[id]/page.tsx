@@ -138,17 +138,17 @@ export default function VenueDetailsPage() {
 							className="p-6 absolute top-0 left-0 z-10 bg-white/80 backdrop-blur-md w-full border-b">
 							<DialogTitle className="font-black text-slate-900">{venue.name}</DialogTitle>
 						</DialogHeader>
-						<div className="mt-16">
-							<VenueMap venue={venue} height="500px"/>
+						<div className="mt-5">
+							<VenueMap venue={venue} height="500px" onClose={() => setShowMapModal(false)}/>
 						</div>
 					</DialogContent>
 				</Dialog>
 			</main>
 
-			<footer className="bg-slate-900 text-white rounded-t-[3.5rem] mt-12">
+			<footer className="bg-slate-900 text-white rounded-t-[1.5rem]">
 				<div className="container mx-auto px-6 md:px-12 py-20">
 					<div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-						<div className="space-y-8 lg:col-span-2">
+						<div className="space-y-4 lg:col-span-2">
 							<div>
 								<h3 className="text-indigo-400 font-bold uppercase tracking-widest text-xs mb-8">Kontakt
 									centar</h3>

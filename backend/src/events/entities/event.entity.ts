@@ -3,12 +3,14 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Venue } from '../../venues/entities/venue.entity';
 import { EventStatus } from '../../../shared/enums/event-status.enum';
 import { EventSubcategory } from '../../event-subcategories/entities/event-subcategory.entity';
+import { TicketType } from '../../ticket-types/entities/ticket-type.entity';
 
 @Entity('events')
 export class Event {
@@ -49,10 +51,12 @@ export class Event {
   @Column({ type: 'jsonb', nullable: true })
   metadata: Record<string, unknown>;
 
+  @OneToMany(() => TicketType, (ticketType) => ticketType.event)
+  ticketTypes: TicketType[];
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
 }
-

@@ -9,24 +9,28 @@ export function useQueryFilters(debounceDelay = 500) {
 	const filters = useMemo(() => {
 		const categories = searchParams.get("categories")?.split(",") || [];
 		const cities = searchParams.get("cities")?.split(",") || [];
-		return {categories, cities};
+		const venueTypes = searchParams.get("venueTypes")?.split(",") || [];
+		return {categories, cities, venueTypes};
 	}, [searchParams]);
 
 	const [search, setSearch] = useState(searchParams.get("search") || "");
 	const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
 
-	const updateFilters = (newFilters: Partial<{ categories: string[]; cities: string[] }>) => {
+	const updateFilters = (newFilters: Partial<{ categories: string[]; cities: string[]; venueTypes: string[] }>) => {
 		const currentCategories = filters.categories;
 		const currentCities = filters.cities;
+		const currentVenueTypes = filters.venueTypes;
 
 		const normalizedFilters = {
 			categories: newFilters.categories !== undefined ? [...newFilters.categories].sort() : currentCategories,
 			cities: newFilters.cities !== undefined ? [...newFilters.cities].sort() : currentCities,
+			venueTypes: newFilters.venueTypes !== undefined ? [...newFilters.venueTypes].sort() : currentVenueTypes,
 		};
 
 		const query = createQueryString({
 			categories: normalizedFilters.categories.length ? normalizedFilters.categories.join(",") : null,
 			cities: normalizedFilters.cities.length ? normalizedFilters.cities.join(",") : null,
+			venueTypes: normalizedFilters.venueTypes.length ? normalizedFilters.venueTypes.join(",") : null,
 			page: 1,
 		});
 
@@ -36,6 +40,8 @@ export function useQueryFilters(debounceDelay = 500) {
 	const setCategories = (categories: string[]) =>
 		updateFilters({categories});
 	const setCities = (cities: string[]) => updateFilters({cities});
+	const setVenueTypes = (venueTypes: string[]) =>
+		updateFilters({venueTypes});
 
 	const createQueryString = useCallback(
 		(params: Record<string, string | number | null>) => {
@@ -78,6 +84,7 @@ export function useQueryFilters(debounceDelay = 500) {
 		filters,
 		setCategories,
 		setCities,
+		setVenueTypes,
 		page,
 		updatePage,
 		urlSearch: searchParams.get("search") || "",

@@ -10,7 +10,7 @@ async function bootstrap() {
   app.enableCors();
 
   app.useStaticAssets(join(process.cwd(), 'public'), {
-    prefix: '/public', // Bez kose crte na kraju
+    prefix: '/public',
   });
 
   app.useGlobalPipes(

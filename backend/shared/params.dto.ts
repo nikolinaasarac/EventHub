@@ -14,4 +14,8 @@ export class ParamsDto extends PaginationDto {
   @IsOptional()
   @CommaSeparatedStringArray()
   cities?: string[];
+
+  @IsOptional()
+  @CommaSeparatedStringArray()
+  venueTypes?: string[];
 }
