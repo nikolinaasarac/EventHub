@@ -16,7 +16,6 @@ import {useParams} from "next/navigation";
 import {Event} from '@/models/event.model'
 import EventService from "@/services/event.service";
 import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
-import {EventMetadata} from "@/models/event-metadata.model";
 import {EventMetadataComponent} from "@/components/EventMetadataComponent";
 
 export default function EventDetailsPage() {
@@ -39,6 +38,8 @@ export default function EventDetailsPage() {
 	}, [id])
 
 	if (!event) return null;
+
+	console.log(event.ticketTypes);
 
 	return (
 		<div className="min-h-screen bg-white">
@@ -99,7 +100,6 @@ export default function EventDetailsPage() {
 								{event.description}
 							</p>
 						</div>
-
 						<div className="space-y-4">
 							<h2 className="text-2xl font-bold flex items-center gap-2">
 								<CheckCircle2 className="w-5 h-5 text-indigo-600"/> Detalji
@@ -111,19 +111,29 @@ export default function EventDetailsPage() {
 					<div className="lg:col-span-1">
 						<div
 							className="sticky top-24 p-8 rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/50 space-y-6">
-							<div>
-								<span className="text-slate-400 text-sm font-medium uppercase">Cijena ulaznice</span>
-								<div className="text-4xl font-black text-slate-900 mt-1">
-									100 KM npr
-								</div>
-							</div>
+							{event.ticketTypes.map(ticketType => {
+								return (
+									<div key={ticketType.id}>
+										<span
+											className="text-slate-400 text-sm font-medium uppercase">Cijena ulaznice</span>
+										<div className="text-4xl font-black text-slate-900 mt-1">
+											{ticketType.name}
+										</div>
+										<div className="text-4xl font-black text-slate-900 mt-1">
+											{ticketType.price} KM
+										</div>
 
-							<div className="space-y-3">
-								<Button
-									className="w-full h-14 bg-indigo-600 hover:bg-indigo-700 text-lg font-bold rounded-2xl shadow-lg shadow-indigo-100">
-									Kupi kartu
-								</Button>
-							</div>
+										<div className="space-y-3 mt-4">
+											<Button
+												className="w-full h-14 bg-indigo-600 hover:bg-indigo-700 text-lg font-bold rounded-2xl shadow-lg shadow-indigo-100"
+											>
+												Kupi kartu
+											</Button>
+										</div>
+									</div>
+								)
+							})}
+
 						</div>
 					</div>
 

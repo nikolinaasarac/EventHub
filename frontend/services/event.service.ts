@@ -14,7 +14,7 @@ export default class EventService {
 		return BaseService.fetch<Event>(`${this.ENDPOINT}/${id}`);
 	}
 
-	static async createEvent(formData: FormData) {
+	static async createEvent(formData: FormData): Promise<Event> {
 		return BaseService.create(`${this.ENDPOINT}`, formData);
 	}
 }
