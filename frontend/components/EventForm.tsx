@@ -1,5 +1,5 @@
 "use client"
-import {ErrorMessage, Form, Formik} from "formik";
+import {ErrorMessage, Form, Formik, FieldArray} from "formik";
 import {Card} from "@/components/ui/card";
 import {Label} from "@/components/ui/label";
 import {ImageUpload} from "@/components/ImageUpload";
@@ -19,6 +19,8 @@ import VenueService from "@/services/venue.service";
 import {eventSchema} from "@/schemas/event.schema";
 import {METADATA_FIELDS_BY_SUBCATEGORY} from "@/shared/constants/metadata-config";
 import EventService from "@/services/event.service";
+import {Plus, Trash} from "lucide-react";
+import TicketTypeService from "@/services/ticket-type.service";
 
 export function EventForm() {
 	const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);
@@ -63,13 +65,8 @@ export function EventForm() {
 						image: null,
 						venueId: undefined,
 						metadata: {} as Record<string, any>,
-						ticketTypes: [
-							{
-								name: '',
-								price: '',
-								totalQuantity: '',
-							},
-						],
+						isFree: false,
+						ticketTypes: [{name: '', price: '', totalQuantity: ''}],
 					}}
 					validationSchema={eventSchema}
 					onSubmit={async (values) => {
@@ -88,7 +85,21 @@ export function EventForm() {
 							Object.entries(values.metadata).forEach(([key, val]) => {
 								formData.append(`metadata[${key}]`, String(val));
 							});
-							await EventService.createEvent(formData);
+							const createdEvent = await EventService.createEvent(formData);
+							const eventId = createdEvent.id;
+
+							if (!values.isFree && values.ticketTypes.length > 0) {
+								await Promise.all(
+									values.ticketTypes.map((ticket) =>
+										TicketTypeService.createTicketType({
+											name: ticket.name,
+											price: Number(ticket.price),
+											totalQuantity: Number(ticket.totalQuantity),
+											eventId,
+										})
+									)
+								);
+							}
 							toast.success("Događaj uspješno kreiran!");
 						} catch (err) {
 							console.error(err);
@@ -214,6 +225,81 @@ export function EventForm() {
 										</div>
 									</div>
 								</Card>
+								<div className="flex items-center gap-3">
+									<input
+										type="checkbox"
+										id="isFree"
+										checked={values.isFree}
+										onChange={(e) => {
+											const checked = e.target.checked;
+											setFieldValue('isFree', checked);
+
+											if (checked) {
+												setFieldValue('ticketTypes', []);
+											}
+										}}
+										className="w-5 h-5"
+									/>
+									<Label htmlFor="isFree" className="font-semibold">
+										Događaj je besplatan
+									</Label>
+								</div>
+								{!values.isFree && (
+									<Card className="p-8 rounded-[2rem] border-none shadow-lg space-y-6">
+										<h2 className="text-xl font-bold flex items-center gap-2">
+											🎟️ Karte
+										</h2>
+
+										<FieldArray name="ticketTypes">
+											{({push, remove}) => (
+												<div className="space-y-6">
+													{values.ticketTypes.map((_, index) => (
+														<div
+															key={index}
+															className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end p-4 rounded-xl border border-slate-200"
+														>
+															<InputField
+																name={`ticketTypes.${index}.name`}
+																label="Naziv karte"
+															/>
+
+															<InputField
+																name={`ticketTypes.${index}.price`}
+																label="Cijena"
+																type="number"
+															/>
+
+															<InputField
+																name={`ticketTypes.${index}.totalQuantity`}
+																label="Količina"
+																type="number"
+															/>
+
+															<button
+																type="button"
+																onClick={() => remove(index)}
+																className="h-12 flex items-center justify-center rounded-xl border border-red-200 text-red-500 hover:bg-red-50"
+															>
+																<Trash className="w-4 h-4"/>
+															</button>
+														</div>
+													))}
+
+													<button
+														type="button"
+														onClick={() =>
+															push({name: '', price: '', totalQuantity: ''})
+														}
+														className="flex items-center gap-2 text-indigo-600 font-bold hover:underline"
+													>
+														<Plus className="w-4 h-4"/>
+														Dodaj novu kartu
+													</button>
+												</div>
+											)}
+										</FieldArray>
+									</Card>
+								)}
 
 								<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 									<Card className="lg:col-span-2 p-8 rounded-[2rem] border-none shadow-lg space-y-4">
