@@ -15,6 +15,7 @@ import { UpdateVenueDto } from './dto/update-venue.dto';
 import { ParamsDto } from '../../shared/params.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { CreateVenueDto } from './dto/create-venue.dto';
 
 @Controller('venues')
 export class VenuesController {
@@ -34,7 +35,10 @@ export class VenuesController {
       }),
     }),
   )
-  create(@UploadedFile() file: Express.Multer.File, @Body() body: any) {
+  create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: CreateVenueDto,
+  ) {
     console.log('Fajl primljen:', file);
     const imageUrl = file ? `uploads/${file.filename}` : undefined;
     return this.venuesService.create(body, imageUrl);
@@ -56,8 +60,25 @@ export class VenuesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVenueDto: UpdateVenueDto) {
-    return this.venuesService.update(+id, updateVenueDto);
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './public/uploads',
+        filename: (req, file, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = file.originalname.split('.').pop();
+          cb(null, `image-${uniqueSuffix}.${ext}`);
+        },
+      }),
+    }),
+  )
+  update(
+    @Param('id') id: string,
+    @Body() updateVenueDto: UpdateVenueDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.venuesService.update(+id, updateVenueDto, file);
   }
 
   @Delete(':id')

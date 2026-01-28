@@ -22,4 +22,12 @@ export default class VenueService {
 	static async createVenue(formData: FormData) {
 		return BaseService.create(`${this.ENDPOINT}`, formData);
 	}
+
+	static async updateVenue(id: number, formData: FormData) {
+		return BaseService.update(`${this.ENDPOINT}/${id}`, formData);
+	}
+
+	static async deleteVenue(id: string) {
+		return BaseService.delete(`${this.ENDPOINT}/${id}`);
+	}
 }

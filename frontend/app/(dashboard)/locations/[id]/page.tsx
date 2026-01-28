@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import {
 	MapPin, Users, Phone, Globe, Mail, ChevronLeft, Share2, Facebook,
-	Instagram, ExternalLink, Building2
+	Instagram, ExternalLink, Building2, Trash
 } from 'lucide-react';
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
@@ -13,6 +13,8 @@ import {useParams, useRouter} from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {ConfirmDialog} from "@/components/ConfirmDialog";
+import {toast} from "sonner";
 
 const VenueMap = dynamic(
 	() => import("@/components/VenueMap"),
@@ -21,7 +23,9 @@ const VenueMap = dynamic(
 export default function VenueDetailsPage() {
 	const [venue, setVenue] = useState<Venue | null>(null);
 	const [showMapModal, setShowMapModal] = useState(false);
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const {id} = useParams();
+	const venueId = Array.isArray(id) ? id[0] : id;
 	const router = useRouter();
 
 	useEffect(() => {
@@ -37,6 +41,19 @@ export default function VenueDetailsPage() {
 		fetchVenue();
 	}, [id]);
 
+
+	const handleDelete = async () => {
+		if (!venueId) return;
+		try {
+			await VenueService.deleteVenue(venueId);
+			toast.success("Lokacija uspješno obrisana!");
+		} catch (e) {
+			console.error(e);
+			toast.error("Greška prilikom brisanja lokacije!");
+		}
+		router.back();
+	}
+
 	if (!venue) return null;
 
 	return (
@@ -46,8 +63,9 @@ export default function VenueDetailsPage() {
 					<Button onClick={() => router.back()} variant="ghost" size="sm" className="gap-2 text-slate-500">
 						<ChevronLeft className="w-4 h-4"/> Nazad
 					</Button>
-					<Button variant="outline" size="icon" className="rounded-full w-9 h-9">
-						<Share2 className="w-4 h-4 text-slate-600"/>
+					<Button variant="outline" size="icon" className="rounded-full w-9 h-9 bg-red-500 hover:bg-red-600"
+							onClick={() => setShowDeleteModal(true)}>
+						<Trash className="w-4 h-4 text-white"/>
 					</Button>
 				</div>
 			</div>
@@ -130,7 +148,8 @@ export default function VenueDetailsPage() {
 				</div>
 
 				<Dialog open={showMapModal} onOpenChange={setShowMapModal}>
-					<DialogContent aria-describedby='map-description' className="max-w-4xl p-0 overflow-hidden border-none rounded-[2rem]">
+					<DialogContent aria-describedby='map-description'
+								   className="max-w-4xl p-0 overflow-hidden border-none rounded-[2rem]">
 						<DialogDescription>
 							Ovaj dijalog služi za prikaz detalja lokacije
 						</DialogDescription>
@@ -224,6 +243,16 @@ export default function VenueDetailsPage() {
 					</div>
 				</div>
 			</footer>
+			<ConfirmDialog
+				open={showDeleteModal}
+				title="Želite li da obrišete ovu lokaciju?"
+				description="Ova akcija se neće moći opozvati. Nećeте moćи obrisati lokaciju koja ima zakazane događaje."
+				confirmText="Obriši"
+				cancelText="Odustani"
+				confirmColor="bg-red-600 hover:bg-red-700"
+				onConfirm={handleDelete}
+				onCancel={() => setShowDeleteModal(false)}
+			/>
 		</div>
 	);
 }
