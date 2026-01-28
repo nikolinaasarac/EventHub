@@ -10,6 +10,8 @@ import { VenuesService } from '../venues/venues.service';
 import { applyQueryOptions } from '../../shared/query-builder.helper';
 import { ParamsDto } from '../../shared/params.dto';
 import { paginate } from '../../shared/pagination/pagination-helper';
+import { join } from 'path';
+import { unlink } from 'node:fs/promises';
 
 @Injectable()
 export class EventsService {
@@ -105,6 +107,14 @@ export class EventsService {
   async remove(id: number) {
     const event = await this.findOne(id);
     if (!event) throw new NotFoundException(`Event with id ${id} not found`);
+    if (event.imageUrl) {
+      const imagePath = join(process.cwd(), 'public', event.imageUrl);
+      try {
+        await unlink(imagePath);
+      } catch (err) {
+        console.warn('Slika nije obrisana:', err);
+      }
+    }
     return await this.eventsRepository.remove(event);
   }
 }
