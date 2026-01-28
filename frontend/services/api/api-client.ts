@@ -21,6 +21,12 @@ export default class ApiClient {
 		});
 	}
 
+	static async remove(endpoint: string, queryParams: any = {}): Promise<AxiosResponse> {
+		return axiosInstance.delete(endpoint, {
+			params: queryParams,
+		});
+	}
+
 	static async post(endpoint: string, body: any, config = {}): Promise<AxiosResponse> {
 		return axiosInstance.post(endpoint, body, config);
 	}

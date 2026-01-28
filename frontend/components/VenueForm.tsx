@@ -18,26 +18,19 @@ import {LoadingButton} from "@/components/LoadingButton";
 import {Field} from "@/components/ui/field";
 import {ImageUpload} from "@/components/ImageUpload";
 import {toast} from "sonner";
+import {Venue} from "@/models/venue.model";
 
 const MapPicker = dynamic(() => import("./MapPicker").then(mod => mod.MapPicker), {ssr: false});
 
-export function VenueForm({}: React.ComponentProps<"form">) {
-	const [imagePreview, setImagePreview] = useState<string | null>(null);
+interface Props extends React.ComponentProps<"form"> {
+	venue?: Venue;
+}
+
+export function VenueForm({venue}: Props) {
 	const [cities, setCities] = useState<City[]>([]);
 	const [venueTypes, setVenueTypes] = useState<VenueType[]>([])
 
-	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: any) => {
-		const file = e.target.files?.[0];
-		if (file) {
-			const reader = new FileReader();
-			reader.onloadend = () => {
-				setImagePreview(reader.result as string);
-			};
-			reader.readAsDataURL(file);
-
-			setFieldValue("image", file);
-		}
-	};
+	const isEdit = !!venue;
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -62,20 +55,20 @@ export function VenueForm({}: React.ComponentProps<"form">) {
 					</div>
 					<Formik
 						initialValues={{
-							name: '',
-							description: '',
-							address: '',
-							cityId: undefined,
-							venueTypeId: undefined,
-							latitude: undefined,
-							longitude: undefined,
-							capacity: undefined,
+							name: venue?.name ?? '',
+							description: venue?.description ?? '',
+							address: venue?.address ?? '',
+							cityId: venue?.city?.id ?? undefined,
+							venueTypeId: venue?.venueType?.id ?? undefined,
+							latitude: venue?.latitude ? Number(venue.latitude) : null,
+							longitude: venue?.longitude ? Number(venue.longitude) : null,
+							capacity: venue?.capacity ?? undefined,
 
-							phone: '',
-							email: '',
-							websiteUrl: '',
-							instagram: '',
-							facebook: '',
+							phone: venue?.phone ?? '',
+							email: venue?.email ?? '',
+							websiteUrl: venue?.websiteUrl ?? '',
+							instagram: venue?.instagram ?? '',
+							facebook: venue?.facebook ?? '',
 							image: null,
 						}}
 						validationSchema={venueSchema}
@@ -111,8 +104,13 @@ export function VenueForm({}: React.ComponentProps<"form">) {
 								if (values.facebook)
 									formData.append('facebook', values.facebook);
 
-								await VenueService.createVenue(formData);
-								toast.success("Lokacija uspješno kreirana!")
+								if (isEdit && venue) {
+									await VenueService.updateVenue(venue.id, formData);
+									toast.success("Lokacija uspješno ažurirana!");
+								} else {
+									await VenueService.createVenue(formData);
+									toast.success("Lokacija uspješno kreirana!");
+								}
 								console.log('Venue uploaded:', formData);
 							} catch (err) {
 								console.error(err);
@@ -129,6 +127,11 @@ export function VenueForm({}: React.ComponentProps<"form">) {
 												name="image"
 												label="Slika objekta"
 												aspectRatio={2}
+												existingImageUrl={
+													venue?.imageUrl
+														? `${process.env.NEXT_PUBLIC_API_BASE_URL}public/${venue.imageUrl}`
+														: undefined
+												}
 											/>
 										</div>
 										<InputField
@@ -293,7 +296,7 @@ export function VenueForm({}: React.ComponentProps<"form">) {
 										type="submit"
 										loading={isSubmitting}
 									>
-										Sačuvaj lokaciju
+										{isEdit ? "Sačuvaj lokaciju" : "Dodaj lokaciju"}
 									</LoadingButton>
 								</Field>
 							</Form>
