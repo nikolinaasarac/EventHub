@@ -17,4 +17,8 @@ export default class EventService {
 	static async createEvent(formData: FormData): Promise<Event> {
 		return BaseService.create(`${this.ENDPOINT}`, formData);
 	}
+
+	static async deleteEvent(id: string) {
+		return BaseService.delete(`${this.ENDPOINT}/${id}`);
+	}
 }

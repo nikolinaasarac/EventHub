@@ -7,20 +7,24 @@ import {
 	Clock,
 	Heart,
 	Info,
-	CheckCircle2
+	CheckCircle2, ChevronLeft, Trash
 } from 'lucide-react';
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
-import BackButton from "@/components/BackButton";
-import {useParams} from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
 import {Event} from '@/models/event.model'
 import EventService from "@/services/event.service";
 import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
 import {EventMetadataComponent} from "@/components/EventMetadataComponent";
+import {ConfirmDialog} from "@/components/ConfirmDialog";
+import {toast} from "sonner";
 
 export default function EventDetailsPage() {
 	const {id} = useParams();
 	const [event, setEvent] = useState<Event | null>(null);
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const router = useRouter();
+	const eventId = Array.isArray(id) ? id[0] : id;
 
 
 	useEffect(() => {
@@ -37,14 +41,35 @@ export default function EventDetailsPage() {
 		fetchEvent();
 	}, [id])
 
+	const handleDelete = async () => {
+		if (!eventId) return;
+		try {
+			await EventService.deleteEvent(eventId);
+			toast.success("Događaj uspješno obrisan!")
+		}catch (e) {
+			console.error(e);
+			toast.error("Greška prilikom brisanja događaja!")
+		}finally{
+			router.back();
+		}
+	}
+
 	if (!event) return null;
 
 	console.log(event.ticketTypes);
 
 	return (
 		<div className="min-h-screen bg-white">
-			<div className="container mx-auto px-4 py-6">
-				<BackButton href='/events' text='Nazad'/>
+			<div className="bg-white top-0 z-40">
+				<div className="container mx-auto px-4 py-3 flex justify-between items-center">
+					<Button onClick={() => router.back()} variant="ghost" size="sm" className="gap-2 text-slate-500">
+						<ChevronLeft className="w-4 h-4"/> Nazad
+					</Button>
+					<Button variant="outline" size="icon" className="rounded-full w-9 h-9 bg-red-500 hover:bg-red-600"
+							onClick={() => setShowDeleteModal(true)}>
+						<Trash className="w-4 h-4 text-white"/>
+					</Button>
+				</div>
 			</div>
 
 			<main className="container mx-auto px-4 pb-20">
@@ -139,6 +164,16 @@ export default function EventDetailsPage() {
 
 				</div>
 			</main>
+			<ConfirmDialog
+				open={showDeleteModal}
+				title="Želite li da obrišete ovaj događaj?"
+				description="Ova akcija se neće moći opozvati."
+				confirmText="Obriši"
+				cancelText="Odustani"
+				confirmColor="bg-red-600 hover:bg-red-700"
+				onConfirm={handleDelete}
+				onCancel={() => setShowDeleteModal(false)}
+			/>
 		</div>
 	);
 }
