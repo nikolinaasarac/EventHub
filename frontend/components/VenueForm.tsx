@@ -29,8 +29,14 @@ interface Props extends React.ComponentProps<"form"> {
 export function VenueForm({venue}: Props) {
 	const [cities, setCities] = useState<City[]>([]);
 	const [venueTypes, setVenueTypes] = useState<VenueType[]>([])
+	console.log(venue);
 
 	const isEdit = !!venue;
+	const title = isEdit ? "Uredi lokaciju" : "Nova lokacija";
+	const subtitle = isEdit
+		? "Izmijenite podatke o lokaciji."
+		: "Unesite podatke o novoj lokaciji.";
+	const submitText = isEdit ? "Sačuvaj izmjene" : "Dodaj lokaciju";
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -50,8 +56,8 @@ export function VenueForm({venue}: Props) {
 			<div className="min-h-screen bg-slate-50/50 py-12 px-4">
 				<div className="max-w-4xl mx-auto space-y-8">
 					<div>
-						<h1 className="text-3xl font-black text-slate-900">Nova lokacija</h1>
-						<p className="text-slate-500">Unesite podatke o novoj lokaciji.</p>
+						<h1 className="text-3xl font-black text-slate-900">{title}</h1>
+						<p className="text-slate-500">{subtitle}</p>
 					</div>
 					<Formik
 						initialValues={{
@@ -74,6 +80,7 @@ export function VenueForm({venue}: Props) {
 						validationSchema={venueSchema}
 						onSubmit={async (values) => {
 							try {
+								console.log(values);
 								const formData = new FormData();
 								formData.append('name', values.name);
 								formData.append('description', values.description);
@@ -83,27 +90,24 @@ export function VenueForm({venue}: Props) {
 								formData.append('latitude', String(values.latitude));
 								formData.append('longitude', String(values.longitude));
 
+								const optionalFields = ['capacity', 'phone', 'email', 'websiteUrl', 'instagram', 'facebook'];
+
 								if (values.image) {
 									formData.append('image', values.image);
+								} else if (!isEdit) {
+									formData.append('image', '');
 								}
-								if (values.capacity)
-									formData.append('capacity', String(values.capacity));
 
-								if (values.phone)
-									formData.append('phone', values.phone);
 
-								if (values.email)
-									formData.append('email', values.email);
 
-								if (values.websiteUrl)
-									formData.append('websiteUrl', values.websiteUrl);
-
-								if (values.instagram)
-									formData.append('instagram', values.instagram);
-
-								if (values.facebook)
-									formData.append('facebook', values.facebook);
-
+								optionalFields.forEach(field => {
+									const value = values[field as keyof typeof values];
+									if (value === null || value === undefined || value === "") {
+										formData.append(field, "");
+									} else {
+										formData.append(field, String(value));
+									}
+								})
 								if (isEdit && venue) {
 									await VenueService.updateVenue(venue.id, formData);
 									toast.success("Lokacija uspješno ažurirana!");
@@ -296,7 +300,7 @@ export function VenueForm({venue}: Props) {
 										type="submit"
 										loading={isSubmitting}
 									>
-										{isEdit ? "Sačuvaj lokaciju" : "Dodaj lokaciju"}
+										{submitText}
 									</LoadingButton>
 								</Field>
 							</Form>
