@@ -19,6 +19,7 @@ import {Field} from "@/components/ui/field";
 import {ImageUpload} from "@/components/ImageUpload";
 import {toast} from "sonner";
 import {Venue} from "@/models/venue.model";
+import {useRouter} from "next/navigation";
 
 const MapPicker = dynamic(() => import("./MapPicker").then(mod => mod.MapPicker), {ssr: false});
 
@@ -29,7 +30,7 @@ interface Props extends React.ComponentProps<"form"> {
 export function VenueForm({venue}: Props) {
 	const [cities, setCities] = useState<City[]>([]);
 	const [venueTypes, setVenueTypes] = useState<VenueType[]>([])
-	console.log(venue);
+	const router = useRouter();
 
 	const isEdit = !!venue;
 	const title = isEdit ? "Uredi lokaciju" : "Nova lokacija";
@@ -98,8 +99,6 @@ export function VenueForm({venue}: Props) {
 									formData.append('image', '');
 								}
 
-
-
 								optionalFields.forEach(field => {
 									const value = values[field as keyof typeof values];
 									if (value === null || value === undefined || value === "") {
@@ -119,9 +118,11 @@ export function VenueForm({venue}: Props) {
 							} catch (err) {
 								console.error(err);
 								toast.error("Greška prilikom kreiranja lokacije!")
+							} finally {
+								router.back();
 							}
-						}}
-					>
+						}
+						}>
 						{({isSubmitting, errors, setFieldValue, values}) => (
 							<Form className="space-y-8">
 								<div className="p-8 rounded-[2rem] border shadow-xl shadow-slate-200/50">
@@ -304,10 +305,12 @@ export function VenueForm({venue}: Props) {
 									</LoadingButton>
 								</Field>
 							</Form>
-						)}
+						)
+						}
 					</Formik>
 				</div>
 			</div>
 		</>
-	);
+	)
+		;
 }

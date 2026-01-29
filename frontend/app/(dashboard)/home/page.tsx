@@ -57,7 +57,7 @@ export default function Page() {
 				className="relative h-[600px] flex items-center justify-center bg-slate-900 text-white overflow-hidden">
 				<div className="absolute inset-0 opacity-40">
 					<img
-						src="/background.png"
+						src="/bg1.jpg"
 						className="w-full h-full object-cover"
 						alt="Pozadina"
 					/>
