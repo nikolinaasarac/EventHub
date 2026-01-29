@@ -47,7 +47,8 @@ export const venueSchema = yup.object({
 
 	image: yup
 		.mixed()
-		.required('Slika je obavezna')
+		.optional()
+		.nullable()
 		.test('fileSize', 'Slika je prevelika', (value: any) => {
 			if (!value) return true;
 			return value.size <= 2000000;
@@ -55,31 +56,31 @@ export const venueSchema = yup.object({
 
 	phone: yup
 		.string()
-		.transform((value) => (value === '' ? undefined : value))
-		.max(150, 'Telefon može imati najviše 150 karaktera')
-		.optional(),
+		.transform(value => value === '' ? null : value)
+		.nullable()
+		.max(150, 'Telefon može imati najviše 150 karaktera'),
 
 	email: yup
 		.string()
-		.transform((value) => (value === '' ? undefined : value))
-		.email('Email nije validan')
-		.optional(),
+		.transform(value => value === '' ? null : value)
+		.nullable()
+		.email('Email nije validan'),
 
 	websiteUrl: yup
 		.string()
-		.transform((value) => (value === '' ? undefined : value))
-		.url('URL mora početi sa http:// ili https://')
-		.optional(),
+		.transform(value => value === '' ? null : value)
+		.nullable()
+		.url('URL mora početi sa http:// ili https://'),
 
 	instagram: yup
 		.string()
-		.transform((value) => (value === '' ? undefined : value))
-		.max(150, 'Maksimalno 150 karaktera')
-		.optional(),
+		.transform(value => value === '' ? null : value)
+		.nullable()
+		.max(150, 'Maksimalno 150 karaktera'),
 
 	facebook: yup
 		.string()
-		.transform((value) => (value === '' ? undefined : value))
-		.max(150, 'Maksimalno 150 karaktera')
-		.optional(),
+		.transform(value => value === '' ? null : value)
+		.nullable()
+		.max(150, 'Maksimalno 150 karaktera'),
 });

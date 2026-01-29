@@ -14,11 +14,11 @@ import { Button } from "@/components/ui/button"
 export function NavBar() {
 	return (
 		<header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur">
-			<div className="container mx-auto flex h-16 items-center justify-between px-4">
+			<div className="container mx-auto flex h-16 items-center justify-between">
 
 				<div className="flex items-center gap-8">
 					<Link href="/home" className="font-bold text-xl text-indigo-600">
-						Eventify
+						<img src="/logo2-1.png" alt="Logo" className="h-30 w-auto z-20" />
 					</Link>
 
 					<NavigationMenu className="hidden md:flex">

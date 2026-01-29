@@ -9,6 +9,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { EmptyStringToNull } from '../../../shared/decorators/empty-string-to-null.decorator';
 
 export class CreateVenueDto {
   @IsString()
@@ -52,30 +53,34 @@ export class CreateVenueDto {
 
   @IsString()
   @IsOptional()
+  @EmptyStringToNull()
   imageUrl?: string;
 
   @IsString()
   @IsOptional()
+  @EmptyStringToNull()
   @MaxLength(150)
   phone?: string;
 
+  @IsOptional()
   @IsEmail()
-  @IsOptional()
-  @MaxLength(150)
-  email?: string;
+  @EmptyStringToNull()
+  email?: string | null;
 
-  @IsUrl()
   @IsOptional()
-  @MaxLength(150)
-  websiteUrl?: string;
+  @IsUrl()
+  @EmptyStringToNull()
+  websiteUrl?: string | null;
 
   @IsString()
   @IsOptional()
+  @EmptyStringToNull()
   @MaxLength(150)
   instagram?: string;
 
   @IsString()
   @IsOptional()
+  @EmptyStringToNull()
   @MaxLength(150)
   facebook?: string;
 }

@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import {
 	MapPin, Users, Phone, Globe, Mail, ChevronLeft, Share2, Facebook,
-	Instagram, ExternalLink, Building2, Trash
+	Instagram, ExternalLink, Building2, Trash, Edit
 } from 'lucide-react';
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
@@ -63,10 +63,18 @@ export default function VenueDetailsPage() {
 					<Button onClick={() => router.back()} variant="ghost" size="sm" className="gap-2 text-slate-500">
 						<ChevronLeft className="w-4 h-4"/> Nazad
 					</Button>
-					<Button variant="outline" size="icon" className="rounded-full w-9 h-9 bg-red-500 hover:bg-red-600"
-							onClick={() => setShowDeleteModal(true)}>
-						<Trash className="w-4 h-4 text-white"/>
-					</Button>
+					<div>
+						<Button variant="outline" size="icon"
+								className="rounded-full w-9 h-9 bg-red-500 hover:bg-red-600"
+								onClick={() => setShowDeleteModal(true)}>
+							<Trash className="w-4 h-4 text-white"/>
+						</Button>
+						<Button variant="outline" size="icon"
+								className="rounded-full w-9 h-9 bg-green-900 hover:bg-green-700"
+								onClick={() => router.push(`/locations/edit-location/${venueId}`)}>
+							<Edit className="w-4 h-4 text-white"/>
+						</Button>
+					</div>
 				</div>
 			</div>
 

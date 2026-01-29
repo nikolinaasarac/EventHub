@@ -14,7 +14,7 @@ export function LoadingButton({ loading, children, ...props }: LoadingButtonProp
 		<Button
 			disabled={loading || props.disabled}
 			{...props}
-			className={`flex items-center justify-center hover:cursor-pointer hover:bg-black hover:text-white ${props.className || ""}`}
+			className={`bg-indigo-600 hover:bg-indigo-700 flex items-center justify-center hover:cursor-pointer hover:text-white ${props.className || ""}`}
 		>
 			{loading ? (
 				<Spinner className="h-4 w-4 animate-spin" />
