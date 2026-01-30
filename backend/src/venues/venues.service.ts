@@ -32,8 +32,20 @@ export class VenuesService {
     }
 
     const venue = this.venuesRepository.create({
-      ...createVenueDto,
-      imageUrl,
+      name: createVenueDto.name,
+      description: createVenueDto.description,
+      address: createVenueDto.address,
+      latitude: createVenueDto.latitude,
+      longitude: createVenueDto.longitude,
+      capacity: createVenueDto.capacity,
+
+      phone: createVenueDto.phone ?? undefined,
+      email: createVenueDto.email ?? undefined,
+      websiteUrl: createVenueDto.websiteUrl ?? undefined,
+      instagram: createVenueDto.instagram ?? undefined,
+      facebook: createVenueDto.facebook ?? undefined,
+
+      imageUrl: imageUrl ?? undefined,
       city,
       venueType,
     });

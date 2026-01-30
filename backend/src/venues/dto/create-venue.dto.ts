@@ -60,7 +60,7 @@ export class CreateVenueDto {
   @IsOptional()
   @EmptyStringToNull()
   @MaxLength(150)
-  phone?: string;
+  phone?: string | null;
 
   @IsOptional()
   @IsEmail()
