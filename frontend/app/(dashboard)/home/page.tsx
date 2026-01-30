@@ -1,3 +1,5 @@
+"use client"
+
 import {
 	Search,
 	MapPin,
@@ -12,6 +14,8 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {CategoryCard} from "@/components/CategoryCard";
 import {EventCard} from "@/components/EventCard";
+import {useApp} from "@/context/app-context";
+import {CATEGORY_UI_MAP} from "@/shared/constants/event-category-ui";
 
 const categories = [
 	{name: 'Koncerti', icon: <Music className="w-6 h-6"/>, color: 'bg-blue-100 text-blue-600'},
@@ -51,6 +55,10 @@ const featuredEvents = [
 ];
 
 export default function Page() {
+	const {eventCategories} = useApp();
+
+	console.log(eventCategories);
+
 	return (
 		<div className="min-h-screen bg-slate-50">
 			<section
@@ -95,9 +103,17 @@ export default function Page() {
 			<section className="py-16 container mx-auto px-4">
 				<h2 className="text-xl md:text-2xl font-bold mb-8">Kategorije</h2>
 				<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-					{categories.map((cat) => (
-						<CategoryCard key={cat.name} name={cat.name} icon={cat.icon} color={cat.color}/>
-					))}
+					{eventCategories.map((cat) => {
+						const ui = CATEGORY_UI_MAP[cat.name as keyof typeof CATEGORY_UI_MAP] || [];
+						return (
+							<CategoryCard
+								key={cat.id}
+								name={cat.name}
+								icon={ui.icon}
+								color={ui.color}
+							/>
+						)
+					})}
 				</div>
 			</section>
 

@@ -44,19 +44,19 @@ export class Venue {
   imageUrl: string;
 
   @Column({ length: 150, nullable: true })
-  phone: string;
+  phone?: string;
 
   @Column({ length: 150, nullable: true })
-  email: string;
+  email?: string;
 
   @Column({ length: 150, nullable: true })
-  websiteUrl: string;
+  websiteUrl?: string;
 
   @Column({ length: 150, nullable: true })
-  instagram: string;
+  instagram?: string;
 
   @Column({ length: 150, nullable: true })
-  facebook: string;
+  facebook?: string;
 
   @CreateDateColumn()
   createdAt: Date;
