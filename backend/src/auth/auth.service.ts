@@ -65,4 +65,14 @@ export class AuthService {
       refreshToken: refreshToken,
     };
   }
+
+  async logout(refreshToken: string) {
+    const token = await this.refreshTokenRepository.findOne({
+      where: { token: refreshToken },
+    });
+    if (!token) return false;
+    token.revoked = true;
+    await this.refreshTokenRepository.save(token);
+    return true;
+  }
 }

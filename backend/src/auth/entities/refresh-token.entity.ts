@@ -18,6 +18,9 @@ export class RefreshToken {
   @ManyToOne(() => User, (user) => user.refreshTokens, { onDelete: 'CASCADE' })
   user: User;
 
+  @Column({ default: false })
+  revoked: boolean;
+
   @Column()
   expiresAt: Date;
 

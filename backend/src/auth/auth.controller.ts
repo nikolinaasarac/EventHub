@@ -1,7 +1,8 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import type { Response } from 'express';
+import type { AuthRequest } from './auth.types';
 
 @Controller('auth')
 export class AuthController {
@@ -34,5 +35,19 @@ export class AuthController {
       email: userResponse.email,
       roles: userResponse.roles,
     };
+  }
+
+  @Post('logout')
+  async logout(
+    @Req() req: AuthRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken: string = req.cookies['refreshToken'];
+    await this.authService.logout(refreshToken);
+
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+
+    return { message: 'Logged out' };
   }
 }
