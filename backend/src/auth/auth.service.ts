@@ -54,6 +54,15 @@ export class AuthService {
 
     const accessToken = this.createToken(user);
     const refreshToken = await this.generateAndSaveRefreshToken(user);
-    return { user, accessToken: accessToken, refreshToken: refreshToken };
+    const userResponse = {
+      id: user.id,
+      email: user.email,
+      roles: user.roles,
+    };
+    return {
+      userResponse,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    };
   }
 }

@@ -12,10 +12,8 @@ export class AuthController {
     @Body() dto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { user, accessToken, refreshToken } = await this.authService.login(
-      dto.email,
-      dto.password,
-    );
+    const { userResponse, accessToken, refreshToken } =
+      await this.authService.login(dto.email, dto.password);
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
@@ -31,6 +29,10 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return { userId: user.id, email: user.email, roles: user.roles };
+    return {
+      id: userResponse.id,
+      email: userResponse.email,
+      roles: userResponse.roles,
+    };
   }
 }
