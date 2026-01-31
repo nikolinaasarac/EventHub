@@ -14,6 +14,9 @@ import { EventCategoriesModule } from './event-categories/event-categories.modul
 import { EventSubcategoriesModule } from './event-subcategories/event-subcategories.module';
 import { AmenitiesModule } from './amenities/amenities.module';
 import { TicketTypesModule } from './ticket-types/ticket-types.module';
+import { UsersModule } from './users/users.module';
+import { RolesModule } from './roles/roles.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -38,6 +41,9 @@ import { TicketTypesModule } from './ticket-types/ticket-types.module';
     EventSubcategoriesModule,
     AmenitiesModule,
     TicketTypesModule,
+    UsersModule,
+    RolesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
