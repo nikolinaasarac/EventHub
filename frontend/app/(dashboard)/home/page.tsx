@@ -4,10 +4,6 @@ import {
 	Search,
 	MapPin,
 	Calendar as CalendarIcon,
-	Music,
-	Mic2,
-	Trophy,
-	Laptop,
 	ArrowRight
 } from 'lucide-react';
 import {Button} from "@/components/ui/button";
@@ -17,13 +13,13 @@ import {EventCard} from "@/components/EventCard";
 import {useApp} from "@/context/app-context";
 import {CATEGORY_UI_MAP} from "@/shared/constants/event-category-ui";
 import {useAuth} from "@/context/auth-context";
-
-const categories = [
-	{name: 'Koncerti', icon: <Music className="w-6 h-6"/>, color: 'bg-blue-100 text-blue-600'},
-	{name: 'Konferencije', icon: <Laptop className="w-6 h-6"/>, color: 'bg-purple-100 text-purple-600'},
-	{name: 'Nastupi', icon: <Mic2 className="w-6 h-6"/>, color: 'bg-pink-100 text-pink-600'},
-	{name: 'Sport', icon: <Trophy className="w-6 h-6"/>, color: 'bg-orange-100 text-orange-600'},
-];
+import {QueryParams} from "@/models/query-params.model";
+import EventService from "@/services/event.service";
+import {useState} from "react";
+import {useEffect} from "react";
+import {Event} from "@/models/event.model";
+import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
+import {useRouter} from "next/navigation";
 
 const featuredEvents = [
 	{
@@ -58,8 +54,21 @@ const featuredEvents = [
 export default function Page() {
 	const {eventCategories} = useApp();
 	const {user} = useAuth();
-	console.log(eventCategories);
-	console.log(user);
+	const [events, setEvents] = useState<Event[]>([]);
+	const router = useRouter();
+
+	useEffect(() => {
+		const fetchEvents = async () => {
+			const params: QueryParams = {page: 1, limit: 3};
+			try {
+				const response = await EventService.getEvents(params);
+				setEvents(response.data);
+			} catch (e) {
+				console.error(e);
+			}
+		}
+		fetchEvents();
+	}, [])
 
 	return (
 		<div className="min-h-screen bg-slate-50">
@@ -125,20 +134,20 @@ export default function Page() {
 						<div>
 							<h2 className="text-3xl font-bold">Najnoviji događaji</h2>
 						</div>
-						<Button variant="ghost" className="text-indigo-600">Vidi sve <ArrowRight
-							className="ml-2 w-4 h-4"/></Button>
+						<Button variant="ghost" className="text-indigo-600" onClick={() => router.push('/events')}>
+							Vidi sve <ArrowRight className="ml-2 w-4 h-4"/></Button>
 					</div>
 
 					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-						{featuredEvents.map((event) => (
+						{events.map((event) => (
 							<EventCard
 								key={event.id}
 								id={event.id}
 								title={event.title}
-								image={event.image}
-								category={event.category}
-								date={event.date}
-								location={event.location}
+								image={event.imageUrl}
+								category={event.eventSubcategory.eventCategory.name}
+								date={DateTimeHelper.formatDate(event.startDate)}
+								location={event.venue.name}
 							/>
 						))}
 					</div>
