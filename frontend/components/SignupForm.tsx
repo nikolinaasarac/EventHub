@@ -1,15 +1,17 @@
 "use client"
 
-import { cn } from "@/lib/utils"
-import { Form, Formik } from "formik"
-import { signupSchema } from "@/schemas/signup.schema"
-import { LoadingButton } from "@/components/LoadingButton"
-import { InputField } from "@/components/InputField"
+import {cn} from "@/lib/utils"
+import {Form, Formik} from "formik"
+import {signupSchema} from "@/schemas/signup.schema"
+import {LoadingButton} from "@/components/LoadingButton"
+import {InputField} from "@/components/InputField"
+import {useAuth} from "@/context/auth-context";
 
 export function SignupForm({
 							   className,
 							   ...props
 						   }: React.ComponentProps<"form">) {
+	const {signup} = useAuth();
 	return (
 		<Formik
 			initialValues={{
@@ -18,11 +20,10 @@ export function SignupForm({
 				confirmPassword: "",
 			}}
 			validationSchema={signupSchema}
-			onSubmit={(values) => {
-				console.log(values)
-			}}
+			onSubmit={(values) => signup(values.email, values.password)
+			}
 		>
-			{({ isSubmitting }) => (
+			{({isSubmitting}) => (
 				<Form className={cn("flex flex-col gap-6", className)} {...props}>
 					<div className="flex flex-col items-center gap-1 text-center">
 						<h1 className="text-2xl font-bold">Napravite nalog</h1>
