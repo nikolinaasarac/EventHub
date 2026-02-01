@@ -79,7 +79,7 @@ export function MultiSelect({title, options, selectedValues = [], onSelectChange
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<Button variant="outline" size="sm" className="border-dashed hover:cursor-pointer">
+				<Button variant="outline" className="w-full border-dashed hover:cursor-pointer">
 					<PlusCircledIcon className="mr-2 h-4 w-4"/>
 					{title}
 					{selectedValues.length > 0 && (

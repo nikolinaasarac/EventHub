@@ -8,9 +8,10 @@ import {City} from "@/models/city.model";
 interface Props {
 	handleSelectChange: (selectedValue: string[]) => void,
 	selectedCities: string[]
+	title?: string
 }
 
-export function CitiesMultiSelect({handleSelectChange, selectedCities}: Props) {
+export function CitiesMultiSelect({handleSelectChange, selectedCities, title = "Opština"}: Props) {
 	const [cities, setCities] = useState<City[]>([]);
 
 	useEffect(() => {
@@ -29,7 +30,7 @@ export function CitiesMultiSelect({handleSelectChange, selectedCities}: Props) {
 		handleSelectChange(selectedCities);
 	}
 	return (
-		<MultiSelect title={"Opština"} options={cities.map(city => ({key: (city.id).toString(), value: city.name}))}
+		<MultiSelect title={title} options={cities.map(city => ({key: (city.id).toString(), value: city.name}))}
 					 selectedValues={selectedCities} onSelectChange={handleCitiesSelected}/>
 	)
 }

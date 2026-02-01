@@ -8,6 +8,7 @@ interface SearchInputProps {
 	onChange: (value: string) => void;
 	placeholder?: string;
 	className?: string;
+	onEnter?: () => void;
 }
 
 export function SearchInput({
@@ -15,6 +16,7 @@ export function SearchInput({
 								onChange,
 								placeholder = "Pretraži...",
 								className,
+								onEnter
 							}: SearchInputProps) {
 	return (
 		<div className={`relative ${className || ""}`}>
@@ -25,6 +27,12 @@ export function SearchInput({
 				placeholder={placeholder}
 				onChange={(e) => onChange(e.target.value)}
 				className="w-full pl-10 h-12 border border-slate-200 rounded-xl text-slate-900 focus:ring-2 focus:border-none focus:!ring-indigo-500/20 transition-all"
+				onKeyDown={(e) => {
+					if (e.key === "Enter") {
+						e.preventDefault();
+						onEnter?.();
+					}
+				}}
 			/>
 		</div>
 	);
