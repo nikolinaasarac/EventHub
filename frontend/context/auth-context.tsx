@@ -1,6 +1,6 @@
 'use client';
 
-import React, {createContext, useState, useContext, useMemo} from 'react';
+import React, {createContext, useState, useContext, useMemo, useEffect} from 'react';
 import {useRouter} from 'next/navigation';
 import {toast} from 'sonner';
 import {User} from "@/models/user.model";
@@ -46,13 +46,12 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 
 	const rehydrateUser = async () => {
 		try {
-			const res = await AuthService.refreshToken();
-			authToken.set(res.accessToken);
-
 			const user = await UserService.getCurrentUser();
 			setUser(user);
-		} catch {
-			logout();
+		} catch (err) {
+			setUser(null);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -70,6 +69,11 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 			toast.error('Logout neuspješan');
 		}
 	};
+
+
+	useEffect(() => {
+		rehydrateUser();
+	}, []);
 
 	const value = useMemo(
 		() => ({user, setUser, login, isLoading, isLoggingIn, logout}),

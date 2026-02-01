@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Req,
   Res,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -100,5 +102,11 @@ export class AuthController {
       accessToken: result.accessToken,
       id: result.userId,
     };
+  }
+
+  @Get('me')
+  getMe(@Req() req: AuthRequest) {
+    console.log(req.user);
+    return req.user;
   }
 }

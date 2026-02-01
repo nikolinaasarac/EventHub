@@ -12,7 +12,7 @@ export default class UserService {
 		return BaseService.fetch<User>(`${this.ENDPOINT}/me`);
 	}
 
-	static async refreshToken():Promise<{accessToken: string, id: string}> {
+	static async refreshToken(): Promise<{ accessToken: string, id: string }> {
 		return BaseService.create(`${this.ENDPOINT}/refresh-token`);
 	}
 
