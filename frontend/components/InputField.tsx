@@ -1,4 +1,5 @@
-import {Field as FormikField, ErrorMessage} from "formik";
+import {Field as FormikField, ErrorMessage, useField} from "formik";
+import {Field, FieldLabel} from "@/components/ui/field";
 
 interface InputFieldProps {
 	name: string;
@@ -19,31 +20,26 @@ export function InputField({
 							   className = "",
 							   as = "input",
 						   }: InputFieldProps) {
+	const [field, meta] = useField(name);
 	return (
-		<div className="mb-4">
-			<label
-				htmlFor={name}
-				className="mb-2 font-medium flex items-center gap-2"
-			>
-				{labelIcon}
-				<span>{label}</span>
-			</label>
+		<Field>
+			<FieldLabel htmlFor={name}>{label}</FieldLabel>
 			<FormikField
 				as={as}
-				id={name}
-				name={name}
 				type={type}
+				name={name}
 				placeholder={placeholder}
-				className={`w-full bg-white border h-10 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 outline-none
-          ${className}`}
+				className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
+          				${meta.touched && meta.error ? "border-red-500 focus:ring-red-400" : "border-indigo-300 focus:ring-indigo-400"}
+						${className}`}
 			/>
 			<div className="text-red-500 text-sm h-1">
 				<ErrorMessage
 					name={name}
 					component="p"
-					className="text-red-500 text-sm mt-1"
+					className="text-red-500 text-sm"
 				/>
 			</div>
-		</div>
+		</Field>
 	);
 }
