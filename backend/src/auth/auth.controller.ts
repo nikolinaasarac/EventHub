@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import type { Response } from 'express';
 import type { AuthRequest } from './auth.types';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -104,9 +105,9 @@ export class AuthController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('me')
   getMe(@Req() req: AuthRequest) {
-    console.log(req.user);
     return req.user;
   }
 }

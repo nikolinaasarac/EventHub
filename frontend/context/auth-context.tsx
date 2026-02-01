@@ -46,6 +46,10 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 
 	const rehydrateUser = async () => {
 		try {
+			const refreshRes = await UserService.refreshToken();
+			console.log('Rehydrate')
+			console.log(refreshRes);
+			authToken.set(refreshRes.accessToken);
 			const user = await UserService.getCurrentUser();
 			setUser(user);
 		} catch (err) {
@@ -79,6 +83,8 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 		() => ({user, setUser, login, isLoading, isLoggingIn, logout}),
 		[user, isLoading, isLoggingIn]
 	);
+
+	if (isLoading) return null; // ili spinner
 
 	return <AuthContext.Provider value={value}> {children} </AuthContext.Provider>;
 }
