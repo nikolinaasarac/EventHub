@@ -4,11 +4,13 @@ type Props = {
 	name: string;
 	icon: React.ElementType;
 	color: string;
+	onClick?: () => void;
 };
 
-export function CategoryCard({name, icon: Icon, color}: Props) {
+export function CategoryCard({name, icon: Icon, color, onClick}: Props) {
 	return (
 		<div
+			onClick={onClick}
 			className="group flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
 			<div
 				className={`p-4 rounded-full mb-3 transition-transform group-hover:scale-110 ${color}`}

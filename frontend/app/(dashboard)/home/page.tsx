@@ -12,7 +12,6 @@ import {CategoryCard} from "@/components/CategoryCard";
 import {EventCard} from "@/components/EventCard";
 import {useApp} from "@/context/app-context";
 import {CATEGORY_UI_MAP} from "@/shared/constants/event-category-ui";
-import {useAuth} from "@/context/auth-context";
 import {QueryParams} from "@/models/query-params.model";
 import EventService from "@/services/event.service";
 import {useState} from "react";
@@ -20,42 +19,16 @@ import {useEffect} from "react";
 import {Event} from "@/models/event.model";
 import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
 import {useRouter} from "next/navigation";
-
-const featuredEvents = [
-	{
-		id: 1,
-		title: "Koncert Zdravko Čolić",
-		date: "25. Avgust",
-		location: "Stadion FK Slavija, Istočno Sarajevo",
-		price: "25 KM",
-		image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80&w=500",
-		category: "Koncert"
-	},
-	{
-		id: 2,
-		title: "Tech Summit 2024",
-		date: "15. Oktobar",
-		location: "Dvorana Slavija, Istočno Sarajevo",
-		price: "Besplatno",
-		image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80&w=500",
-		category: "Edukacija"
-	},
-	{
-		id: 3,
-		title: "Vinski Maraton",
-		date: "10. Septembar",
-		location: "Studenstki trg, Pale",
-		price: "20 KM",
-		image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80&w=500",
-		category: "Lifestyle"
-	}
-];
+import {EventCategory} from "@/models/event-category.model";
 
 export default function Page() {
 	const {eventCategories} = useApp();
-	const {user} = useAuth();
 	const [events, setEvents] = useState<Event[]>([]);
 	const router = useRouter();
+
+	const showEventsByCategory = (category: EventCategory) => {
+		router.push(`/events?categories=${category.id}&page=1`);
+	};
 
 	useEffect(() => {
 		const fetchEvents = async () => {
@@ -122,6 +95,7 @@ export default function Page() {
 								name={cat.name}
 								icon={ui.icon}
 								color={ui.color}
+								onClick={() => showEventsByCategory(cat)}
 							/>
 						)
 					})}
