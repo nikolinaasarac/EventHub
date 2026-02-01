@@ -16,6 +16,7 @@ import {CategoryCard} from "@/components/CategoryCard";
 import {EventCard} from "@/components/EventCard";
 import {useApp} from "@/context/app-context";
 import {CATEGORY_UI_MAP} from "@/shared/constants/event-category-ui";
+import {useAuth} from "@/context/auth-context";
 
 const categories = [
 	{name: 'Koncerti', icon: <Music className="w-6 h-6"/>, color: 'bg-blue-100 text-blue-600'},
@@ -56,8 +57,9 @@ const featuredEvents = [
 
 export default function Page() {
 	const {eventCategories} = useApp();
-
+	const {user} = useAuth();
 	console.log(eventCategories);
+	console.log(user);
 
 	return (
 		<div className="min-h-screen bg-slate-50">

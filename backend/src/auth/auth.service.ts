@@ -1,5 +1,9 @@
 import { JwtService } from '@nestjs/jwt';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { User } from '../users/entities/user.entity';
 import * as crypto from 'crypto';
 import { UsersService } from '../users/users.service';
@@ -44,6 +48,23 @@ export class AuthService {
     });
     await this.refreshTokenRepository.save(refreshToken);
     return token;
+  }
+
+  async refreshTokens(refreshToken: string) {
+    const token = await this.refreshTokenRepository.findOne({
+      where: { token: refreshToken, revoked: false },
+      relations: ['user'],
+    });
+
+    if (!token || token.expiresAt < new Date()) {
+      throw new UnauthorizedException();
+    }
+
+    return {
+      accessToken: this.createToken(token.user),
+      refreshToken: token.token,
+      userId: token.user.id,
+    };
   }
 
   async login(email: string, password: string) {
