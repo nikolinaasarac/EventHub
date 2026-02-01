@@ -20,14 +20,26 @@ import {Event} from "@/models/event.model";
 import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
 import {useRouter} from "next/navigation";
 import {EventCategory} from "@/models/event-category.model";
+import {useQueryFilters} from "@/shared/hooks/use-query-filters.hook";
+import {SearchInput} from "@/components/SearchInput";
 
 export default function Page() {
 	const {eventCategories} = useApp();
 	const [events, setEvents] = useState<Event[]>([]);
 	const router = useRouter();
+	const {
+		search,
+	} = useQueryFilters();
 
 	const showEventsByCategory = (category: EventCategory) => {
 		router.push(`/events?categories=${category.id}&page=1`);
+	};
+
+	const [localSearch, setLocalSearch] = useState(search);
+
+	const handleSearch = () => {
+		if (!localSearch.trim()) return;
+		router.push(`/events?search=${encodeURIComponent(localSearch)}&page=1`);
 	};
 
 	useEffect(() => {
@@ -61,9 +73,7 @@ export default function Page() {
 					<div
 						className="bg-white shadow-2xl p-2 md:p-4 rounded-xl flex flex-col md:flex-row gap-2 max-w-4xl mx-auto items-center">
 						<div className="relative w-full flex-1">
-							<Search className="absolute left-3 top-3 text-slate-400 w-5 h-5"/>
-							<Input className="pl-10 h-12 border-none text-slate-900 focus-visible:ring-0"
-								   placeholder="Šta tražiš?"/>
+							<SearchInput value={localSearch} onChange={setLocalSearch} placeholder="Šta tražiš?"/>
 						</div>
 						<div className="hidden md:block w-[1px] h-8 bg-slate-200"/>
 						<div className="relative w-full flex-1">
@@ -77,7 +87,8 @@ export default function Page() {
 							<Input className="pl-10 h-12 border-none text-slate-900 focus-visible:ring-0"
 								   placeholder="Kada?"/>
 						</div>
-						<Button className="w-full md:w-auto h-12 px-8 bg-indigo-600  hover:bg-indigo-700">
+						<Button className="w-full md:w-auto h-12 px-8 bg-indigo-600  hover:bg-indigo-700"
+						onClick={handleSearch}>
 							Pretraži
 						</Button>
 					</div>
