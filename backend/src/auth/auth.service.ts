@@ -1,5 +1,9 @@
 import { JwtService } from '@nestjs/jwt';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { User } from '../users/entities/user.entity';
 import * as crypto from 'crypto';
 import { UsersService } from '../users/users.service';
@@ -46,6 +50,23 @@ export class AuthService {
     return token;
   }
 
+  async refreshTokens(refreshToken: string) {
+    const token = await this.refreshTokenRepository.findOne({
+      where: { token: refreshToken, revoked: false },
+      relations: ['user'],
+    });
+
+    if (!token || token.expiresAt < new Date()) {
+      throw new UnauthorizedException();
+    }
+
+    return {
+      accessToken: this.createToken(token.user),
+      refreshToken: token.token,
+      userId: token.user.id,
+    };
+  }
+
   async login(email: string, password: string) {
     const user = await this.usersService.findOneByEmail(email);
     if (!user) throw new NotFoundException('Invalid credentials');
@@ -54,6 +75,25 @@ export class AuthService {
 
     const accessToken = this.createToken(user);
     const refreshToken = await this.generateAndSaveRefreshToken(user);
-    return { access_token: accessToken, refresh_token: refreshToken };
+    const userResponse = {
+      id: user.id,
+      email: user.email,
+      roles: user.roles,
+    };
+    return {
+      userResponse,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    };
+  }
+
+  async logout(refreshToken: string) {
+    const token = await this.refreshTokenRepository.findOne({
+      where: { token: refreshToken },
+    });
+    if (!token) return false;
+    token.revoked = true;
+    await this.refreshTokenRepository.save(token);
+    return true;
   }
 }

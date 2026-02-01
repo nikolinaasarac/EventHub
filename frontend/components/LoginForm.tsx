@@ -9,18 +9,19 @@ import {
 import {Form, Formik, Field as FormikField, ErrorMessage} from "formik";
 import {loginSchema} from "@/schemas/login.schema";
 import {LoadingButton} from "@/components/LoadingButton";
+import {useAuth} from "@/context/auth-context";
 
 export function LoginForm({
 							  className,
 							  ...props
 						  }: React.ComponentProps<"form">) {
-	//const {login} = useAuth();
+	const {login} = useAuth();
 
 	return (
 		<Formik
 			initialValues={{email: "", password: ""}}
 			validationSchema={loginSchema}
-			onSubmit={(values) => console.log(values.email, values.password)}
+			onSubmit={(values) => login(values.email, values.password)}
 		>
 			{({isSubmitting, errors, touched}) => (
 				<Form className={cn("flex flex-col gap-6", className)} {...props}>
