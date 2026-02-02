@@ -84,6 +84,17 @@ export class EventsService {
     return paginate(data, total, paramsDto.page, paramsDto.limit);
   }
 
+  async getAllEvents() {
+    return await this.eventsRepository.find({
+      relations: [
+        'eventSubcategory',
+        'venue',
+        'eventSubcategory.eventCategory',
+        'ticketTypes',
+      ],
+    });
+  }
+
   async findOne(id: number) {
     return await this.eventsRepository.findOne({
       where: { id },

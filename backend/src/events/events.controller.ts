@@ -49,6 +49,11 @@ export class EventsController {
     return this.eventsService.findAll(paramsDto);
   }
 
+  @Get('all-events')
+  getAllEvents() {
+    return this.eventsService.getAllEvents();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.eventsService.findOne(+id);
