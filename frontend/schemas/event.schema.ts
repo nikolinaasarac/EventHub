@@ -41,8 +41,8 @@ export const eventSchema = yup.object({
 				.of(
 					yup.object({
 						name: yup.string().required("Polje je obavezno"),
-						price: yup.number().min(0).required("Polje je obavezno"),
-						totalQuantity: yup.number().min(1).required("Polje je obavezno"),
+						price: yup.number().min(0).required("Polje je obavezno").moreThan(0, "Cijena mora biti veća od 0"),
+						totalQuantity: yup.number().min(1).required("Polje je obavezno").moreThan(0, "Količina mora biti veća od 0"),
 					})
 				)
 				.min(1, 'Dodajte barem jednu kartu'),
