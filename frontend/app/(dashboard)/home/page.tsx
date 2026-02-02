@@ -74,7 +74,7 @@ export default function Page() {
 						className="bg-white shadow-2xl p-2 md:p-4 rounded-xl flex flex-col md:flex-row gap-2 max-w-4xl mx-auto items-center">
 						<div className="relative w-full flex-1">
 							<SearchInput value={localSearch} onChange={setLocalSearch} placeholder="Šta tražiš?"
-							onEnter={handleSearch}/>
+										 onEnter={handleSearch}/>
 						</div>
 						<div className="hidden md:block w-[1px] h-8 bg-slate-200"/>
 						{/*<div className="relative w-full flex-1">
@@ -87,8 +87,10 @@ export default function Page() {
 						<div className="hidden md:block w-[1px] h-8 bg-slate-200"/>
 						<div className="relative w-full flex-1">
 							<CalendarIcon className="absolute left-3 top-3 text-slate-400 w-5 h-5"/>
-							<Input className="pl-10 h-12 border-none text-slate-900 focus-visible:ring-0"
-								   placeholder="Kada?"/>
+							<Input readOnly
+								   className="pl-10 h-12 border-none text-slate-900 focus-visible:ring-0 hover:cursor-pointer"
+								   placeholder="Kalendar događaja"
+								   onClick={() => router.push('/calendar')}/>
 						</div>
 						<Button className="w-full md:w-auto h-12 px-8 bg-indigo-600  hover:bg-indigo-700"
 								onClick={handleSearch}>
