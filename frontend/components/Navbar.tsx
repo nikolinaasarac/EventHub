@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/navigation-menu"
 import {Button} from "@/components/ui/button"
 import {useAuth} from "@/context/auth-context";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import {LogOut, UserIcon} from "lucide-react";
 
 export function NavBar() {
 	const {user, logout} = useAuth();
@@ -66,7 +68,29 @@ export function NavBar() {
 
 				<div className="flex items-center gap-4">
 					{user ? (
-						<Button variant="ghost" onClick={logout}>Logout</Button>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button className="!h-8 !w-8 rounded-full bg-indigo-600 hover:bg-indigo-700" >
+									<UserIcon className="!h-7 !w-7 text-white"/>
+								</Button>
+							</DropdownMenuTrigger>
+
+							<DropdownMenuContent align="end" className="w-40">
+								<DropdownMenuItem asChild>
+									<Link href="/profile">
+										Moj profil
+									</Link>
+								</DropdownMenuItem>
+
+								<DropdownMenuItem
+									onClick={logout}
+									className="text-red-600 focus:text-red-600"
+								>
+									<LogOut className="mr-2 h-4 w-4"/>
+									Odjavi se
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
 					) : (
 						<>
 							<Button variant="ghost" asChild>

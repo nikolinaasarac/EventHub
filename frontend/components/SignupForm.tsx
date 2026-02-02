@@ -1,146 +1,72 @@
 "use client"
 
 import {cn} from "@/lib/utils"
-import {
-	Field,
-	FieldDescription,
-	FieldGroup,
-	FieldLabel,
-} from "@/components/ui/field"
-import {Form, Formik, Field as FormikField, ErrorMessage} from "formik";
-import {signupSchema} from "@/schemas/signup.schema";
-import {LoadingButton} from "@/components/LoadingButton";
+import {Form, Formik} from "formik"
+import {signupSchema} from "@/schemas/signup.schema"
+import {LoadingButton} from "@/components/LoadingButton"
+import {InputField} from "@/components/InputField"
+import {useAuth} from "@/context/auth-context";
 
 export function SignupForm({
 							   className,
 							   ...props
 						   }: React.ComponentProps<"form">) {
+	const {signup} = useAuth();
 	return (
-		<Formik initialValues={{name: "", surname: "", email: "", password: "", confirmPassword: ""}}
-				validationSchema={signupSchema}
-				onSubmit={(values) => console.log(values.name, values.surname, values.email, values.password, values.confirmPassword)}>
-			{({isSubmitting, errors, touched}) => (
+		<Formik
+			initialValues={{
+				email: "",
+				password: "",
+				confirmPassword: "",
+			}}
+			validationSchema={signupSchema}
+			onSubmit={(values) => signup(values.email, values.password)
+			}
+		>
+			{({isSubmitting}) => (
 				<Form className={cn("flex flex-col gap-6", className)} {...props}>
-					<FieldGroup>
-						<div className="flex flex-col items-center gap-1 text-center">
-							<h1 className="text-2xl font-bold">Napravite nalog</h1>
-							<p className="text-muted-foreground text-sm text-balance">
-								Popunite naredna polja da biste kreirali nalog
-							</p>
-						</div>
+					<div className="flex flex-col items-center gap-1 text-center">
+						<h1 className="text-2xl font-bold">Napravite nalog</h1>
+						<p className="text-muted-foreground text-sm">
+							Popunite naredna polja da biste kreirali nalog
+						</p>
+					</div>
 
-						<Field>
-							<Field className="grid grid-cols-2 gap-4">
-								<Field>
-									<FieldLabel htmlFor="name">Ime</FieldLabel>
-									<FormikField
-										type="text"
-										name="name"
-										placeholder="Unesite ime..."
-										className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
-          							${errors.name && touched.name
-											? "border-red-500 focus:ring-red-400"
-											: "border-gray-300 focus:ring-[#7d6552]"}`}
-									/>
-									<div className="text-red-500 text-sm h-1">
-										<ErrorMessage
-											name="name"
-											component="p"
-											className="text-red-500 text-sm"
-										/>
-									</div>
-								</Field>
-								<Field>
-									<FieldLabel htmlFor="surname">Prezime</FieldLabel>
-									<FormikField
-										type="text"
-										name="surname"
-										placeholder="Unesite prezime..."
-										className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
-          							${errors.surname && touched.surname
-											? "border-red-500 focus:ring-red-400"
-											: "border-gray-300 focus:ring-[#7d6552]"}`}
-									/>
-									<div className="text-red-500 text-sm h-1">
-										<ErrorMessage
-											name="surname"
-											component="p"
-											className="text-red-500 text-sm"
-										/>
-									</div>
-								</Field>
-							</Field>
-						</Field>
-						<Field>
-							<FieldLabel htmlFor="email">Email</FieldLabel>
-							<FormikField
-								type="email"
-								name="email"
-								placeholder="Unesite email..."
-								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
-          							${errors.email && touched.email
-									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:ring-[#7d6552]"}`}
-							/>
-							<div className="text-red-500 text-sm h-1">
-								<ErrorMessage
-									name="email"
-									component="p"
-									className="text-red-500 text-sm"
-								/>
-							</div>
-						</Field>
-						<Field>
-							<FieldLabel htmlFor="password">Lozinka</FieldLabel>
-							<FormikField
-								type="password"
-								name="password"
-								placeholder="Unesite lozinku..."
-								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
-          							${errors.password && touched.password
-									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:ring-[#7d6552]"}`}
-							/>
-							<div className="text-red-500 text-sm h-1">
-								<ErrorMessage
-									name="password"
-									component="p"
-									className="text-red-500 text-sm"
-								/>
-							</div>
-						</Field>
-						<Field>
-							<FieldLabel htmlFor="confirmPassword">Potvrdite lozinku</FieldLabel>
-							<FormikField
-								type="password"
-								name="confirmPassword"
-								placeholder="Ponovo unesite lozinku..."
-								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
-          							${errors.confirmPassword && touched.confirmPassword
-									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:ring-[#7d6552]"}`}
-							/>
-							<div className="text-red-500 text-sm h-1">
-								<ErrorMessage
-									name="confirmPassword"
-									component="p"
-									className="text-red-500 text-sm"
-								/>
-							</div>
-						</Field>
-						<Field>
-							<LoadingButton
-								className="mt-3 cursor-pointer"
-								type="submit"
-								loading={isSubmitting}
-							>
-								Kreiraj nalog
-							</LoadingButton>
-						</Field>
-						<FieldDescription className="px-6 text-center">
-							Već imate nalog? <a href="/login">Prijavite se</a>
-						</FieldDescription>
-					</FieldGroup>
+					<InputField
+						name="email"
+						label="Email"
+						type="email"
+						placeholder="Unesite email..."
+					/>
+
+					<InputField
+						name="password"
+						label="Lozinka"
+						type="password"
+						placeholder="Unesite lozinku..."
+					/>
+
+					<InputField
+						name="confirmPassword"
+						label="Potvrdite lozinku"
+						type="password"
+						placeholder="Ponovo unesite lozinku..."
+					/>
+
+					<LoadingButton
+						type="submit"
+						loading={isSubmitting}
+						className="mt-3"
+					>
+						Kreiraj nalog
+					</LoadingButton>
+
+					<p className="text-center text-sm">
+						Već imate nalog?{" "}
+						<a href="/login" className="underline">
+							Prijavite se
+						</a>
+					</p>
 				</Form>
 			)}
 		</Formik>

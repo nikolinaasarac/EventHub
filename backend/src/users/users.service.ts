@@ -5,12 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { RolesService } from '../roles/roles.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private rolesService: RolesService,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<User> {
     const existingUser = await this.usersRepository.findOne({
@@ -27,11 +29,18 @@ export class UsersService {
       saltRounds,
     );
 
+    const visitorRole = await this.rolesService.findByName('Posjetilac');
+    if (!visitorRole) {
+      throw new NotFoundException('Visitor role not found in DB');
+    }
+
     const user = this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
+      roles: [visitorRole],
     });
-    return await this.usersRepository.save(user);
+    await this.usersRepository.save(user);
+    return user;
   }
 
   async findAll() {

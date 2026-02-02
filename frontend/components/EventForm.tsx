@@ -61,11 +61,11 @@ export function EventForm() {
 						eventCategoryId: undefined,
 						eventSubcategoryId: undefined,
 						startDate: null,
-						endDate: null,
+						endDate: undefined,
 						image: null,
 						venueId: undefined,
-						metadata: {} as Record<string, any>,
-						isFree: false,
+						metadata: {},
+						isFree: true,
 						ticketTypes: [{name: '', price: '', totalQuantity: ''}],
 					}}
 					validationSchema={eventSchema}
@@ -318,19 +318,14 @@ export function EventForm() {
 											</h2>
 											<div className="space-y-4">
 												{dynamicFields.map((field) => (
-													<div key={field.name} className="space-y-1">
-														<Label
-															className="text-xs text-indigo-200 uppercase font-bold tracking-wider">
-															{field.label}
-														</Label>
-														<Input
-															type={field.type}
-															placeholder={field.placeholder}
-															className="bg-white/10 border-white/20 text-white placeholder:text-white/30 rounded-xl focus:ring-white/50"
-															onChange={(e) => setFieldValue(`metadata.${field.name}`, e.target.value)}
-															value={values.metadata?.[field.name] || ""}
-														/>
-													</div>
+													<InputField
+														key={field.name}
+														name={`metadata.${field.name}`}
+														label={field.label}
+														type={field.type}
+														placeholder={field.placeholder}
+														className="bg-white/10 border-white/20 text-white placeholder:text-white/30 rounded-xl"
+													/>
 												))}
 											</div>
 											<div

@@ -10,6 +10,7 @@ import {Form, Formik, Field as FormikField, ErrorMessage} from "formik";
 import {loginSchema} from "@/schemas/login.schema";
 import {LoadingButton} from "@/components/LoadingButton";
 import {useAuth} from "@/context/auth-context";
+import {InputField} from "@/components/InputField";
 
 export function LoginForm({
 							  className,
@@ -23,7 +24,7 @@ export function LoginForm({
 			validationSchema={loginSchema}
 			onSubmit={(values) => login(values.email, values.password)}
 		>
-			{({isSubmitting, errors, touched}) => (
+			{({isSubmitting}) => (
 				<Form className={cn("flex flex-col gap-6", className)} {...props}>
 					<FieldGroup>
 						<div className="flex flex-col items-center gap-1 text-center mb-4">
@@ -32,55 +33,27 @@ export function LoginForm({
 								Prijavite se na svoj nalog
 							</p>
 						</div>
-						<Field>
-							<FieldLabel htmlFor="email">Email</FieldLabel>
-							<FormikField
-								type="email"
-								name="email"
-								placeholder="Unesite email..."
-								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
-          							${errors.email && touched.email
-									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:ring-[#7d6552]"}`}
-							/>
-							<div className="text-red-500 text-sm h-1">
-								<ErrorMessage
-									name="email"
-									component="p"
-									className="text-red-500 text-sm"
-								/>
-							</div>
-						</Field>
-						<Field>
-							<div className="flex items-center">
-								<FieldLabel htmlFor="password">Lozinka</FieldLabel>
-							</div>
-							<FormikField
-								type="password"
-								name="password"
-								placeholder="Unesite lozinku..."
-								className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
-          							${errors.email && touched.password
-									? "border-red-500 focus:ring-red-400"
-									: "border-gray-300 focus:ring-[#7d6552]"}`}
-							/>
-							<div className="text-red-500 text-sm h-1">
-								<ErrorMessage
-									name="password"
-									component="p"
-									className="text-red-500 text-sm"
-								/>
-							</div>
-						</Field>
-						<Field>
-							<LoadingButton
-								className="mt-3 cursor-pointer"
-								type="submit"
-								loading={isSubmitting}
-							>
-								Prijavi se
-							</LoadingButton>
-						</Field>
+						<InputField
+							name="email"
+							label="Email"
+							type="email"
+							placeholder="Unesite email..."
+						/>
+
+						<InputField
+							name="password"
+							label="Lozinka"
+							type="password"
+							placeholder="Unesite lozinku..."
+						/>
+
+						<LoadingButton
+							className="mt-3 cursor-pointer"
+							type="submit"
+							loading={isSubmitting}
+						>
+							Prijavi se
+						</LoadingButton>
 						<FieldDescription className="text-center">
 							Nemate nalog?{" "}
 							<a href="/signup" className="underline underline-offset-4">

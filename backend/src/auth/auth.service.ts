@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RefreshToken } from './entities/refresh-token.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -95,5 +96,9 @@ export class AuthService {
     token.revoked = true;
     await this.refreshTokenRepository.save(token);
     return true;
+  }
+
+  async register(createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 }

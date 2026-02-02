@@ -19,4 +19,8 @@ export default class UserService {
 	static async logout() {
 		return BaseService.create(`${this.ENDPOINT}/logout`);
 	}
+
+	static async register(email: string, password: string) {
+		return BaseService.create(`${this.ENDPOINT}/register`, {email, password});
+	}
 }

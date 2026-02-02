@@ -15,6 +15,7 @@ interface AuthContextProps {
 	isLoggingIn: boolean;
 	login: (email: string, password: string) => Promise<void>;
 	logout: () => void;
+	signup: (email: string, password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -29,7 +30,6 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 	const login = async (email: string, password: string) => {
 		try {
 			setIsLoggingIn(true);
-			console.log(email, password);
 			const response = await AuthService.login(email, password);
 			setUser(response.user);
 			authToken.set(response.accessToken);
@@ -41,6 +41,17 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 			toast.error('Prijava neuspješna');
 		} finally {
 			setIsLoggingIn(false);
+		}
+	};
+
+	const signup = async (email: string, password: string) => {
+		try {
+			await AuthService.register(email, password);
+			toast.success('Nalog uspješno kreiran');
+			router.push('/home');
+		} catch (error) {
+			console.error('Greška prilikom kreiranja naloga', error);
+			toast.error('Greška prilikom kreiranja naloga');
 		}
 	};
 
@@ -80,11 +91,11 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 	}, []);
 
 	const value = useMemo(
-		() => ({user, setUser, login, isLoading, isLoggingIn, logout}),
+		() => ({user, setUser, login, isLoading, isLoggingIn, logout, signup}),
 		[user, isLoading, isLoggingIn]
 	);
 
-	if (isLoading) return null; // ili spinner
+	if (isLoading) return null;
 
 	return <AuthContext.Provider value={value}> {children} </AuthContext.Provider>;
 }

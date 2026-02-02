@@ -26,6 +26,12 @@ export class RolesService {
     });
   }
 
+  async findByName(name: string) {
+    return await this.rolesRepository.findOne({
+      where: { name },
+    });
+  }
+
   async update(id: string, updateRoleDto: UpdateRoleDto) {
     const role = await this.findOne(id);
     if (!role) throw new NotFoundException();
