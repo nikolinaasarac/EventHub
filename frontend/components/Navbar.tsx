@@ -51,6 +51,15 @@ export function NavBar() {
 									asChild
 									className={navigationMenuTriggerStyle()}
 								>
+									<Link href="/calendar">Kalendar događaja</Link>
+								</NavigationMenuLink>
+							</NavigationMenuItem>
+
+							<NavigationMenuItem>
+								<NavigationMenuLink
+									asChild
+									className={navigationMenuTriggerStyle()}
+								>
 									<Link href="/news">Novosti</Link>
 								</NavigationMenuLink>
 							</NavigationMenuItem>
