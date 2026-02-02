@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import {metadataSchema} from "@/schemas/metadata.schema";
 
 export const eventSchema = yup.object({
 	title: yup.string().required("Naslov je obavezan"),
@@ -20,16 +21,28 @@ export const eventSchema = yup.object({
 	venueId: yup.number().required("Lokacija je obavezna"),
 	eventCategoryId: yup.number().required("Kategorija je obavezna"),
 	eventSubcategoryId: yup.number().required("Podkategorija je obavezna"),
-	metadata: yup.object().optional(),
+	metadata: yup
+		.object()
+		.default({})
+		.when('eventSubcategoryId', (value, schema) => {
+			const subcategoryId = Number(value);
+
+			if (metadataSchema[subcategoryId]) {
+				return schema.shape(
+					metadataSchema[subcategoryId].fields
+				);
+			}
+			return schema;
+		}),
 	ticketTypes: yup.array().when('isFree', {
 		is: false,
 		then: (schema) =>
 			schema
 				.of(
 					yup.object({
-						name: yup.string().required(),
-						price: yup.number().min(0).required(),
-						totalQuantity: yup.number().min(1).required(),
+						name: yup.string().required("Polje je obavezno"),
+						price: yup.number().min(0).required("Polje je obavezno"),
+						totalQuantity: yup.number().min(1).required("Polje je obavezno"),
 					})
 				)
 				.min(1, 'Dodajte barem jednu kartu'),
