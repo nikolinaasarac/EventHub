@@ -57,16 +57,16 @@ export default function LocationsPage() {
 	return (
 		<div className="min-h-screen bg-slate-50 py-12">
 			<div className="container mx-auto px-4">
-
 				<div className="mb-3">
 					<div className="flex items-center justify-between">
 						<h1 className="text-3xl font-bold text-slate-900 mb-2">Lokacije</h1>
 						<Button className="bg-indigo-600 hover:bg-indigo-700"
 								onClick={() => router.push('/locations/add-location')}>Dodaj lokaciju</Button>
 					</div>
-					<div className="flex flex-row gap-4">
-					<CitiesMultiSelect handleSelectChange={setCities} selectedCities={filters.cities}/>
-					<VenueTypesMultiSelect handleSelectChange={setVenueTypes} selectedVenueTypes={filters.venueTypes}/>
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 my-2">
+						<CitiesMultiSelect handleSelectChange={setCities} selectedCities={filters.cities}/>
+						<VenueTypesMultiSelect handleSelectChange={setVenueTypes}
+											   selectedVenueTypes={filters.venueTypes}/>
 					</div>
 				</div>
 
