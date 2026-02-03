@@ -1,8 +1,8 @@
 "use client"
 
-import {MapPin as MapPinIcon} from "lucide-react";
+import {Calendar as CalendarIcon, MapPin as MapPinIcon} from "lucide-react";
 import {LocationCard} from "@/components/LocationCard";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Venue} from "@/models/venue.model";
 import VenueService from "@/services/venue.service";
 import dynamic from "next/dynamic";
@@ -14,6 +14,7 @@ import {QueryParams} from "@/models/query-params.model";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {VenueTypesMultiSelect} from "@/components/VenueTypesMultiSelect";
+import PageHeader from "@/components/PageHeader";
 
 const VenueMap = dynamic(
 	() => import("@/components/VenueMap"),
@@ -59,7 +60,9 @@ export default function LocationsPage() {
 			<div className="container mx-auto px-4">
 				<div className="mb-3">
 					<div className="flex items-center justify-between">
-						<h1 className="text-3xl font-bold text-slate-900 mb-2">Lokacije</h1>
+						<PageHeader title={"Lokacije"}
+									subtitle={"Pregledajte informacije o svim registrovanim lokacijama"}
+									icon={MapPinIcon}/>
 						<Button className="bg-indigo-600 hover:bg-indigo-700"
 								onClick={() => router.push('/locations/add-location')}>Dodaj lokaciju</Button>
 					</div>
