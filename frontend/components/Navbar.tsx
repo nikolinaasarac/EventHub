@@ -12,7 +12,7 @@ import {
 import {Button} from "@/components/ui/button"
 import {useAuth} from "@/context/auth-context";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
-import {LogOut, UserIcon} from "lucide-react";
+import {LogIn, LogOut, MenuIcon, UserIcon, UserPlus} from "lucide-react";
 
 export function NavBar() {
 	const {user, logout} = useAuth();
@@ -76,10 +76,59 @@ export function NavBar() {
 				</div>
 
 				<div className="flex items-center gap-4">
+					<NavigationMenu className="md:hidden">
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button className="!h-8 !w-8 bg-white hover:bg-gray-100">
+									<MenuIcon className="!h-7 !w-7 text-black"/>
+								</Button>
+							</DropdownMenuTrigger>
+
+							<DropdownMenuContent align="end" className="w-40">
+								<DropdownMenuItem asChild>
+									<Link href="/home">
+										Početna
+									</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem asChild>
+									<Link href="/events">
+										Događaji
+									</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem asChild>
+									<Link href="/calendar">
+										Kalendar događaja
+									</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem asChild>
+									<Link href="/news">
+										Novosti
+									</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem asChild>
+									<Link href="/locations">
+										Lokacije
+									</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem asChild>
+									<Link href="/login">
+										<LogIn className="mr-2 h-4 w-4"/>
+										Prijavi se
+									</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem asChild>
+									<Link href="/signup">
+										<UserPlus className="mr-2 h-4 w-4"/>
+										Kreiraj nalog
+									</Link>
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</NavigationMenu>
 					{user ? (
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<Button className="!h-8 !w-8 rounded-full bg-indigo-600 hover:bg-indigo-700" >
+								<Button className="!h-8 !w-8 rounded-full bg-indigo-600 hover:bg-indigo-700">
 									<UserIcon className="!h-7 !w-7 text-white"/>
 								</Button>
 							</DropdownMenuTrigger>
@@ -101,14 +150,14 @@ export function NavBar() {
 							</DropdownMenuContent>
 						</DropdownMenu>
 					) : (
-						<>
+						<div className="hidden md:flex">
 							<Button variant="ghost" asChild>
 								<Link href="/login">Prijavi se</Link>
 							</Button>
 							<Button className="bg-indigo-600 hover:bg-indigo-700" asChild>
 								<Link href="/signup">Kreiraj nalog</Link>
 							</Button>
-						</>
+						</div>
 					)}
 				</div>
 
