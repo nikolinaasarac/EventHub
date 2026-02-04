@@ -1,6 +1,6 @@
 "use client"
 import {EventCard} from "@/components/EventCard";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import EventService from "@/services/event.service";
 import {Event} from "@/models/event.model"
 import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
@@ -12,6 +12,8 @@ import {QueryParams} from "@/models/query-params.model";
 import {CitiesMultiSelect} from "@/components/CitiesMultiSelect";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
+import {Calendar as CalendarIcon, TicketIcon} from "lucide-react";
+import PageHeader from "@/components/PageHeader";
 
 export default function EventsPage() {
 	const {
@@ -55,8 +57,10 @@ export default function EventsPage() {
 		<section className="min-h-screen bg-white py-12">
 			<div className="container mx-auto px-4">
 				<div className="flex flex-col mb-8">
-					<div className="flex items-center justify-between">
-						<h1 className="text-3xl font-bold text-slate-900 mb-2">Događaji</h1>
+					<div className="flex items-center justify-between mb-2">
+						<PageHeader title={"Događaji"}
+									subtitle={"Pregledajte sve događaje."}
+									icon={TicketIcon}/>
 						<Button className="bg-indigo-600 hover:bg-indigo-700"
 								onClick={() => router.push('/events/add-event')}>Dodaj događaj</Button>
 					</div>

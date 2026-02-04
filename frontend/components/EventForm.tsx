@@ -45,6 +45,8 @@ export function EventForm() {
 		fetchData();
 	}, [])
 
+	console.log(eventSchema)
+
 
 	return (
 		<div className="min-h-screen bg-slate-50/50 py-12 px-4">
@@ -64,7 +66,7 @@ export function EventForm() {
 						endDate: undefined,
 						image: null,
 						venueId: undefined,
-						metadata: {},
+						metadata: {performer: ''},
 						isFree: true,
 						ticketTypes: [{name: '', price: '', totalQuantity: ''}],
 					}}

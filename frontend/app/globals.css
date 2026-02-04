@@ -198,9 +198,17 @@
     border-radius: 8px !important;
     padding: 2px !important;
     border: none !important;
+    color: #4f46e5 !important;
     box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
     margin: 2px 4px !important;
 }
+
+.fc-event {
+    background-color: #4f46e5 !important;
+    color: white !important;
+    border: none !important;
+}
+
 
 .fc-event-title {
     font-weight: 600 !important;
