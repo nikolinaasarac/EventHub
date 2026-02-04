@@ -6,7 +6,6 @@ import {ImageUpload} from "@/components/ImageUpload";
 import {InputField} from "@/components/InputField";
 import {SelectBox} from "@/components/SelectBox";
 import {AlignLeft, Calendar, Clock, Info, MapPin} from "lucide-react";
-import {Input} from "@/components/ui/input";
 import {LoadingButton} from "@/components/LoadingButton";
 import React, {useEffect, useState} from "react";
 import {EventCategory} from "@/models/event-category.model";
@@ -21,6 +20,25 @@ import {METADATA_FIELDS_BY_SUBCATEGORY} from "@/shared/constants/metadata-config
 import EventService from "@/services/event.service";
 import {Plus, Trash} from "lucide-react";
 import TicketTypeService from "@/services/ticket-type.service";
+import {DateTimePickerField} from "@/components/DateTimePickerField";
+
+type EventFormValues = {
+	title: string;
+	description: string;
+	eventCategoryId?: number;
+	eventSubcategoryId?: number;
+	startDate: Date | null;
+	endDate?: Date | null;
+	image: File | null;
+	venueId?: number;
+	metadata: Record<string, any>;
+	isFree: boolean;
+	ticketTypes: {
+		name: string;
+		price: string;
+		totalQuantity: string;
+	}[];
+};
 
 export function EventForm() {
 	const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);
@@ -56,7 +74,7 @@ export function EventForm() {
 					<p className="text-slate-500 font-medium">Izaberite termin, lokaciju i unesite detalje.</p>
 				</div>
 
-				<Formik
+				<Formik<EventFormValues>
 					initialValues={{
 						title: '',
 						description: '',
@@ -79,8 +97,8 @@ export function EventForm() {
 							formData.append('description', values.description);
 							formData.append('eventSubcategoryId', String(values.eventSubcategoryId));
 
-							if (values.startDate) formData.append('startDate', values.startDate);
-							if (values.endDate) formData.append('endDate', values.endDate);
+							if (values.startDate) formData.append('startDate', values.startDate.toISOString());
+							if (values.endDate) formData.append('endDate', values.endDate.toISOString());
 							if (values.venueId) formData.append('venueId', String(values.venueId));
 							if (values.image) formData.append('image', values.image);
 
@@ -179,34 +197,20 @@ export function EventForm() {
 										<div className="space-y-2">
 											<Label className="flex items-center gap-2"><Calendar
 												className="w-4 h-4 text-indigo-600"/> Početak</Label>
-											<Input
-												type="datetime-local"
-												value={values.startDate ?? ""}
-												onChange={(e) => setFieldValue("startDate", e.target.value)}
+											<DateTimePickerField
+												name="startDate"
+												label="Početak"
+												placeholder="Izaberi datum i vrijeme"
 											/>
-											<div className="text-red-500 text-sm h-2">
-												<ErrorMessage
-													name="startDate"
-													component="p"
-													className="text-red-500 text-sm h-2"
-												/>
-											</div>
 										</div>
 										<div className="space-y-2">
 											<Label className="flex items-center gap-2"><Clock
 												className="w-4 h-4 text-indigo-600"/> Kraj (opciono)</Label>
-											<Input
-												type="datetime-local"
-												value={values.endDate ?? ""}
-												onChange={(e) => setFieldValue("endDate", e.target.value)}
+											<DateTimePickerField
+												name="endDate"
+												label="Kraj"
+												placeholder="Izaberi datum i vrijeme"
 											/>
-											<div className="text-red-500 text-sm h-2">
-												<ErrorMessage
-													name="endDate"
-													component="p"
-													className="text-red-500 text-sm h-2"
-												/>
-											</div>
 										</div>
 										<div className="space-y-2">
 											<Label className="flex items-center gap-2"><MapPin
