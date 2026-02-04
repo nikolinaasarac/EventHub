@@ -21,6 +21,7 @@ import EventService from "@/services/event.service";
 import {Plus, Trash} from "lucide-react";
 import TicketTypeService from "@/services/ticket-type.service";
 import {DateTimePickerField} from "@/components/DateTimePickerField";
+import {useRouter} from "next/navigation";
 
 type EventFormValues = {
 	title: string;
@@ -44,6 +45,8 @@ export function EventForm() {
 	const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);
 	const [eventSubcategories, setEventSubcategories] = useState<EventSubcategory[]>([]);
 	const [venues, setVenues] = useState<Venue[]>([]);
+
+	const router = useRouter();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -124,6 +127,8 @@ export function EventForm() {
 						} catch (err) {
 							console.error(err);
 							toast.error("Greška prilikom kreiranja događaja!");
+						} finally {
+							router.back();
 						}
 					}}
 				>

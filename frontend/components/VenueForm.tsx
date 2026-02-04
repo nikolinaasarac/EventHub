@@ -69,7 +69,7 @@ export function VenueForm({venue}: Props) {
 							venueTypeId: venue?.venueType?.id ?? undefined,
 							latitude: venue?.latitude ? Number(venue.latitude) : null,
 							longitude: venue?.longitude ? Number(venue.longitude) : null,
-							capacity: venue?.capacity ?? undefined,
+							capacity: venue?.capacity ?? '',
 
 							phone: venue?.phone ?? '',
 							email: venue?.email ?? '',
