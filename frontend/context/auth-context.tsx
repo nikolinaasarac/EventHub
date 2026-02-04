@@ -46,7 +46,8 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 
 	const signup = async (email: string, password: string) => {
 		try {
-			await AuthService.register(email, password);
+			const response = await AuthService.register(email, password);
+			setUser(response.user);
 			toast.success('Nalog uspješno kreiran');
 			router.push('/home');
 		} catch (error) {
