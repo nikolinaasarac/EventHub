@@ -98,7 +98,20 @@ export class AuthService {
     return true;
   }
 
-  async register(createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async registerAndLogin(createUserDto: CreateUserDto) {
+    const user = await this.usersService.create(createUserDto);
+
+    const accessToken = this.createToken(user);
+    const refreshToken = await this.generateAndSaveRefreshToken(user);
+
+    return {
+      userResponse: {
+        id: user.id,
+        email: user.email,
+        roles: user.roles,
+      },
+      accessToken,
+      refreshToken,
+    };
   }
 }
