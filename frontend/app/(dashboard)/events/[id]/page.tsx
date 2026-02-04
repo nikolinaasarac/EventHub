@@ -121,7 +121,7 @@ export default function EventDetailsPage() {
 							<h2 className="text-2xl font-bold flex items-center gap-2">
 								<Info className="w-5 h-5 text-indigo-600"/> O događaju
 							</h2>
-							<p className="text-slate-600 leading-relaxed text-lg">
+							<p className="text-slate-600 leading-relaxed text-lg text-justify">
 								{event.description}
 							</p>
 						</div>
@@ -137,7 +137,8 @@ export default function EventDetailsPage() {
 							<div
 								className="sticky top-24 p-8 rounded-3xl shadow-slate-200/50 space-y-6">
 								{event.ticketTypes.map(ticketType => (
-									<div key={ticketType.id} className="flex flex-col items-center gap-4 p-6 rounded-xl shadow-lg  border border-indigo-100 hover:shadow-xl transition-all">
+									<div key={ticketType.id}
+										 className="flex flex-col items-center gap-4 p-6 rounded-xl shadow-lg  border border-indigo-100 hover:shadow-xl transition-all">
 										<span
 											className="text-slate-400 text-sm font-medium uppercase">Cijena ulaznice</span>
 										<div className="text-4xl font-black text-slate-900 mt-1">{ticketType.name}</div>

@@ -21,6 +21,17 @@ export class VenuesService {
     private readonly venueTypesService: VenueTypesService,
   ) {}
 
+  private async deleteImage(imageUrl?: string) {
+    if (!imageUrl) return;
+
+    const imagePath = join(process.cwd(), 'public', imageUrl);
+    try {
+      await unlink(imagePath);
+    } catch (err) {
+      console.warn('Slika nije obrisana:', err);
+    }
+  }
+
   async create(createVenueDto: CreateVenueDto, imageUrl?: string) {
     const city = await this.citiesService.findOne(createVenueDto.cityId);
     const venueType = await this.venueTypesService.findOne(
@@ -113,28 +124,17 @@ export class VenuesService {
     if (!venue) throw new NotFoundException(`Venue with id ${id} not found`);
 
     if (file) {
-      if (venue.imageUrl) {
-        const oldImagePath = join(process.cwd(), 'public', venue.imageUrl);
-        try {
-          await unlink(oldImagePath);
-        } catch (err) {
-          console.warn('Stara slika nije obrisana:', err);
-        }
-      }
+      await this.deleteImage(venue.imageUrl);
       venue.imageUrl = `uploads/${file.filename}`;
     } else if (updateVenueDto.imageUrl === '') {
-      if (venue.imageUrl) {
-        const oldImagePath = join(process.cwd(), 'public', venue.imageUrl);
-        try {
-          await unlink(oldImagePath);
-        } catch (err) {
-          console.warn('Stara slika nije obrisana:', err);
-        }
-      }
+      await this.deleteImage(venue.imageUrl);
       venue.imageUrl = '';
     }
 
-    Object.assign(venue, updateVenueDto);
+    Object.assign(venue, {
+      ...updateVenueDto,
+      imageUrl: venue.imageUrl,
+    });
 
     return await this.venuesRepository.save(venue);
   }
@@ -142,14 +142,9 @@ export class VenuesService {
   async remove(id: number) {
     const venue = await this.findOne(id);
     if (!venue) throw new NotFoundException(`Venue with id ${id} not found`);
-    if (venue.imageUrl) {
-      const imagePath = join(process.cwd(), 'public', venue.imageUrl);
-      try {
-        await unlink(imagePath);
-      } catch (err) {
-        console.warn('Slika nije obrisana:', err);
-      }
-    }
+
+    await this.deleteImage(venue.imageUrl);
+
     return await this.venuesRepository.remove(venue);
   }
 }

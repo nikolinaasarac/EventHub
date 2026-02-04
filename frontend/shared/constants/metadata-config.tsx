@@ -1,4 +1,4 @@
-import {Activity, Guitar, Home, Music, Square, Users} from "lucide-react";
+import {Activity, DoorOpen, Guitar, Home, Music, Square, Users} from "lucide-react";
 import {JSX} from "react";
 
 export const metadataConfig: Record<
@@ -10,6 +10,7 @@ export const metadataConfig: Record<
 	referee: {label: 'Sudija', icon: <Activity className="text-slate-500"/>},
 	performer: {label: 'Izvođač', icon: <Music className="text-slate-500"/>},
 	genre: {label: 'Žanr', icon: <Guitar className="text-slate-500"/>},
+	gatesOpen: {label: 'Ulaz od', icon: <DoorOpen className="text-slate-500"/>},
 };
 
 export const defaultMetadataIcon = <Square className="text-slate-500"/>;
