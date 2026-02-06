@@ -39,7 +39,6 @@ export class EventsController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createEventDto: CreateEventDto,
   ) {
-    console.log('Fajl primljen:', file);
     const imageUrl = file ? `uploads/${file.filename}` : undefined;
     return this.eventsService.create(createEventDto, imageUrl);
   }
@@ -60,8 +59,25 @@ export class EventsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventsService.update(+id, updateEventDto);
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './public/uploads',
+        filename: (req, file, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = file.originalname.split('.').pop();
+          cb(null, `image-${uniqueSuffix}.${ext}`);
+        },
+      }),
+    }),
+  )
+  update(
+    @Param('id') id: string,
+    @Body() updateEventDto: UpdateEventDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.eventsService.update(+id, updateEventDto, file);
   }
 
   @Delete(':id')

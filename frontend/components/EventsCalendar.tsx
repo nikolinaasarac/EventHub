@@ -1,7 +1,6 @@
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import srLocale from "@fullcalendar/core/locales/sr";
 import FullCalendar from "@fullcalendar/react";
 import React from "react";
 import {EventInput} from "@fullcalendar/core";
@@ -16,11 +15,17 @@ export function EventsCalendar({events, handleEventClick}: Props) {
 		<FullCalendar
 			plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 			initialView="dayGridMonth"
-			locale={srLocale}
+			locale="sr-latn"
 			headerToolbar={{
 				left: "prev,next today",
 				center: "title",
 				right: "dayGridMonth,timeGridWeek",
+			}}
+			buttonText={{
+				today: "Danas",
+				month: "Mjesec",
+				week: "Sedmica",
+				day: "Dan",
 			}}
 			events={events}
 			eventClick={handleEventClick}

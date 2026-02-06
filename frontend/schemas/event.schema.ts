@@ -12,7 +12,8 @@ export const eventSchema = yup.object({
 
 	image: yup
 		.mixed()
-		.required('Slika je obavezna')
+		.optional()
+		.nullable()
 		.test('fileSize', 'Slika je prevelika', (value: any) => {
 			if (!value) return true;
 			return value.size <= 2000000;

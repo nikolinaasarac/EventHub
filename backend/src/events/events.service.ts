@@ -22,8 +22,18 @@ export class EventsService {
     private readonly venuesService: VenuesService,
   ) {}
 
+  private async deleteImage(imageUrl?: string) {
+    if (!imageUrl) return;
+
+    const imagePath = join(process.cwd(), 'public', imageUrl);
+    try {
+      await unlink(imagePath);
+    } catch (err) {
+      console.warn('Slika nije obrisana:', err);
+    }
+  }
+
   async create(createEventDto: CreateEventDto, imageUrl?: string) {
-    console.log(createEventDto);
     const eventSubcategory = await this.eventSubcategoriesService.findOne(
       createEventDto.eventSubcategoryId,
     );
@@ -107,12 +117,75 @@ export class EventsService {
     });
   }
 
-  async update(id: number, updateEventDto: UpdateEventDto) {
+  async update(
+    id: number,
+    updateEventDto: UpdateEventDto,
+    file?: Express.Multer.File,
+  ) {
     const event = await this.findOne(id);
-    if (!event) throw new NotFoundException(`Event with id ${id} not found`);
-    Object.assign(event, updateEventDto);
-    await this.eventsRepository.save(this.eventsRepository.create(event));
-    return `This action updates a #${id} event`;
+    if (!event) {
+      throw new NotFoundException(`Event with id ${id} not found`);
+    }
+
+    if (file) {
+      await this.deleteImage(event.imageUrl);
+      event.imageUrl = `uploads/${file.filename}`;
+    } else if (updateEventDto.imageUrl === '') {
+      await this.deleteImage(event.imageUrl);
+      event.imageUrl = '';
+    }
+
+    if (updateEventDto.venueId) {
+      const venue = await this.venuesService.findOne(updateEventDto.venueId);
+      if (!venue) {
+        throw new NotFoundException(
+          `Venue with id ${updateEventDto.venueId} not found`,
+        );
+      }
+      event.venue = venue;
+    }
+
+    if (updateEventDto.eventSubcategoryId) {
+      throw new NotFoundException('Event subcategory cannot be changed');
+    }
+
+    const { venueId, eventSubcategoryId, metadata, ...rest } = updateEventDto;
+    Object.assign(event, {
+      ...rest,
+      imageUrl: event.imageUrl,
+    });
+
+    if (!event.eventSubcategory) {
+      throw new NotFoundException('Event subcategory not found');
+    }
+
+    if (metadata) {
+      const subcategoryName = event.eventSubcategory.name.toLowerCase();
+      const config = SUBCATEGORY_METADATA_CONFIG[subcategoryName];
+
+      if (config) {
+        for (const field of config.fields) {
+          const value =
+            metadata[field.key] !== undefined
+              ? metadata[field.key]
+              : event.metadata?.[field.key];
+
+          if (
+            field.required &&
+            (value === undefined || value === null || value === '')
+          ) {
+            throw new NotFoundException(`Field ${field.key} is required`);
+          }
+        }
+      }
+
+      event.metadata = {
+        ...(event.metadata || {}),
+        ...metadata,
+      };
+    }
+
+    return await this.eventsRepository.save(event);
   }
 
   async remove(id: number) {

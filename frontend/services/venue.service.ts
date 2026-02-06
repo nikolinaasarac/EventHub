@@ -23,7 +23,7 @@ export default class VenueService {
 		return BaseService.create(`${this.ENDPOINT}`, formData);
 	}
 
-	static async updateVenue(id: number, formData: FormData) {
+	static async updateVenue(id: number, formData: FormData){
 		return BaseService.update(`${this.ENDPOINT}/${id}`, formData);
 	}
 

@@ -25,4 +25,8 @@ export default class EventService {
 	static async deleteEvent(id: string) {
 		return BaseService.delete(`${this.ENDPOINT}/${id}`);
 	}
+
+	static async updateEvent(id: number, formData: FormData): Promise<Event> {
+		return BaseService.update(`${this.ENDPOINT}/${id}`, formData);
+	}
 }

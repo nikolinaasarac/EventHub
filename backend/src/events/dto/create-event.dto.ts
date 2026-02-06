@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { EventStatus } from '../../../shared/enums/event-status.enum';
 import { Transform } from 'class-transformer';
+import { EmptyStringToNull } from '../../../shared/decorators/empty-string-to-null.decorator';
 
 export class CreateEventDto {
   @IsString()
@@ -40,6 +41,7 @@ export class CreateEventDto {
 
   @IsString()
   @IsOptional()
+  @EmptyStringToNull()
   imageUrl?: string;
 
   @IsOptional()
