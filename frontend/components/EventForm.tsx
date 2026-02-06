@@ -8,6 +8,7 @@ import {SelectBox} from "@/components/SelectBox";
 import {AlignLeft, Calendar, Clock, Info, MapPin} from "lucide-react";
 import {LoadingButton} from "@/components/LoadingButton";
 import React, {useEffect, useState} from "react";
+import {Event} from "@/models/event.model";
 import {EventCategory} from "@/models/event-category.model";
 import {EventSubcategory} from "@/models/event-subcategory.model";
 import EventCategoryService from "@/services/event-category.service";
@@ -41,7 +42,11 @@ type EventFormValues = {
 	}[];
 };
 
-export function EventForm() {
+interface Props {
+	event?: Event
+}
+
+export function EventForm({event}: Props) {
 	const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);
 	const [eventSubcategories, setEventSubcategories] = useState<EventSubcategory[]>([]);
 	const [venues, setVenues] = useState<Venue[]>([]);
@@ -57,8 +62,6 @@ export function EventForm() {
 				setEventCategories(responseCategory);
 				setEventSubcategories(responseSubcategory);
 				setVenues(responseVenue);
-				console.log(responseCategory);
-				console.log(responseSubcategory);
 			} catch (e) {
 				console.error(e);
 			}
@@ -66,54 +69,88 @@ export function EventForm() {
 		fetchData();
 	}, [])
 
-	console.log(eventSchema)
-
+	const isEdit = !!event;
+	const title = isEdit ? "Uredi događaj" : "Novi događaj";
+	const subtitle = isEdit
+		? "Izmijenite podatke o događaju."
+		: "Izaberite termin, lokaciju i unesite detalje.";
+	const submitText = isEdit ? "Sačuvaj izmjene" : "Objavi događaj";
 
 	return (
 		<div className="min-h-screen bg-slate-50/50 py-12 px-4">
 			<div className="max-w-5xl mx-auto space-y-8">
 				<div className="mb-8 text-center md:text-left">
-					<h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Kreiraj Događaj</h1>
-					<p className="text-slate-500 font-medium">Izaberite termin, lokaciju i unesite detalje.</p>
+					<h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight">{title}</h1>
+					<p className="text-slate-500 font-medium">{subtitle}</p>
 				</div>
 
 				<Formik<EventFormValues>
 					initialValues={{
-						title: '',
-						description: '',
-						eventCategoryId: undefined,
-						eventSubcategoryId: undefined,
-						startDate: null,
-						endDate: undefined,
+						title: event?.title ?? '',
+						description: event?.description ?? '',
+						eventCategoryId: event?.eventSubcategory.eventCategory.id ?? undefined,
+						eventSubcategoryId: event?.eventSubcategory.id ?? undefined,
+						startDate: event?.startDate ? new Date(event.startDate) : null,
+						endDate: event?.endDate ? new Date(event.endDate) : undefined,
 						image: null,
-						venueId: undefined,
-						metadata: {performer: ''},
-						isFree: true,
-						ticketTypes: [{name: '', price: '', totalQuantity: ''}],
+						venueId: event?.venue.id ?? undefined,
+						metadata: event?.metadata ?? {performer: ''},
+						isFree: event?.ticketTypes?.length === 0,
+						ticketTypes: event?.ticketTypes?.map(t => ({
+							name: t.name,
+							price: String(t.price),
+							totalQuantity: String(t.totalQuantity),
+						})) || [{name: '', price: '', totalQuantity: ''}],
 					}}
 					validationSchema={eventSchema}
 					onSubmit={async (values) => {
-						console.log(values);
+						console.log("Updated", values);
 						try {
 							const formData = new FormData();
+
 							formData.append('title', values.title);
 							formData.append('description', values.description);
-							formData.append('eventSubcategoryId', String(values.eventSubcategoryId));
+							if (!isEdit) {
+								formData.append('eventSubcategoryId', String(values.eventSubcategoryId));
+							}
 
-							if (values.startDate) formData.append('startDate', values.startDate.toISOString());
-							if (values.endDate) formData.append('endDate', values.endDate.toISOString());
-							if (values.venueId) formData.append('venueId', String(values.venueId));
-							if (values.image) formData.append('image', values.image);
+							if (values.startDate) {
+								formData.append('startDate', values.startDate.toISOString());
+							}
+							if (values.endDate) {
+								formData.append('endDate', values.endDate.toISOString());
+							}
+							if (values.venueId) {
+								formData.append('venueId', String(values.venueId));
+							}
+
+							if (values.image) {
+								formData.append('image', values.image);
+							} else if (!isEdit) {
+								formData.append('image', '');
+							}
 
 							Object.entries(values.metadata).forEach(([key, val]) => {
 								formData.append(`metadata[${key}]`, String(val));
 							});
-							const createdEvent = await EventService.createEvent(formData);
-							const eventId = createdEvent.id;
 
-							if (!values.isFree && values.ticketTypes.length > 0) {
+							let savedEvent;
+
+							if (isEdit && event) {
+								savedEvent = await EventService.updateEvent(event.id, formData);
+								toast.success("Događaj uspješno ažuriran!");
+								router.back();
+							} else {
+								savedEvent = await EventService.createEvent(formData);
+								toast.success("Događaj uspješno kreiran!");
+								router.back();
+							}
+
+							const eventId = savedEvent.id;
+
+							if (!isEdit && !values.isFree && values.ticketTypes.length > 0) {
 								await Promise.all(
-									values.ticketTypes.map((ticket) =>
+									values.ticketTypes.map(ticket =>
 										TicketTypeService.createTicketType({
 											name: ticket.name,
 											price: Number(ticket.price),
@@ -123,12 +160,9 @@ export function EventForm() {
 									)
 								);
 							}
-							toast.success("Događaj uspješno kreiran!");
 						} catch (err) {
 							console.error(err);
-							toast.error("Greška prilikom kreiranja događaja!");
-						} finally {
-							router.back();
+							toast.error("Greška prilikom čuvanja događaja!");
 						}
 					}}
 				>
@@ -144,7 +178,11 @@ export function EventForm() {
 									<div className="grid grid-cols-1 lg:grid-cols-12">
 										<div className="lg:col-span-5 p-6 bg-slate-50">
 											<ImageUpload name="image" label={"Naslovna fotografija događaja"}
-														 aspectRatio={1.77}/>
+														 aspectRatio={1.77} existingImageUrl={
+												event?.imageUrl
+													? `${process.env.NEXT_PUBLIC_API_BASE_URL}public/${event.imageUrl}`
+													: undefined
+											}/>
 										</div>
 										<div
 											className="lg:col-span-7 p-8 flex flex-col justify-center space-y-6 bg-white">
@@ -164,7 +202,8 @@ export function EventForm() {
 																   setFieldValue("eventSubcategoryId", null);
 																   setFieldValue("metadata", {});
 															   }}
-															   placeholder={"Izaberite kategoriju"}/>
+															   placeholder={"Izaberite kategoriju"}
+															   disabled={isEdit}/>
 													<div className="text-red-500 text-sm h-2">
 														<ErrorMessage
 															name="eventCategoryId"
@@ -183,7 +222,7 @@ export function EventForm() {
 															   }))} value={values.eventSubcategoryId || null}
 															   setFieldValue={setFieldValue}
 															   placeholder={values.eventCategoryId ? "Izaberite podkategoriju" : "Prvo izaberite kategoriju"}
-															   disabled={!values.eventCategoryId}/>
+															   disabled={!values.eventCategoryId || isEdit}/>
 													<div className="text-red-500 text-sm h-2">
 														<ErrorMessage
 															name="eventSubcategoryId"
@@ -351,7 +390,7 @@ export function EventForm() {
 										type="submit"
 										loading={isSubmitting}
 										className="w-full md:w-[400px] h-16 bg-indigo-600 text-xl font-black rounded-2xl shadow-2xl shadow-indigo-200">
-										OBJAVI DOGAĐAJ
+										{submitText}
 									</LoadingButton>
 								</div>
 
