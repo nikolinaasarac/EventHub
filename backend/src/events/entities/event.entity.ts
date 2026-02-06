@@ -30,7 +30,7 @@ export class Event {
   endDate: Date;
 
   @ManyToOne(() => Venue)
-  venue: Venue;
+  venue: Venue | null;
 
   @Column({ nullable: true })
   imageUrl: string;
@@ -39,7 +39,7 @@ export class Event {
     () => EventSubcategory,
     (eventSubcategory) => eventSubcategory.event,
   )
-  eventSubcategory: EventSubcategory;
+  eventSubcategory: EventSubcategory | null;
 
   @Column({
     type: 'enum',
