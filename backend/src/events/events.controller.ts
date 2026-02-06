@@ -39,7 +39,6 @@ export class EventsController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createEventDto: CreateEventDto,
   ) {
-    console.log('Fajl primljen:', file);
     const imageUrl = file ? `uploads/${file.filename}` : undefined;
     return this.eventsService.create(createEventDto, imageUrl);
   }

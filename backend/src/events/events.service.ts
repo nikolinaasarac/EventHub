@@ -34,7 +34,6 @@ export class EventsService {
   }
 
   async create(createEventDto: CreateEventDto, imageUrl?: string) {
-    console.log(createEventDto);
     const eventSubcategory = await this.eventSubcategoriesService.findOne(
       createEventDto.eventSubcategoryId,
     );
