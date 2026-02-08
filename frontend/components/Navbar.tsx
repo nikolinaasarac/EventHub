@@ -54,15 +54,6 @@ export function NavBar() {
 									<Link href="/calendar">Kalendar</Link>
 								</NavigationMenuLink>
 							</NavigationMenuItem>
-
-							<NavigationMenuItem>
-								<NavigationMenuLink
-									asChild
-									className={navigationMenuTriggerStyle()}
-								>
-									<Link href="/news">Novosti</Link>
-								</NavigationMenuLink>
-							</NavigationMenuItem>
 							<NavigationMenuItem>
 								<NavigationMenuLink
 									asChild
@@ -98,11 +89,6 @@ export function NavBar() {
 								<DropdownMenuItem asChild>
 									<Link href="/calendar">
 										Kalendar događaja
-									</Link>
-								</DropdownMenuItem>
-								<DropdownMenuItem asChild>
-									<Link href="/news">
-										Novosti
 									</Link>
 								</DropdownMenuItem>
 								<DropdownMenuItem asChild>
