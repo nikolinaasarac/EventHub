@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Role } from '../../roles/entities/role.entity';
 import { RefreshToken } from '../../auth/entities/refresh-token.entity';
+import { Review } from '../../reviews/entities/review.entity';
 
 @Entity('users')
 export class User {
@@ -34,6 +35,9 @@ export class User {
 
   @OneToMany(() => RefreshToken, (rt) => rt.user)
   refreshTokens: RefreshToken[];
+
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
 
   @CreateDateColumn()
   createdAt: Date;
