@@ -11,6 +11,7 @@ import { Venue } from '../../venues/entities/venue.entity';
 import { EventStatus } from '../../../shared/enums/event-status.enum';
 import { EventSubcategory } from '../../event-subcategories/entities/event-subcategory.entity';
 import { TicketType } from '../../ticket-types/entities/ticket-type.entity';
+import { Review } from '../../reviews/entities/review.entity';
 
 @Entity('events')
 export class Event {
@@ -50,6 +51,9 @@ export class Event {
 
   @Column({ type: 'jsonb', nullable: true })
   metadata: Record<string, unknown>;
+
+  @OneToMany(() => Review, (review) => review.event)
+  reviews: Review[];
 
   @OneToMany(() => TicketType, (ticketType) => ticketType.event)
   ticketTypes: TicketType[];

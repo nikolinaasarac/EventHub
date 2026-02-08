@@ -23,7 +23,7 @@ export function InputField({
 	const [field, meta] = useField(name);
 	return (
 		<Field>
-			<FieldLabel htmlFor={name}>{label}</FieldLabel>
+			<FieldLabel htmlFor={name} className="font-bold text-slate-700">{label}</FieldLabel>
 			<FormikField
 				as={as}
 				type={type}
