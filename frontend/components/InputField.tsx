@@ -3,7 +3,7 @@ import {Field, FieldLabel} from "@/components/ui/field";
 
 interface InputFieldProps {
 	name: string;
-	label: string;
+	label?: string;
 	labelIcon?: React.ReactNode;
 	type?: string;
 	placeholder?: string;
