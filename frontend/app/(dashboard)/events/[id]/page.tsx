@@ -22,6 +22,7 @@ import {Review} from "@/models/review.model";
 import ReviewsService from "@/services/reviews.service";
 import {ReviewItem} from "@/components/ReviewItem";
 import {AddReviewForm} from "@/components/AddReviewForm";
+import {Ticket} from "@/components/Ticket";
 
 export default function EventDetailsPage() {
 	const {id} = useParams();
@@ -191,20 +192,7 @@ export default function EventDetailsPage() {
 							<div
 								className="sticky top-24 p-8 rounded-3xl shadow-slate-200/50 space-y-6">
 								{event.ticketTypes.map(ticketType => (
-									<div key={ticketType.id}
-										 className="flex flex-col items-center gap-4 p-6 rounded-xl shadow-lg  border border-indigo-100 hover:shadow-xl transition-all">
-										<span
-											className="text-slate-400 text-sm font-medium uppercase">Cijena ulaznice</span>
-										<div className="text-4xl font-black text-slate-900 mt-1">{ticketType.name}</div>
-										<div className="text-4xl font-black text-slate-900 mt-1">{ticketType.price} KM
-										</div>
-										<div className="space-y-3 mt-4">
-											<Button
-												className="w-full h-14 bg-indigo-600 hover:bg-indigo-700 text-lg font-bold rounded-2xl shadow-lg shadow-indigo-100">
-												Kupi kartu
-											</Button>
-										</div>
-									</div>
+									<Ticket key={ticketType.id} ticketType={ticketType}/>
 								))}
 							</div>
 						</div>
