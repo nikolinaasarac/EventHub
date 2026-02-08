@@ -7,7 +7,7 @@ import {
 	Clock,
 	Heart,
 	Info,
-	CheckCircle2, ChevronLeft, Trash
+	CheckCircle2, ChevronLeft, Trash, MessageSquare
 } from 'lucide-react';
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
@@ -18,6 +18,10 @@ import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
 import {EventMetadataComponent} from "@/components/EventMetadataComponent";
 import {ConfirmDialog} from "@/components/ConfirmDialog";
 import {toast} from "sonner";
+import {Review} from "@/models/review.model";
+import ReviewsService from "@/services/reviews.service";
+import {ReviewItem} from "@/components/ReviewItem";
+import {AddReviewForm} from "@/components/AddReviewForm";
 
 export default function EventDetailsPage() {
 	const {id} = useParams();
@@ -25,6 +29,7 @@ export default function EventDetailsPage() {
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const router = useRouter();
 	const eventId = Array.isArray(id) ? id[0] : id;
+	const [reviews, setReviews] = useState<Review[]>([])
 
 
 	useEffect(() => {
@@ -32,13 +37,21 @@ export default function EventDetailsPage() {
 		const fetchEvent = async () => {
 			try {
 				const response = await EventService.getEvent(id);
-				console.log(response);
 				setEvent(response);
 			} catch (e) {
 				console.error(e);
 			}
 		}
+		const fetchReviews = async () => {
+			try {
+				const response = await ReviewsService.getReviewsByEventId(Number(id));
+				setReviews(response);
+			} catch (e) {
+				console.error(e);
+			}
+		}
 		fetchEvent();
+		fetchReviews();
 	}, [id])
 
 	const handleDelete = async () => {
@@ -54,9 +67,16 @@ export default function EventDetailsPage() {
 		}
 	}
 
-	if (!event) return null;
+	const refreshReviews = async () => {
+		try {
+			const response = await ReviewsService.getReviewsByEventId(Number(id));
+			setReviews(response);
+		} catch (e) {
+			console.error(e);
+		}
+	};
 
-	console.log(event.ticketTypes);
+	if (!event) return null;
 
 	return (
 		<div className="min-h-screen bg-white">
@@ -130,6 +150,40 @@ export default function EventDetailsPage() {
 								<CheckCircle2 className="w-5 h-5 text-indigo-600"/> Detalji
 							</h2>
 							<EventMetadataComponent metadata={event.metadata}/>
+						</div>
+						<hr className="border-slate-100"/>
+						<div className="space-y-8">
+							<div className="flex items-center justify-between">
+								<h2 className="text-2xl font-bold flex items-center gap-2">
+									<MessageSquare className="w-5 h-5 text-indigo-600"/> Utisci posjetilaca
+								</h2>
+								<Badge variant="secondary" className="bg-slate-100 text-slate-600">
+									{reviews.length} {reviews.length === 1 ? 'komentar' : 'komentara'}
+								</Badge>
+							</div>
+							<AddReviewForm
+								eventId={Number(eventId)}
+								onReviewAdded={refreshReviews}
+							/>
+
+							{reviews.length > 0 ? (
+								<div className="grid gap-6">
+									{reviews.map((review) => (
+										<ReviewItem key={review.id} review={review}/>
+									))}
+								</div>
+							) : (
+								<div
+									className="text-center py-12 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+									<div
+										className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
+										<MessageSquare className="w-6 h-6 text-slate-300"/>
+									</div>
+									<p className="text-slate-500 font-medium">Još uvijek nema komentara za ovaj
+										događaj.</p>
+									<p className="text-sm text-slate-400">Budite prvi koji će podijeliti utiske!</p>
+								</div>
+							)}
 						</div>
 					</div>
 					{event.ticketTypes && event.ticketTypes.length > 0 ? (
