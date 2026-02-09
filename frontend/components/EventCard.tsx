@@ -36,7 +36,7 @@ export function EventCard({
 	const [isFavorite, setIsFavorite] = useState(false); //dodati da se provjeri u bazi
 
 	const toggleFavorite = (e: React.MouseEvent) => {
-		e.stopPropagation(); // Sprečava otvaranje detalja događaja klikom na srce
+		e.stopPropagation();
 		setIsFavorite(!isFavorite);
 		// Ovde ćeš kasnije dodati poziv ka API-ju
 		// npr. FavoriteService.toggle(id);
