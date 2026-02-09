@@ -12,6 +12,7 @@ import { EventStatus } from '../../../shared/enums/event-status.enum';
 import { EventSubcategory } from '../../event-subcategories/entities/event-subcategory.entity';
 import { TicketType } from '../../ticket-types/entities/ticket-type.entity';
 import { Review } from '../../reviews/entities/review.entity';
+import { Ticket } from '../../tickets/entities/ticket.entity';
 
 @Entity('events')
 export class Event {
@@ -57,6 +58,9 @@ export class Event {
 
   @OneToMany(() => TicketType, (ticketType) => ticketType.event)
   ticketTypes: TicketType[];
+
+  @OneToMany(() => Ticket, (ticket) => ticket.event)
+  tickets: Ticket[];
 
   @CreateDateColumn()
   createdAt: Date;

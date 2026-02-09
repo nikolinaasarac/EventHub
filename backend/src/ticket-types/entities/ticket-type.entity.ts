@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { Event } from '../../events/entities/event.entity';
+import { Ticket } from '../../tickets/entities/ticket.entity';
 
 @Entity('ticket_types')
 export class TicketType {
@@ -32,6 +34,9 @@ export class TicketType {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(() => Ticket, (ticket) => ticket.ticketType)
+  tickets: Ticket[];
 
   @CreateDateColumn()
   createdAt: Date;

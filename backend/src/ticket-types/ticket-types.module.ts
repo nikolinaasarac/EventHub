@@ -9,5 +9,6 @@ import { EventsModule } from '../events/events.module';
   imports: [TypeOrmModule.forFeature([TicketType]), EventsModule],
   controllers: [TicketTypesController],
   providers: [TicketTypesService],
+  exports: [TicketTypesService],
 })
 export class TicketTypesModule {}
