@@ -7,14 +7,15 @@ import {CreditCard, ShieldCheck} from "lucide-react";
 import {LoadingButton} from "@/components/LoadingButton";
 import React from "react";
 import {TicketType} from "@/models/ticket-type.model";
+import TicketsService from "@/services/tickets.service";
 
 interface Props {
 	ticketType: TicketType;
 	quantity: number;
+	eventId: number;
 }
 
-export function CheckoutForm({ticketType, quantity}: Props) {
-	const totalPrice = ticketType.price * quantity;
+export function CheckoutForm({ticketType, quantity, eventId}: Props) {
 
 	return (
 		<Formik
@@ -27,9 +28,24 @@ export function CheckoutForm({ticketType, quantity}: Props) {
 			}}
 			validationSchema={checkoutSchema}
 			onSubmit={async (values) => {
-				console.log("Podaci za naplatu:", {...values, quantity, totalPrice});
-				await new Promise(resolve => setTimeout(resolve, 2000));
-				toast.success("Uspješna kupovina! Provjerite vaš email.");
+				try {
+					const payload = {
+						eventId: eventId,
+						ticketTypeId: ticketType.id,
+						quantity: quantity,
+					};
+					console.log('Payload type check:', payload, {
+						eventId: typeof payload.eventId,
+						ticketTypeId: typeof payload.ticketTypeId,
+						quantity: typeof payload.quantity
+					});
+
+					await TicketsService.buyTickets(payload);
+					toast.success("Uspješna kupovina! Provjerite vaš email.");
+				} catch (error) {
+					console.error(error);
+					toast.error("Greška prilikom kupovine karata!");
+				}
 			}}
 		>
 			{({isSubmitting, handleChange, values}) => (

@@ -16,11 +16,13 @@ interface Props {
 	isOpen: boolean;
 	onClose: () => void;
 	ticketType: TicketType
+	eventId: number
 }
 
-export function CheckoutModal({isOpen, onClose, ticketType}: Props) {
+export function CheckoutModal({isOpen, onClose, ticketType, eventId}: Props) {
 	const [quantity, setQuantity] = useState(1);
 	const totalPrice = ticketType.price * quantity;
+	console.log(ticketType);
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
@@ -80,7 +82,7 @@ export function CheckoutModal({isOpen, onClose, ticketType}: Props) {
 							<DialogTitle className="text-2xl font-black text-slate-900">Plaćanje</DialogTitle>
 							<DialogDescription>Unesite vaše podatke.</DialogDescription>
 						</DialogHeader>
-						<CheckoutForm ticketType={ticketType} quantity={quantity}/>
+						<CheckoutForm ticketType={ticketType} quantity={quantity} eventId={eventId}/>
 					</div>
 				</div>
 			</DialogContent>

@@ -4,16 +4,14 @@ import {Button} from "@/components/ui/button";
 import React, {useState} from "react";
 import {Ticket as TicketIcon, Zap} from "lucide-react";
 import {CheckoutModal} from "@/components/CheckoutModal";
+import {TicketType} from "@/models/ticket-type.model";
 
 interface Props {
-	ticketType: {
-		id: number;
-		name: string;
-		price: number;
-	}
+	ticketType: TicketType
+	eventId: number
 }
 
-export function Ticket({ticketType}: Props) {
+export function Ticket({ticketType, eventId}: Props) {
 	const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 	return (
 		<div className="group relative w-full max-w-sm mx-auto transition-all duration-300 hover:-translate-y-2">
@@ -77,6 +75,7 @@ export function Ticket({ticketType}: Props) {
 				isOpen={isCheckoutOpen}
 				onClose={() => setIsCheckoutOpen(false)}
 				ticketType={ticketType}
+				eventId={eventId}
 			/>
 		</div>
 	);
