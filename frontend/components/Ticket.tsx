@@ -1,16 +1,18 @@
+"use client"
+
 import {Button} from "@/components/ui/button";
-import React from "react";
+import React, {useState} from "react";
 import {Ticket as TicketIcon, Zap} from "lucide-react";
+import {CheckoutModal} from "@/components/CheckoutModal";
+import {TicketType} from "@/models/ticket-type.model";
 
 interface Props {
-	ticketType: {
-		id: number;
-		name: string;
-		price: number;
-	}
+	ticketType: TicketType
+	eventId: number
 }
 
-export function Ticket({ticketType}: Props) {
+export function Ticket({ticketType, eventId}: Props) {
+	const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 	return (
 		<div className="group relative w-full max-w-sm mx-auto transition-all duration-300 hover:-translate-y-2">
 			<div
@@ -55,6 +57,7 @@ export function Ticket({ticketType}: Props) {
 					</div>
 
 					<Button
+						onClick={() => setIsCheckoutOpen(true)}
 						className="w-full h-14 bg-indigo-600 hover:bg-indigo-700 text-lg font-black rounded-2xl shadow-lg shadow-indigo-200 transition-all group-hover:scale-[1.02] flex gap-2"
 					>
 						<Zap className="w-5 h-5 fill-white"/>
@@ -68,6 +71,12 @@ export function Ticket({ticketType}: Props) {
 				<div
 					className="absolute -bottom-10 -right-10 w-32 h-32 bg-indigo-50 rounded-full opacity-50 blur-3xl pointer-events-none group-hover:bg-indigo-100 transition-colors"/>
 			</div>
+			<CheckoutModal
+				isOpen={isCheckoutOpen}
+				onClose={() => setIsCheckoutOpen(false)}
+				ticketType={ticketType}
+				eventId={eventId}
+			/>
 		</div>
 	);
 }

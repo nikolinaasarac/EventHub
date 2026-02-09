@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react";
+import React, {useState} from "react";
 import {
 	Card,
 	CardContent,
@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
-import {CalendarIcon, MapPin} from "lucide-react";
+import {CalendarIcon, Heart, MapPin} from "lucide-react";
 import {useRouter} from "next/navigation";
+import { cn } from "@/lib/utils"
+
 
 type Props = {
 	id: string | number;
@@ -31,6 +33,14 @@ export function EventCard({
 							  location,
 						  }: Props) {
 	const router = useRouter();
+	const [isFavorite, setIsFavorite] = useState(false); //dodati da se provjeri u bazi
+
+	const toggleFavorite = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		setIsFavorite(!isFavorite);
+		// Ovde ćeš kasnije dodati poziv ka API-ju
+		// npr. FavoriteService.toggle(id);
+	};
 	return (
 		<Card className="overflow-hidden border-none shadow-lg group">
 			<div className="relative h-48 overflow-hidden">
@@ -42,6 +52,18 @@ export function EventCard({
 				<Badge className="absolute top-4 left-4 bg-white/90 text-slate-900 hover:bg-white">
 					{category}
 				</Badge>
+				<button
+					onClick={toggleFavorite}
+					className={cn(
+						"absolute top-3 right-3 p-2 rounded-full transition-all duration-300 z-10",
+						"bg-white/80 backdrop-blur-sm shadow-md hover:scale-110",
+						isFavorite ? "text-red-500" : "text-slate-400 hover:text-red-500"
+					)}
+				>
+					<Heart
+						className={cn("w-5 h-5 transition-colors", isFavorite && "fill-current")}
+					/>
+				</button>
 			</div>
 			<CardHeader>
 				<div className="flex items-center text-indigo-600 text-sm font-semibold mb-2">

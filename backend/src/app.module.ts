@@ -18,6 +18,7 @@ import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
 import { AuthModule } from './auth/auth.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     RolesModule,
     AuthModule,
     ReviewsModule,
+    TicketsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -77,6 +77,7 @@ export default function EventDetailsPage() {
 		}
 	};
 
+
 	if (!event) return null;
 
 	return (
@@ -192,7 +193,7 @@ export default function EventDetailsPage() {
 							<div
 								className="sticky top-24 p-8 rounded-3xl shadow-slate-200/50 space-y-6">
 								{event.ticketTypes.map(ticketType => (
-									<Ticket key={ticketType.id} ticketType={ticketType}/>
+									<Ticket key={ticketType.id} ticketType={ticketType} eventId={Number(eventId)}/>
 								))}
 							</div>
 						</div>

@@ -12,6 +12,7 @@ import {
 import { Role } from '../../roles/entities/role.entity';
 import { RefreshToken } from '../../auth/entities/refresh-token.entity';
 import { Review } from '../../reviews/entities/review.entity';
+import { Ticket } from '../../tickets/entities/ticket.entity';
 
 @Entity('users')
 export class User {
@@ -38,6 +39,9 @@ export class User {
 
   @OneToMany(() => Review, (review) => review.user)
   reviews: Review[];
+
+  @OneToMany(() => Ticket, (ticket) => ticket.user)
+  tickets: Ticket[];
 
   @CreateDateColumn()
   createdAt: Date;
