@@ -112,11 +112,11 @@ export class MailService {
         };
 
         const dateStr = new Date(ticket.event.startDate).toLocaleDateString(
-          'sr-RS',
+          'sr-Latn-RS',
           { day: '2-digit', month: 'long', year: 'numeric' },
         );
         const timeStr = new Date(ticket.event.startDate).toLocaleTimeString(
-          'sr-RS',
+          'sr-Latn-RS',
           { hour: '2-digit', minute: '2-digit' },
         );
 
