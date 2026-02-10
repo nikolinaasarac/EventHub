@@ -18,7 +18,6 @@ export function VenueTypesMultiSelect({handleSelectChange, selectedVenueTypes}: 
 			try {
 				const response = await VenueTypesService.getVenueTypes();
 				setVenueTypes(response);
-				console.log(response);
 			} catch (e) {
 				console.error(e);
 			}

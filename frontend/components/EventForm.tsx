@@ -104,7 +104,6 @@ export function EventForm({event}: Props) {
 					}}
 					validationSchema={eventSchema}
 					onSubmit={async (values) => {
-						console.log("Updated", values);
 						try {
 							const formData = new FormData();
 

@@ -39,7 +39,6 @@ export class VenuesController {
     @UploadedFile() file: Express.Multer.File,
     @Body() body: CreateVenueDto,
   ) {
-    console.log('Fajl primljen:', file);
     const imageUrl = file ? `uploads/${file.filename}` : undefined;
     return this.venuesService.create(body, imageUrl);
   }

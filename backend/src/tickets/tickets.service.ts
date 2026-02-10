@@ -49,7 +49,7 @@ export class TicketsService {
       soldQuantity: ticketType.soldQuantity,
     });
 
-    await this.mailService.sendTicketPurchaseEmail(user, dto.quantity);
+    await this.mailService.sendTicketPurchaseEmail(user, savedTickets);
 
     return savedTickets;
   }

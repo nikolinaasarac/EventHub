@@ -34,11 +34,6 @@ export function CheckoutForm({ticketType, quantity, eventId}: Props) {
 						ticketTypeId: ticketType.id,
 						quantity: quantity,
 					};
-					console.log('Payload type check:', payload, {
-						eventId: typeof payload.eventId,
-						ticketTypeId: typeof payload.ticketTypeId,
-						quantity: typeof payload.quantity
-					});
 
 					await TicketsService.buyTickets(payload);
 					toast.success("Uspješna kupovina! Provjerite vaš email.");

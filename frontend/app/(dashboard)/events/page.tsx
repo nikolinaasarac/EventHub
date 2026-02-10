@@ -40,13 +40,10 @@ export default function EventsPage() {
 			const params: QueryParams = {page: urlPage, limit: 10, search: urlSearch};
 			try {
 				if (eventCategories.length) params.categories = eventCategories.join(",");
-				if(cities.length > 0) params.cities = cities.join(",");
+				if (cities.length > 0) params.cities = cities.join(",");
 				const response = await EventService.getEvents(params);
-				console.log(filters.categories);
-				console.log(filters.cities);
 				setEvents(response.data);
 				setTotalPages(response.meta.totalPages);
-				console.log(response);
 			} catch (e) {
 				console.error(e);
 			}

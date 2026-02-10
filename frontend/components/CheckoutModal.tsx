@@ -22,7 +22,6 @@ interface Props {
 export function CheckoutModal({isOpen, onClose, ticketType, eventId}: Props) {
 	const [quantity, setQuantity] = useState(1);
 	const totalPrice = ticketType.price * quantity;
-	console.log(ticketType);
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>

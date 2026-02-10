@@ -81,7 +81,6 @@ export function VenueForm({venue}: Props) {
 						validationSchema={venueSchema}
 						onSubmit={async (values) => {
 							try {
-								console.log(values);
 								const formData = new FormData();
 								formData.append('name', values.name);
 								formData.append('description', values.description);
@@ -114,7 +113,6 @@ export function VenueForm({venue}: Props) {
 									await VenueService.createVenue(formData);
 									toast.success("Lokacija uspješno kreirana!");
 								}
-								console.log('Venue uploaded:', formData);
 							} catch (err) {
 								console.error(err);
 								toast.error("Greška prilikom kreiranja lokacije!")
