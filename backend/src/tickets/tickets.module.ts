@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Ticket } from './entities/ticket.entity';
 import { TicketTypesModule } from '../ticket-types/ticket-types.module';
 import { EventsModule } from '../events/events.module';
+import { MailService } from '../email/mail.service';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { EventsModule } from '../events/events.module';
     EventsModule,
   ],
   controllers: [TicketsController],
-  providers: [TicketsService],
+  providers: [TicketsService, MailService],
 })
 export class TicketsModule {}

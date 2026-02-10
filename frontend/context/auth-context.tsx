@@ -33,7 +33,6 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 			const response = await AuthService.login(email, password);
 			setUser(response.user);
 			authToken.set(response.accessToken);
-			console.log(response);
 			toast.success('Prijava uspješna');
 			router.push('/home');
 		} catch (error) {
@@ -59,8 +58,6 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 	const rehydrateUser = async () => {
 		try {
 			const refreshRes = await UserService.refreshToken();
-			console.log('Rehydrate')
-			console.log(refreshRes);
 			authToken.set(refreshRes.accessToken);
 			const user = await UserService.getCurrentUser();
 			setUser(user);
