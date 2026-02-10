@@ -6,6 +6,7 @@ import { User } from '../users/entities/user.entity';
 import { EventsService } from '../events/events.service';
 import { BuyTicketsDto } from './dto/buy-ticket.dto';
 import { TicketTypesService } from '../ticket-types/ticket-types.service';
+import { MailService } from '../email/mail.service';
 
 @Injectable()
 export class TicketsService {
@@ -14,6 +15,7 @@ export class TicketsService {
     private readonly ticketRepository: Repository<Ticket>,
     private readonly eventsService: EventsService,
     private readonly ticketTypesService: TicketTypesService,
+    private readonly mailService: MailService,
   ) {}
 
   async buyTickets(dto: BuyTicketsDto, user: User) {
@@ -46,6 +48,8 @@ export class TicketsService {
     await this.ticketTypesService.update(ticketType.id, {
       soldQuantity: ticketType.soldQuantity,
     });
+
+    await this.mailService.sendTicketPurchaseEmail(user, dto.quantity);
 
     return savedTickets;
   }

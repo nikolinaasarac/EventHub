@@ -19,9 +19,11 @@ import { RolesModule } from './roles/roles.module';
 import { AuthModule } from './auth/auth.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { TicketsModule } from './tickets/tickets.module';
+import { MailModule } from './email/mail.module';
 
 @Module({
   imports: [
+    MailModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeormConfig],
@@ -48,6 +50,7 @@ import { TicketsModule } from './tickets/tickets.module';
     AuthModule,
     ReviewsModule,
     TicketsModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
