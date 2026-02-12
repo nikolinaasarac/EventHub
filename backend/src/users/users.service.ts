@@ -43,6 +43,36 @@ export class UsersService {
     return user;
   }
 
+  async createWithRole(
+    email: string,
+    password: string,
+    roleName: string,
+  ): Promise<User> {
+    const existingUser = await this.usersRepository.findOne({
+      where: { email },
+    });
+
+    if (existingUser) {
+      throw new NotFoundException(`User with email ${email} already exists`);
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const role = await this.rolesService.findByName(roleName);
+
+    if (!role) {
+      throw new NotFoundException(`Role ${roleName} not found`);
+    }
+
+    const user = this.usersRepository.create({
+      email,
+      password: hashedPassword,
+      roles: [role],
+    });
+
+    return this.usersRepository.save(user);
+  }
+
   async findAll() {
     return this.usersRepository.find();
   }

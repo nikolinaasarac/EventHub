@@ -8,11 +8,13 @@ import {
   JoinTable,
   Index,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { Role } from '../../roles/entities/role.entity';
 import { RefreshToken } from '../../auth/entities/refresh-token.entity';
 import { Review } from '../../reviews/entities/review.entity';
 import { Ticket } from '../../tickets/entities/ticket.entity';
+import { Organizer } from '../../organizers/entities/organizer.entity';
 
 @Entity('users')
 export class User {
@@ -33,6 +35,9 @@ export class User {
     inverseJoinColumn: { name: 'role_id' },
   })
   roles: Role[];
+
+  @OneToOne(() => Organizer, (organizer) => organizer.user)
+  organizerProfile: Organizer;
 
   @OneToMany(() => RefreshToken, (rt) => rt.user)
   refreshTokens: RefreshToken[];
