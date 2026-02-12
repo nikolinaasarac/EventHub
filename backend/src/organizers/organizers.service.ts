@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Organizer } from './entities/organizer.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
-import { Role } from '../roles/entities/role.entity';
 
 @Injectable()
 export class OrganizersService {
