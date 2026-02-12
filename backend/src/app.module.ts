@@ -20,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { MailModule } from './email/mail.module';
+import { OrganizersModule } from './organizers/organizers.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { MailModule } from './email/mail.module';
     ReviewsModule,
     TicketsModule,
     MailModule,
+    OrganizersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

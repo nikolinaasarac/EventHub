@@ -13,6 +13,7 @@ import { EventSubcategory } from '../../event-subcategories/entities/event-subca
 import { TicketType } from '../../ticket-types/entities/ticket-type.entity';
 import { Review } from '../../reviews/entities/review.entity';
 import { Ticket } from '../../tickets/entities/ticket.entity';
+import { Organizer } from '../../organizers/entities/organizer.entity';
 
 @Entity('events')
 export class Event {
@@ -61,6 +62,9 @@ export class Event {
 
   @OneToMany(() => Ticket, (ticket) => ticket.event)
   tickets: Ticket[];
+
+  @ManyToOne(() => Organizer, (organizer) => organizer.events)
+  organizer: Organizer;
 
   @CreateDateColumn()
   createdAt: Date;
