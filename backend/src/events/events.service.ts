@@ -12,6 +12,7 @@ import { ParamsDto } from '../../shared/params.dto';
 import { paginate } from '../../shared/pagination/pagination-helper';
 import { join } from 'path';
 import { unlink } from 'node:fs/promises';
+import { OrganizersService } from '../organizers/organizers.service';
 
 @Injectable()
 export class EventsService {
@@ -20,6 +21,7 @@ export class EventsService {
     private readonly eventsRepository: Repository<Event>,
     private readonly eventSubcategoriesService: EventSubcategoriesService,
     private readonly venuesService: VenuesService,
+    private readonly organizersService: OrganizersService,
   ) {}
 
   private async deleteImage(imageUrl?: string) {
@@ -33,7 +35,17 @@ export class EventsService {
     }
   }
 
-  async create(createEventDto: CreateEventDto, imageUrl?: string) {
+  async create(
+    createEventDto: CreateEventDto,
+    userId: string,
+    imageUrl?: string,
+  ) {
+    const organizer = await this.organizersService.getOrganizerByUserId(userId);
+
+    if (!organizer) {
+      throw new NotFoundException('Only organizers can create events');
+    }
+
     const eventSubcategory = await this.eventSubcategoriesService.findOne(
       createEventDto.eventSubcategoryId,
     );
@@ -67,6 +79,7 @@ export class EventsService {
       venue,
       imageUrl,
       eventSubcategory,
+      organizer,
     });
     return await this.eventsRepository.save(event);
   }
@@ -101,6 +114,7 @@ export class EventsService {
         'venue',
         'eventSubcategory.eventCategory',
         'ticketTypes',
+        'organizer',
       ],
     });
   }
@@ -113,6 +127,7 @@ export class EventsService {
         'venue',
         'eventSubcategory.eventCategory',
         'ticketTypes',
+        'organizer',
       ],
     });
   }

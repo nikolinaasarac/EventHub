@@ -66,4 +66,20 @@ export class OrganizersService {
     if (!organizer) throw new NotFoundException('Organizer not found.');
     return this.mapToOrganizerResponse(organizer);
   }
+
+  async getOrganizerByUserId(userId: string) {
+    const organizer = await this.organizersRepository.findOne({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      relations: ['user'],
+    });
+
+    if (!organizer) {
+      throw new NotFoundException('Organizer not found for this user.');
+    }
+    return this.mapToOrganizerResponse(organizer);
+  }
 }
