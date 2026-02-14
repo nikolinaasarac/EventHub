@@ -74,7 +74,9 @@ export class UsersService {
   }
 
   async findAll() {
-    return this.usersRepository.find();
+    return this.usersRepository.find({
+      relations: ['organizerProfile', 'roles'],
+    });
   }
 
   async findOne(id: string) {
