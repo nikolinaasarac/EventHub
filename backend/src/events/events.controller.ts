@@ -9,6 +9,8 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -16,12 +18,15 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { ParamsDto } from '../../shared/params.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import type { AuthRequest } from '../auth/auth.types';
 
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -38,9 +43,10 @@ export class EventsController {
   create(
     @UploadedFile() file: Express.Multer.File,
     @Body() createEventDto: CreateEventDto,
+    @Req() req: AuthRequest,
   ) {
     const imageUrl = file ? `uploads/${file.filename}` : undefined;
-    return this.eventsService.create(createEventDto, imageUrl);
+    return this.eventsService.create(createEventDto, req.user['id'], imageUrl);
   }
 
   @Get()

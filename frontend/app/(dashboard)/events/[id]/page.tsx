@@ -113,9 +113,17 @@ export default function EventDetailsPage() {
 							</div>
 						</div>
 						<div className="space-y-4">
-							<Badge className="bg-indigo-100 text-indigo-700 hover:bg-indigo-100 border-none px-4 py-1">
-								{event.eventSubcategory.eventCategory.name}
-							</Badge>
+							<div className="flex items-center justify-between space-x-4">
+								<Badge
+									className="bg-indigo-100 text-indigo-700 hover:bg-indigo-100 border-none px-4 py-1">
+									{event.eventSubcategory.eventCategory.name}
+								</Badge>
+								{event.organizer && (
+									<Badge
+										className="bg-indigo-100 text-indigo-700 hover:bg-indigo-100 border-none px-4 py-1">
+										Organizator: {event.organizer.displayName}
+									</Badge>)}
+							</div>
 							<h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight">
 								{event.title}
 							</h1>
