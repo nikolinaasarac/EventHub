@@ -23,4 +23,8 @@ export default class UserService {
 	static async register(email: string, password: string): Promise<LoginResponse> {
 		return BaseService.create(`${this.ENDPOINT}/register`, {email, password});
 	}
+
+	static async getAllUsers(): Promise<User[]> {
+		return BaseService.fetchList<User[]>(`/users`);
+	}
 }
