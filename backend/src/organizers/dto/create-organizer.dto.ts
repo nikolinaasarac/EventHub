@@ -1,5 +1,11 @@
-import { IsString, IsOptional, IsEmail, IsNotEmpty } from 'class-validator';
-import { Role } from '../../roles/entities/role.entity';
+import {
+  IsString,
+  IsOptional,
+  IsEmail,
+  IsNotEmpty,
+  IsEnum,
+} from 'class-validator';
+import { UserRole } from '../../../shared/enums/user-role.enum';
 
 export class CreateOrganizerDto {
   @IsEmail()
@@ -11,7 +17,8 @@ export class CreateOrganizerDto {
   password: string;
 
   @IsOptional()
-  role?: Role[];
+  @IsEnum(UserRole)
+  role: UserRole;
 
   @IsString()
   @IsNotEmpty()

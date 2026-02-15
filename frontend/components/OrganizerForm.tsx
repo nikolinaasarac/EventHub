@@ -25,7 +25,6 @@ export function OrganizerForm() {
 	return (
 		<div className="min-h-screen bg-slate-50/50 py-12 px-4">
 			<div className="max-w-4xl mx-auto space-y-8">
-				{/* HEADER */}
 				<div className="flex items-center gap-4">
 					<div className="bg-indigo-600 p-3 rounded-2xl shadow-lg shadow-indigo-200">
 						<Briefcase className="w-8 h-8 text-white"/>
@@ -43,7 +42,7 @@ export function OrganizerForm() {
 						password: '',
 						displayName: '',
 						description: '',
-						contactEmail: '',
+						contactEmail: undefined,
 						phone: '',
 					}}
 					validationSchema={organizerSchema}

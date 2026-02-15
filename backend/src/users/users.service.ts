@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { RolesService } from '../roles/roles.service';
+import { Role } from '../roles/entities/role.entity';
 
 @Injectable()
 export class UsersService {
@@ -18,29 +19,40 @@ export class UsersService {
     const existingUser = await this.usersRepository.findOne({
       where: { email: createUserDto.email },
     });
-    if (existingUser)
+
+    if (existingUser) {
       throw new NotFoundException(
         `User with email ${createUserDto.email} already exists`,
       );
+    }
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(
-      createUserDto.password,
-      saltRounds,
-    );
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-    const visitorRole = await this.rolesService.findByName('Posjetilac');
-    if (!visitorRole) {
-      throw new NotFoundException('Visitor role not found in DB');
+    let role: Role | null;
+
+    if (!createUserDto.role) {
+      role = await this.rolesService.findByName('Posjetilac');
+
+      if (!role) {
+        throw new NotFoundException('Default role Posjetilac not found');
+      }
+    } else {
+      role = await this.rolesService.findByName(createUserDto.role);
+
+      if (!role) {
+        throw new NotFoundException(
+          `Role ${createUserDto.role} does not exist`,
+        );
+      }
     }
 
     const user = this.usersRepository.create({
-      ...createUserDto,
+      email: createUserDto.email,
       password: hashedPassword,
-      roles: [visitorRole],
+      roles: [role],
     });
-    await this.usersRepository.save(user);
-    return user;
+
+    return await this.usersRepository.save(user);
   }
 
   async createWithRole(
