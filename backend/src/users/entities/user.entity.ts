@@ -15,6 +15,7 @@ import { RefreshToken } from '../../auth/entities/refresh-token.entity';
 import { Review } from '../../reviews/entities/review.entity';
 import { Ticket } from '../../tickets/entities/ticket.entity';
 import { Organizer } from '../../organizers/entities/organizer.entity';
+import { FavoriteEvent } from '../../favorite-events/entities/favorite-event.entity';
 
 @Entity('users')
 export class User {
@@ -53,4 +54,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => FavoriteEvent, (favorite) => favorite.user)
+  favoriteEvents: FavoriteEvent[];
 }
