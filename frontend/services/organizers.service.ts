@@ -1,10 +1,10 @@
 import BaseService from "@/services/base.service";
-import {CreateOrganizerDto} from "@/models/dto/create-organizer.dto";
+import {FormikValues} from "formik";
 
 export class OrganizersService {
 	static readonly ENDPOINT = "/organizers";
 
-	static async createOrganizer(payload: CreateOrganizerDto) {
+	static async createOrganizer(payload: FormikValues) {
 		return BaseService.create(`${this.ENDPOINT}`, payload)
 	}
 }

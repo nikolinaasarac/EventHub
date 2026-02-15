@@ -31,11 +31,12 @@ export class OrganizersService {
   }
 
   async createOrganizer(createOrganizerDto: CreateOrganizerDto) {
-    const user = await this.usersService.createWithRole(
-      createOrganizerDto.email,
-      createOrganizerDto.password,
-      UserRole.ORGANIZER,
-    );
+    const createUserDto = {
+      email: createOrganizerDto.email,
+      password: createOrganizerDto.password,
+      role: UserRole.ORGANIZER,
+    };
+    const user = await this.usersService.create(createUserDto);
 
     const organizer = this.organizersRepository.create({
       displayName: createOrganizerDto.displayName,
