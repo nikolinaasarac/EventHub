@@ -21,6 +21,7 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { MailModule } from './email/mail.module';
 import { OrganizersModule } from './organizers/organizers.module';
+import { FavoriteEventsModule } from './favorite-events/favorite-events.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { OrganizersModule } from './organizers/organizers.module';
     TicketsModule,
     MailModule,
     OrganizersModule,
+    FavoriteEventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

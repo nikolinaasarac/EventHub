@@ -14,6 +14,7 @@ import { TicketType } from '../../ticket-types/entities/ticket-type.entity';
 import { Review } from '../../reviews/entities/review.entity';
 import { Ticket } from '../../tickets/entities/ticket.entity';
 import { Organizer } from '../../organizers/entities/organizer.entity';
+import { FavoriteEvent } from '../../favorite-events/entities/favorite-event.entity';
 
 @Entity('events')
 export class Event {
@@ -71,4 +72,7 @@ export class Event {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => FavoriteEvent, (favorite) => favorite.event)
+  favoriteEvents: FavoriteEvent[];
 }
