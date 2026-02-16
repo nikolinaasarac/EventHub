@@ -125,7 +125,11 @@ export function NavBar() {
 										Moj profil
 									</Link>
 								</DropdownMenuItem>
-
+								<DropdownMenuItem asChild>
+									<Link href="/events/favorites">
+										Omiljeni događaji
+									</Link>
+								</DropdownMenuItem>
 								<DropdownMenuItem
 									onClick={logout}
 									className="text-red-600 focus:text-red-600"
