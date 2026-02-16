@@ -15,6 +15,7 @@ import {useRouter} from "next/navigation";
 import {cn} from "@/lib/utils"
 import {FavoriteEventsService} from "@/services/favorite-events.service";
 import {useAuth} from "@/context/auth-context";
+import {useFavorites} from "@/context/favorite-context";
 
 
 type Props = {
@@ -36,49 +37,21 @@ export function EventCard({
 						  }: Props) {
 	const {user} = useAuth();
 	const router = useRouter();
-	const [isFavorite, setIsFavorite] = useState(false);
-	const [loadingFavorite, setLoadingFavorite] = useState(false);
 
-	useEffect(() => {
-		if (!user) return;
+	const {
+		isFavorite,
+		toggleFavorite,
+		loading: loadingFavorite
+	} = useFavorites();
 
-		const checkFavorite = async () => {
-			try {
-				const favorites = await FavoriteEventsService.getMyFavoriteEvents();
-				const isFav = favorites.some(
-					(event) => String(event.id) === String(id)
-				);
-				setIsFavorite(isFav);
-			} catch (e) {
-				console.log("Favorite check failed");
-			}
-		};
-
-		checkFavorite();
-
-	}, [id]);
-
-	const toggleFavorite = async (e: React.MouseEvent) => {
+	const handleToggleFavorite = async (e: React.MouseEvent) => {
 		e.stopPropagation();
 		if (!user) {
 			const currentPath = window.location.pathname;
 			router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
 			return;
 		}
-		try {
-			setLoadingFavorite(true);
-			if (isFavorite) {
-				await FavoriteEventsService.removeFromFavoriteEvents(Number(id));
-				setIsFavorite(false);
-			} else {
-				await FavoriteEventsService.addToFavoriteEvents(Number(id));
-				setIsFavorite(true);
-			}
-		} catch (e) {
-			console.error(e);
-		} finally {
-			setLoadingFavorite(false);
-		}
+		await toggleFavorite(Number(id));
 	};
 
 	return (
@@ -93,12 +66,12 @@ export function EventCard({
 					{category}
 				</Badge>
 				<button
-					onClick={toggleFavorite}
+					onClick={handleToggleFavorite}
 					disabled={loadingFavorite}
 					className={cn(
 						"absolute top-3 right-3 p-2 rounded-full transition-all duration-300 z-10",
 						"bg-white/80 backdrop-blur-sm shadow-md hover:scale-110",
-						isFavorite
+						isFavorite(Number(id))
 							? "text-red-500"
 							: "text-slate-400 hover:text-red-500"
 					)}
@@ -106,7 +79,7 @@ export function EventCard({
 					<Heart
 						className={cn(
 							"w-5 h-5 transition-colors",
-							isFavorite && "fill-current"
+							isFavorite(Number(id)) && "fill-current"
 						)}
 					/>
 				</button>

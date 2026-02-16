@@ -4,6 +4,7 @@ import "./globals.css";
 import {Toaster} from "@/components/ui/sonner";
 import {AppProvider} from "@/context/app-context";
 import {AuthProvider} from "@/context/auth-context";
+import {FavoriteProvider} from "@/context/favorite-context";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -32,7 +33,9 @@ export default function RootLayout({
 		>
 		<AuthProvider>
 			<AppProvider>
-				{children}
+				<FavoriteProvider>
+					{children}
+				</FavoriteProvider>
 			</AppProvider>
 		</AuthProvider>
 		<Toaster position="top-right"/>

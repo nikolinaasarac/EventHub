@@ -23,6 +23,10 @@ import ReviewsService from "@/services/reviews.service";
 import {ReviewItem} from "@/components/ReviewItem";
 import {AddReviewForm} from "@/components/AddReviewForm";
 import {Ticket} from "@/components/Ticket";
+import {cn} from "@/lib/utils";
+import {useApp} from "@/context/app-context";
+import {useFavorites} from "@/context/favorite-context";
+import {useAuth} from "@/context/auth-context";
 
 export default function EventDetailsPage() {
 	const {id} = useParams();
@@ -31,6 +35,18 @@ export default function EventDetailsPage() {
 	const router = useRouter();
 	const eventId = Array.isArray(id) ? id[0] : id;
 	const [reviews, setReviews] = useState<Review[]>([])
+
+	const {isFavorite, toggleFavorite, loading: loadingFavorite} = useFavorites();
+	const {user} = useAuth();
+
+	const handleToggleFavorite = async () => {
+		if (!user) {
+			const currentPath = window.location.pathname;
+			router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
+			return;
+		}
+		await toggleFavorite(Number(eventId));
+	};
 
 
 	useEffect(() => {
@@ -106,9 +122,24 @@ export default function EventDetailsPage() {
 								alt={event.title}
 							/>
 							<div className="absolute top-4 right-4 flex gap-2">
-								<Button size="icon" variant="secondary"
-										className="rounded-full shadow-lg bg-white/90 text-red-500">
-									<Heart className="w-4 h-4"/>
+								<Button
+									size="icon"
+									variant="secondary"
+									onClick={handleToggleFavorite}
+									disabled={loadingFavorite}
+									className={cn(
+										"rounded-full shadow-lg bg-white/90",
+										isFavorite(Number(eventId))
+											? "text-red-500"
+											: "text-slate-400 hover:text-red-500"
+									)}
+								>
+									<Heart
+										className={cn(
+											"w-4 h-4",
+											isFavorite(Number(eventId)) && "fill-current"
+										)}
+									/>
 								</Button>
 							</div>
 						</div>
