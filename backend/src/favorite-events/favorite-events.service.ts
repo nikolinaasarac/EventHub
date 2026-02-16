@@ -10,6 +10,9 @@ import { FavoriteEvent } from './entities/favorite-event.entity';
 import { UsersService } from '../users/users.service';
 import { EventsService } from '../events/events.service';
 import { User } from '../users/entities/user.entity';
+import { applyQueryOptions } from '../../shared/query-builder.helper';
+import { ParamsDto } from '../../shared/params.dto';
+import { paginate } from '../../shared/pagination/pagination-helper';
 
 @Injectable()
 export class FavoriteEventsService {
@@ -70,5 +73,27 @@ export class FavoriteEventsService {
     });
 
     return favorites.map((f) => f.event);
+  }
+
+  async getUserFavoritesPaginated(user: User, params: ParamsDto) {
+    const qb = this.favoriteEventRepository
+      .createQueryBuilder('favorite')
+      .leftJoinAndSelect('favorite.event', 'event')
+      .leftJoinAndSelect('event.venue', 'venue')
+      .leftJoinAndSelect('event.eventSubcategory', 'eventSubcategory')
+      .leftJoinAndSelect('eventSubcategory.eventCategory', 'eventCategory')
+      .where('favorite.user.id = :userId', { userId: user.id });
+
+    applyQueryOptions(qb, {
+      search: params.search,
+      searchFields: ['event.title'],
+      page: params.page,
+      limit: params.limit,
+      order: { 'favorite.createdAt': 'DESC' },
+    });
+
+    const [data, total] = await qb.getManyAndCount();
+    const events = data.map((fav) => fav.event);
+    return paginate(events, total, params.page, params.limit);
   }
 }

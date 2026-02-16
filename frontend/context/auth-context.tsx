@@ -29,12 +29,17 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 
 	const login = async (email: string, password: string) => {
 		try {
+			const params = new URLSearchParams(window.location.search);
+			const redirect = params.get("redirect");
 			setIsLoggingIn(true);
 			const response = await AuthService.login(email, password);
 			setUser(response.user);
 			authToken.set(response.accessToken);
 			toast.success('Prijava uspješna');
-			router.push('/home');
+			if (redirect === '' || redirect === null)
+				router.push('/home');
+			else
+				router.push(redirect)
 		} catch (error) {
 			console.error('Prijava neuspješna: ', error);
 			toast.error('Prijava neuspješna');
