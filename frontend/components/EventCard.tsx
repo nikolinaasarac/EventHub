@@ -58,7 +58,6 @@ export function EventCard({
 
 	}, [id]);
 
-
 	const toggleFavorite = async (e: React.MouseEvent) => {
 		e.stopPropagation();
 		if (!user) {
@@ -66,7 +65,6 @@ export function EventCard({
 			router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
 			return;
 		}
-
 		try {
 			setLoadingFavorite(true);
 			if (isFavorite) {
@@ -76,7 +74,6 @@ export function EventCard({
 				await FavoriteEventsService.addToFavoriteEvents(Number(id));
 				setIsFavorite(true);
 			}
-
 		} catch (e) {
 			console.error(e);
 		} finally {
