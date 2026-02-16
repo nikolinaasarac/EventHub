@@ -28,8 +28,8 @@ export function FavoriteProvider({children}: { children: React.ReactNode }) {
 			}
 			setLoading(true);
 			try {
-				const favorites = await FavoriteEventsService.getMyFavoriteEvents();
-				setFavoriteIds(favorites.map(e => e.id));
+				const response = await FavoriteEventsService.getMyFavoriteEvents();
+				setFavoriteIds(response.map(e => e.id));
 			} catch (e) {
 				console.error("Failed to fetch favorites", e);
 				setFavoriteIds([]);
@@ -44,6 +44,7 @@ export function FavoriteProvider({children}: { children: React.ReactNode }) {
 	const isFavorite = (eventId: number) => favoriteIds.includes(eventId);
 
 	const addFavorite = async (eventId: number) => {
+		if (!user) return;
 		try {
 			await FavoriteEventsService.addToFavoriteEvents(eventId);
 			setFavoriteIds(prev => (prev.includes(eventId) ? prev : [...prev, eventId]));
@@ -70,10 +71,14 @@ export function FavoriteProvider({children}: { children: React.ReactNode }) {
 		}
 	};
 
-	const value = useMemo(
-		() => ({favoriteIds, loading, isFavorite, addFavorite, removeFavorite, toggleFavorite}),
-		[favoriteIds, loading]
-	);
+	const value = useMemo(() => ({
+		favoriteIds,
+		loading,
+		isFavorite,
+		addFavorite,
+		removeFavorite,
+		toggleFavorite
+	}), [favoriteIds, loading]);
 
 	return <FavoriteContext.Provider value={value}>{children}</FavoriteContext.Provider>;
 }

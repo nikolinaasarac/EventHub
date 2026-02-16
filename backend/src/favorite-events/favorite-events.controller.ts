@@ -4,12 +4,14 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { FavoriteEventsService } from './favorite-events.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../shared/decorators/current-user.decorator';
 import { User } from '../users/entities/user.entity';
+import { ParamsDto } from '../../shared/params.dto';
 
 @Controller('favorite-events')
 export class FavoriteEventsController {
@@ -19,6 +21,15 @@ export class FavoriteEventsController {
   @Get()
   getMyFavorites(@CurrentUser() user: User) {
     return this.favoriteEventsService.getUserFavorites(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/paginated')
+  getMyFavoritesPaginated(
+    @CurrentUser() user: User,
+    @Query() params: ParamsDto,
+  ) {
+    return this.favoriteEventsService.getUserFavoritesPaginated(user, params);
   }
 
   @UseGuards(JwtAuthGuard)
