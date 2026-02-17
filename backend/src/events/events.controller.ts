@@ -20,6 +20,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { AuthRequest } from '../auth/auth.types';
+import { CurrentUser } from '../../shared/decorators/current-user.decorator';
+import { User } from '../users/entities/user.entity';
 
 @Controller('events')
 export class EventsController {
@@ -59,9 +61,24 @@ export class EventsController {
     return this.eventsService.getAllEvents();
   }
 
+  @Get('my-events')
+  @UseGuards(JwtAuthGuard)
+  getMyOrganizedEvents(@CurrentUser() user: User, @Query() params: ParamsDto) {
+    return this.eventsService.getMyOrganizedEvents(user, params);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.eventsService.findOne(+id);
+  }
+
+  @Get('my-events/:organizerId')
+  @UseGuards(JwtAuthGuard)
+  getEventsByOrganizer(
+    @Param('organizerId') organizerId: string,
+    @Query() params: ParamsDto,
+  ) {
+    return this.eventsService.getOrganizerEvents(organizerId, params);
   }
 
   @Patch(':id')

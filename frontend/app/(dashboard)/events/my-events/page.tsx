@@ -4,29 +4,27 @@ import {EventCard} from "@/components/EventCard";
 import {useAuth} from "@/context/auth-context";
 import {useRouter} from "next/navigation";
 import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
-import {useFavorites} from "@/context/favorite-context";
 import {useEffect, useState} from "react";
 import {QueryParams} from "@/models/query-params.model";
-import {FavoriteEventsService} from "@/services/favorite-events.service";
 import {PaginationComponent} from "@/components/Pagination";
 import {Event} from "@/models/event.model";
 import PageHeader from "@/components/PageHeader";
-import {HeartIcon} from "lucide-react";
+import {CalendarCheckIcon} from "lucide-react";
 import {useQueryFilters} from "@/shared/hooks/use-query-filters.hook";
+import EventService from "@/services/event.service";
 
-export default function FavoritesPage() {
+export default function MyEventsPage() {
 	const {user} = useAuth();
 	const router = useRouter();
 
-	const [favorites, setFavorites] = useState<Event[]>([]);
+	const [myEvents, setMyEvents] = useState<Event[]>([]);
 	const [loading, setLoading] = useState(true);
 	const {page, urlPage, updatePage} = useQueryFilters();
 	const [totalPages, setTotalPages] = useState(1);
-	const limit = 3;
+	const limit = 2;
 
-	const fetchFavorites = async (pageNumber = urlPage) => {
+	const fetchMyEvents = async (pageNumber = urlPage) => {
 		if (!user) return;
-
 		setLoading(true);
 
 		try {
@@ -36,23 +34,23 @@ export default function FavoritesPage() {
 			};
 
 			const response =
-				await FavoriteEventsService.getMyFavoriteEventsPaginated(params);
+				await EventService.getMyOrganizedEvents(params);
 			if (response.data.length === 0 && pageNumber > 1) {
 				updatePage(pageNumber - 1);
 				return;
 			}
-			setFavorites(response.data);
+
+			setMyEvents(response.data);
 			setTotalPages(response.meta.totalPages);
 
 		} catch (e) {
 			console.error(e);
-			setFavorites([]);
+			setMyEvents([]);
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	const {favoriteIds} = useFavorites();
 
 	useEffect(() => {
 		if (!user) {
@@ -60,16 +58,16 @@ export default function FavoritesPage() {
 			return;
 		}
 
-		fetchFavorites(urlPage);
+		fetchMyEvents(urlPage);
 
-	}, [user, urlPage, favoriteIds]);
+	}, [user, urlPage]);
 
 	if (loading) return <p className="text-center py-20">Učitavanje...</p>;
 
-	if (favorites.length === 0)
+	if (myEvents.length === 0)
 		return (
 			<div className="text-center py-20">
-				<p className="text-lg font-medium">Još uvijek nema omiljenih događaja.</p>
+				<p className="text-lg font-medium">Još uvijek nema organoizovanih događaja.</p>
 			</div>
 		);
 
@@ -78,14 +76,14 @@ export default function FavoritesPage() {
 			<div className="container mx-auto px-4">
 				<div className="mb-8">
 					<PageHeader
-						title="Omiljeni događaji"
-						subtitle="Pregled događaja koje ste označili da Vam se sviđaju."
-						icon={HeartIcon}
+						title="Moji događaji"
+						subtitle="Pregled događaja koje ste Vi organizovali."
+						icon={CalendarCheckIcon}
 					/>
 				</div>
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-					{favorites.map(event => (
+					{myEvents.map(event => (
 						<EventCard
 							key={event.id}
 							id={event.id}

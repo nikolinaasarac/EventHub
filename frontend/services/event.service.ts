@@ -10,6 +10,10 @@ export default class EventService {
 		return BaseService.fetchList(`${this.ENDPOINT}`, queryParams);
 	}
 
+	static async getMyOrganizedEvents(queryParams: QueryParams): Promise<PaginatedResponse<Event>> {
+		return BaseService.fetchList(`${this.ENDPOINT}/my-events`, queryParams);
+	}
+
 	static async getAllEvents(): Promise<Event[]> {
 		return BaseService.fetchList<Event[]>(`${this.ENDPOINT}/all-events`);
 	}

@@ -5,6 +5,7 @@ import { Organizer } from './entities/organizer.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { UserRole } from '../../shared/enums/user-role.enum';
+import { ParamsDto } from '../../shared/params.dto';
 
 @Injectable()
 export class OrganizersService {
@@ -79,8 +80,21 @@ export class OrganizersService {
     });
 
     if (!organizer) {
-      throw new NotFoundException('Organizer not found for this user.');
+      throw new NotFoundException('Organizer not found.');
     }
     return this.mapToOrganizerResponse(organizer);
+  }
+
+  async getOrganizerEntityByUserId(userId: string) {
+    const organizer = await this.organizersRepository.findOne({
+      where: { user: { id: userId } },
+      relations: ['user'],
+    });
+
+    if (!organizer) {
+      throw new NotFoundException('Organizer not found.');
+    }
+
+    return organizer;
   }
 }
