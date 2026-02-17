@@ -2,7 +2,7 @@
 
 import {EventCard} from "@/components/EventCard";
 import {useAuth} from "@/context/auth-context";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
 import {useFavorites} from "@/context/favorite-context";
 import {useEffect, useState} from "react";
@@ -37,13 +37,10 @@ export default function FavoritesPage() {
 
 			const response =
 				await FavoriteEventsService.getMyFavoriteEventsPaginated(params);
-
-			// ako je stranica prazna, idi na prethodnu preko updatePage
 			if (response.data.length === 0 && pageNumber > 1) {
 				updatePage(pageNumber - 1);
 				return;
 			}
-
 			setFavorites(response.data);
 			setTotalPages(response.meta.totalPages);
 
