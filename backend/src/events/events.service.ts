@@ -13,6 +13,7 @@ import { paginate } from '../../shared/pagination/pagination-helper';
 import { join } from 'path';
 import { unlink } from 'node:fs/promises';
 import { OrganizersService } from '../organizers/organizers.service';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class EventsService {
@@ -215,5 +216,60 @@ export class EventsService {
       }
     }
     return await this.eventsRepository.remove(event);
+  }
+
+  async getOrganizerEvents(organizerId: string, paramsDto: ParamsDto) {
+    const organizer = await this.organizersService.getOrganizerById(
+      Number(organizerId),
+    );
+    if (!organizer) {
+      throw new NotFoundException('Organizer not found for this user');
+    }
+
+    const qb = this.eventsRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.venue', 'venue')
+      .leftJoinAndSelect('venue.city', 'city')
+      .leftJoinAndSelect('event.eventSubcategory', 'eventSubcategory')
+      .leftJoinAndSelect('eventSubcategory.eventCategory', 'eventCategory')
+      .where('event.organizer.id = :organizerId', {
+        organizerId: organizer.id,
+      });
+
+    applyQueryOptions(qb, {
+      search: paramsDto.search,
+      searchFields: ['event.title'],
+      page: paramsDto.page,
+      limit: paramsDto.limit,
+      order: { 'event.createdAt': 'DESC' },
+    });
+    const [data, total] = await qb.getManyAndCount();
+    return paginate(data, total, paramsDto.page, paramsDto.limit);
+  }
+
+  async getMyOrganizedEvents(user: User, paramsDto: ParamsDto) {
+    const organizer = await this.organizersService.getOrganizerByUserId(
+      user.id,
+    );
+    const qb = this.eventsRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.venue', 'venue')
+      .leftJoinAndSelect('venue.city', 'city')
+      .leftJoinAndSelect('event.eventSubcategory', 'eventSubcategory')
+      .leftJoinAndSelect('eventSubcategory.eventCategory', 'eventCategory')
+      .where('event.organizer.id = :organizerId', {
+        organizerId: organizer.id,
+      });
+
+    applyQueryOptions(qb, {
+      search: paramsDto.search,
+      searchFields: ['event.title'],
+      page: paramsDto.page,
+      limit: paramsDto.limit,
+      order: { 'event.createdAt': 'DESC' },
+    });
+
+    const [data, total] = await qb.getManyAndCount();
+    return paginate(data, total, paramsDto.page, paramsDto.limit);
   }
 }
