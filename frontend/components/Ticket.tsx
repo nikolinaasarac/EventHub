@@ -1,21 +1,19 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
-import { Ticket as TicketIcon, Zap, Clock, Ban } from "lucide-react";
-import { CheckoutModal } from "@/components/CheckoutModal";
-import { TicketType } from "@/models/ticket-type.model";
-import { cn } from "@/lib/utils";
+import {Button} from "@/components/ui/button";
+import React from "react";
+import {Ticket as TicketIcon, Zap, Clock, Ban} from "lucide-react";
+import {TicketType} from "@/models/ticket-type.model";
+import {cn} from "@/lib/utils";
 
 interface Props {
 	ticketType: TicketType
-	eventId: number
 	isExpired?: boolean;
 	isSoldOut?: boolean;
+	onBuy: (ticket: TicketType) => void;
 }
 
-export function Ticket({ ticketType, eventId, isExpired = false, isSoldOut = false }: Props) {
-	const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+export function Ticket({ticketType, isExpired = false, isSoldOut = false, onBuy}: Props) {
 
 	const isDisabled = isExpired || isSoldOut;
 
@@ -26,8 +24,10 @@ export function Ticket({ ticketType, eventId, isExpired = false, isSoldOut = fal
 		)}>
 
 			{isSoldOut && !isExpired && (
-				<div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none overflow-hidden rounded-3xl">
-					<div className="border-8 border-red-500/80 px-6 py-2 rounded-2xl rotate-[-25deg] scale-125 bg-white/10 backdrop-blur-[1px]">
+				<div
+					className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none overflow-hidden rounded-3xl">
+					<div
+						className="border-8 border-red-500/80 px-6 py-2 rounded-2xl rotate-[-25deg] scale-125 bg-white/10 backdrop-blur-[1px]">
                         <span className="text-4xl font-black text-red-500/90 tracking-tighter uppercase italic">
                             RASPRODANO
                         </span>
@@ -71,9 +71,11 @@ export function Ticket({ ticketType, eventId, isExpired = false, isSoldOut = fal
 				</div>
 
 				<div className="relative flex items-center px-2 py-2">
-					<div className="absolute -left-3 w-6 h-6 bg-white border border-slate-200 rounded-full z-10 shadow-inner"/>
+					<div
+						className="absolute -left-3 w-6 h-6 bg-white border border-slate-200 rounded-full z-10 shadow-inner"/>
 					<div className="w-full border-t-2 border-dashed border-slate-200"/>
-					<div className="absolute -right-3 w-6 h-6 bg-white border border-slate-200 rounded-full z-10 shadow-inner"/>
+					<div
+						className="absolute -right-3 w-6 h-6 bg-white border border-slate-200 rounded-full z-10 shadow-inner"/>
 				</div>
 
 				<div className="p-6 pt-4 space-y-6">
@@ -95,7 +97,7 @@ export function Ticket({ ticketType, eventId, isExpired = false, isSoldOut = fal
 
 					<Button
 						disabled={isDisabled}
-						onClick={() => !isDisabled && setIsCheckoutOpen(true)}
+						onClick={() => onBuy(ticketType)}
 						className={cn(
 							"w-full h-14 text-lg font-black rounded-2xl shadow-lg transition-all flex gap-2",
 							isExpired && "bg-slate-200 text-slate-500 cursor-not-allowed",
@@ -104,24 +106,15 @@ export function Ticket({ ticketType, eventId, isExpired = false, isSoldOut = fal
 						)}
 					>
 						{isExpired ? (
-							<> <Clock className="w-5 h-5" /> ZAVRŠENO </>
+							<> <Clock className="w-5 h-5"/> ZAVRŠENO </>
 						) : isSoldOut ? (
-							<> <Ban className="w-5 h-5" /></>
+							<> <Ban className="w-5 h-5"/></>
 						) : (
 							<> <Zap className="w-5 h-5 fill-white"/> KUPI KARTU </>
 						)}
 					</Button>
 				</div>
 			</div>
-
-			{!isDisabled && (
-				<CheckoutModal
-					isOpen={isCheckoutOpen}
-					onClose={() => setIsCheckoutOpen(false)}
-					ticketType={ticketType}
-					eventId={eventId}
-				/>
-			)}
 		</div>
 	);
 }

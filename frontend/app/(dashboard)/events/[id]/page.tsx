@@ -27,6 +27,8 @@ import {cn} from "@/lib/utils";
 import {useApp} from "@/context/app-context";
 import {useFavorites} from "@/context/favorite-context";
 import {useAuth} from "@/context/auth-context";
+import {TicketType} from "@/models/ticket-type.model";
+import {CheckoutModal} from "@/components/CheckoutModal";
 
 export default function EventDetailsPage() {
 	const {id} = useParams();
@@ -38,6 +40,13 @@ export default function EventDetailsPage() {
 
 	const {isFavorite, toggleFavorite, loading: loadingFavorite} = useFavorites();
 	const {user} = useAuth();
+	const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+	const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
+
+	const handleBuyClick = (ticket: TicketType) => {
+		setSelectedTicket(ticket);
+		setIsCheckoutOpen(true);
+	};
 
 	const handleToggleFavorite = async () => {
 		if (!user) {
@@ -70,6 +79,16 @@ export default function EventDetailsPage() {
 		fetchEvent();
 		fetchReviews();
 	}, [id])
+
+	const refreshData = async () => {
+		if (!eventId) return;
+		try {
+			const response = await EventService.getEvent(eventId);
+			setEvent(response);
+		} catch (e) {
+			console.error(e);
+		}
+	};
 
 	const handleDelete = async () => {
 		if (!eventId) return;
@@ -241,7 +260,7 @@ export default function EventDetailsPage() {
 										<Ticket
 											key={ticketType.id}
 											ticketType={ticketType}
-											eventId={Number(eventId)}
+											onBuy={handleBuyClick}
 											isExpired={isExpired}
 											isSoldOut={isSoldOut}
 										/>
@@ -270,6 +289,19 @@ export default function EventDetailsPage() {
 				onConfirm={handleDelete}
 				onCancel={() => setShowDeleteModal(false)}
 			/>
+			{selectedTicket && (
+				<CheckoutModal
+					isOpen={isCheckoutOpen}
+					onClose={() => setIsCheckoutOpen(false)}
+					ticketType={selectedTicket}
+					eventId={Number(eventId)}
+					onSuccess={() => {
+						setIsCheckoutOpen(false);
+						toast.success("Uspješno ste kupili kartu!");
+						refreshData();
+					}}
+				/>
+			)}
 		</div>
 	);
 }
