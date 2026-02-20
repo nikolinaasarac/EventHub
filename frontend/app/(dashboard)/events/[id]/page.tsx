@@ -235,9 +235,18 @@ export default function EventDetailsPage() {
 						<div className="lg:col-span-1">
 							<div
 								className="sticky top-24 p-8 rounded-3xl shadow-slate-200/50 space-y-6">
-								{event.ticketTypes.map(ticketType => (
-									<Ticket key={ticketType.id} ticketType={ticketType} eventId={Number(eventId)} isExpired={isExpired}/>
-								))}
+								{event.ticketTypes.map(ticketType => {
+									const isSoldOut = ticketType.soldQuantity >= ticketType.totalQuantity;
+									return (
+										<Ticket
+											key={ticketType.id}
+											ticketType={ticketType}
+											eventId={Number(eventId)}
+											isExpired={isExpired}
+											isSoldOut={isSoldOut}
+										/>
+									);
+								})}
 							</div>
 						</div>
 					) : (
