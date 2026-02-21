@@ -13,9 +13,10 @@ interface Props {
 	ticketType: TicketType;
 	quantity: number;
 	eventId: number;
+	onSuccess: () => void;
 }
 
-export function CheckoutForm({ticketType, quantity, eventId}: Props) {
+export function CheckoutForm({ticketType, quantity, eventId, onSuccess}: Props) {
 
 	return (
 		<Formik
@@ -36,7 +37,7 @@ export function CheckoutForm({ticketType, quantity, eventId}: Props) {
 					};
 
 					await TicketsService.buyTickets(payload);
-					toast.success("Uspješna kupovina! Provjerite vaš email.");
+					onSuccess();
 				} catch (error) {
 					console.error(error);
 					toast.error("Greška prilikom kupovine karata!");

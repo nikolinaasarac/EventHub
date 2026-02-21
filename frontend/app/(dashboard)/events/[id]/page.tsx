@@ -27,6 +27,8 @@ import {cn} from "@/lib/utils";
 import {useApp} from "@/context/app-context";
 import {useFavorites} from "@/context/favorite-context";
 import {useAuth} from "@/context/auth-context";
+import {TicketType} from "@/models/ticket-type.model";
+import {CheckoutModal} from "@/components/CheckoutModal";
 
 export default function EventDetailsPage() {
 	const {id} = useParams();
@@ -38,6 +40,13 @@ export default function EventDetailsPage() {
 
 	const {isFavorite, toggleFavorite, loading: loadingFavorite} = useFavorites();
 	const {user} = useAuth();
+	const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+	const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
+
+	const handleBuyClick = (ticket: TicketType) => {
+		setSelectedTicket(ticket);
+		setIsCheckoutOpen(true);
+	};
 
 	const handleToggleFavorite = async () => {
 		if (!user) {
@@ -71,6 +80,16 @@ export default function EventDetailsPage() {
 		fetchReviews();
 	}, [id])
 
+	const refreshData = async () => {
+		if (!eventId) return;
+		try {
+			const response = await EventService.getEvent(eventId);
+			setEvent(response);
+		} catch (e) {
+			console.error(e);
+		}
+	};
+
 	const handleDelete = async () => {
 		if (!eventId) return;
 		try {
@@ -95,6 +114,10 @@ export default function EventDetailsPage() {
 
 
 	if (!event) return null;
+
+	const now = new Date();
+	const eventEndTime = event.endDate ? new Date(event.endDate) : new Date(event.startDate);
+	const isExpired = now > eventEndTime;
 
 	return (
 		<div className="min-h-screen bg-white">
@@ -231,9 +254,18 @@ export default function EventDetailsPage() {
 						<div className="lg:col-span-1">
 							<div
 								className="sticky top-24 p-8 rounded-3xl shadow-slate-200/50 space-y-6">
-								{event.ticketTypes.map(ticketType => (
-									<Ticket key={ticketType.id} ticketType={ticketType} eventId={Number(eventId)}/>
-								))}
+								{event.ticketTypes.map(ticketType => {
+									const isSoldOut = ticketType.soldQuantity >= ticketType.totalQuantity;
+									return (
+										<Ticket
+											key={ticketType.id}
+											ticketType={ticketType}
+											onBuy={handleBuyClick}
+											isExpired={isExpired}
+											isSoldOut={isSoldOut}
+										/>
+									);
+								})}
 							</div>
 						</div>
 					) : (
@@ -257,6 +289,19 @@ export default function EventDetailsPage() {
 				onConfirm={handleDelete}
 				onCancel={() => setShowDeleteModal(false)}
 			/>
+			{selectedTicket && (
+				<CheckoutModal
+					isOpen={isCheckoutOpen}
+					onClose={() => setIsCheckoutOpen(false)}
+					ticketType={selectedTicket}
+					eventId={Number(eventId)}
+					onSuccess={() => {
+						setIsCheckoutOpen(false);
+						toast.success("Uspješno ste kupili kartu!");
+						refreshData();
+					}}
+				/>
+			)}
 		</div>
 	);
 }

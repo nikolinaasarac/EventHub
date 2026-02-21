@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TicketType } from './entities/ticket-type.entity';
@@ -11,6 +16,7 @@ export class TicketTypesService {
   constructor(
     @InjectRepository(TicketType)
     private readonly ticketTypesRepository: Repository<TicketType>,
+    @Inject(forwardRef(() => EventsService))
     private readonly eventsService: EventsService,
   ) {}
 

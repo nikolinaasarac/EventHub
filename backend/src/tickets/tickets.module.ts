@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { TicketsController } from './tickets.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,9 +11,10 @@ import { MailService } from '../email/mail.service';
   imports: [
     TypeOrmModule.forFeature([Ticket]),
     TicketTypesModule,
-    EventsModule,
+    forwardRef(() => EventsModule),
   ],
   controllers: [TicketsController],
   providers: [TicketsService, MailService],
+  exports: [TicketsService],
 })
 export class TicketsModule {}

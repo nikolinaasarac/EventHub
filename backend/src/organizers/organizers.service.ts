@@ -1,11 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateOrganizerDto } from './dto/create-organizer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Organizer } from './entities/organizer.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { UserRole } from '../../shared/enums/user-role.enum';
-import { ParamsDto } from '../../shared/params.dto';
+import { EventsService } from '../events/events.service';
+import { TicketsService } from '../tickets/tickets.service';
+import { OrganizerStatisticsDto } from './dto/organizer-statistics.dto';
 
 @Injectable()
 export class OrganizersService {
@@ -13,6 +20,10 @@ export class OrganizersService {
     @InjectRepository(Organizer)
     private readonly organizersRepository: Repository<Organizer>,
     private readonly usersService: UsersService,
+    @Inject(forwardRef(() => EventsService))
+    private readonly eventsService: EventsService,
+    @Inject(forwardRef(() => TicketsService))
+    private readonly ticketsService: TicketsService,
   ) {}
 
   private mapToOrganizerResponse(organizer: Organizer) {
@@ -96,5 +107,37 @@ export class OrganizersService {
     }
 
     return organizer;
+  }
+
+  async getMyStatistics(userId: string): Promise<OrganizerStatisticsDto> {
+    const organizer = await this.getOrganizerEntityByUserId(userId);
+
+    const [
+      totalEvents,
+      activeEvents,
+      finishedEvents,
+      totalTicketsSold,
+      totalRevenue,
+      ticketsPerEvent,
+      ticketsPerDay,
+    ] = await Promise.all([
+      this.eventsService.countByOrganizer(organizer.id),
+      this.eventsService.countActiveByOrganizer(organizer.id),
+      this.eventsService.countFinishedByOrganizer(organizer.id),
+      this.ticketsService.countSoldByOrganizer(organizer.id),
+      this.ticketsService.getRevenueByOrganizer(organizer.id),
+      this.ticketsService.getTicketsPerEvent(organizer.id),
+      this.ticketsService.getTicketsPerDay(organizer.id),
+    ]);
+
+    return {
+      totalEvents,
+      activeEvents,
+      finishedEvents,
+      totalTicketsSold,
+      totalRevenue,
+      ticketsPerEvent,
+      ticketsPerDay,
+    };
   }
 }
