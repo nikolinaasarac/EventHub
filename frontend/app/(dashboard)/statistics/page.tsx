@@ -8,7 +8,6 @@ import {XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Ar
 import {OrganizersService} from "@/services/organizers.service";
 import {OrganizerStatistics} from "@/models/organizer-statistics.model";
 import {StatCard} from "@/components/StatCard";
-import {cn} from "@/lib/utils";
 
 export default function OrganizerStatsPage() {
 	const [stats, setStats] = useState<OrganizerStatistics | null>(null);
