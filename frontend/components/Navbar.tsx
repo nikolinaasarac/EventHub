@@ -13,6 +13,7 @@ import {Button} from "@/components/ui/button"
 import {useAuth} from "@/context/auth-context";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {LogIn, LogOut, MenuIcon, UserIcon, UserPlus} from "lucide-react";
+import {UserRole} from "@/shared/enums/user-role.enum";
 
 export function NavBar() {
 	const {user, logout} = useAuth();
@@ -96,18 +97,40 @@ export function NavBar() {
 										Lokacije
 									</Link>
 								</DropdownMenuItem>
-								<DropdownMenuItem asChild>
-									<Link href="/login">
-										<LogIn className="mr-2 h-4 w-4"/>
-										Prijavi se
-									</Link>
-								</DropdownMenuItem>
-								<DropdownMenuItem asChild>
-									<Link href="/signup">
-										<UserPlus className="mr-2 h-4 w-4"/>
-										Kreiraj nalog
-									</Link>
-								</DropdownMenuItem>
+								{!user && (
+									<>
+										<DropdownMenuItem asChild>
+											<Link href="/login">
+												<LogIn className="mr-2 h-4 w-4"/>
+												Prijavi se
+											</Link>
+										</DropdownMenuItem>
+										<DropdownMenuItem asChild>
+											<Link href="/signup">
+												<UserPlus className="mr-2 h-4 w-4"/>
+												Kreiraj nalog
+											</Link>
+										</DropdownMenuItem>
+									</>
+								)}
+								{user && user.roles.some(role => role.name === UserRole.ORGANIZER) &&(
+									<>
+										<DropdownMenuItem asChild>
+											<Link href="/statistics">
+												Statistika
+											</Link>
+										</DropdownMenuItem>
+									</>
+								)}
+								{user && user.roles.some(role => role.name === UserRole.ADMIN) &&(
+									<>
+										<DropdownMenuItem asChild>
+											<Link href="/users">
+												Korisnici
+											</Link>
+										</DropdownMenuItem>
+									</>
+								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</NavigationMenu>
