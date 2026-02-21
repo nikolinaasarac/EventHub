@@ -23,6 +23,8 @@ interface Props {
 export function CheckoutModal({isOpen, onClose, ticketType, eventId, onSuccess}: Props) {
 	const [quantity, setQuantity] = useState(1);
 	const totalPrice = ticketType.price * quantity;
+	const remainingTickets = ticketType.totalQuantity - ticketType.soldQuantity;
+
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
@@ -31,7 +33,7 @@ export function CheckoutModal({isOpen, onClose, ticketType, eventId, onSuccess}:
 
 					<div className="md:col-span-2 bg-indigo-600 p-8 text-white flex flex-col justify-between">
 						<div>
-							<Badge className="bg-white/20 text-white border-none mb-4">Pregled narudžbe</Badge>
+							<Badge className="bg-white/20 text-white border-none mb-4">Kupovina karte</Badge>
 							<h3 className="text-2xl font-black mb-1">{ticketType.name}</h3>
 							<p className="text-indigo-100 text-sm italic">Cijena jedne karte: {ticketType.price} KM</p>
 							<p className="text-indigo-100 text-sm italic">Preostalo: {ticketType.totalQuantity - ticketType.soldQuantity}</p>
@@ -42,23 +44,26 @@ export function CheckoutModal({isOpen, onClose, ticketType, eventId, onSuccess}:
 								<Label
 									className="text-xs font-bold uppercase tracking-widest text-indigo-200">Količina</Label>
 								<div
-									className="flex items-center gap-4 bg-white/10 p-2 rounded-2xl border border-white/10">
+									className="flex items-center justify-between bg-white/10 p-2 rounded-2xl border border-white/10 w-full max-w-[160px]">
 									<Button
 										type="button"
 										variant="ghost"
 										size="icon"
-										className="text-white hover:bg-white/20 h-10 w-10"
+										className="text-white hover:bg-white/20 h-10 w-10 shrink-0"
 										onClick={() => setQuantity(Math.max(1, quantity - 1))}
 									>
 										<Minus className="w-4 h-4"/>
 									</Button>
-									<span className="text-xl font-bold flex-1 text-center">{quantity}</span>
+
+									<span className="text-xl font-black w-12 text-center tabular-nums">{quantity}</span>
+
 									<Button
 										type="button"
 										variant="ghost"
 										size="icon"
-										className="text-white hover:bg-white/20 h-10 w-10"
-										onClick={() => setQuantity(quantity + 1)}
+										className="text-white hover:bg-white/20 h-10 w-10 shrink-0"
+										onClick={() => setQuantity(prev => Math.min(prev + 1, remainingTickets))}
+										disabled={quantity >= remainingTickets}
 									>
 										<Plus className="w-4 h-4"/>
 									</Button>
@@ -82,7 +87,8 @@ export function CheckoutModal({isOpen, onClose, ticketType, eventId, onSuccess}:
 							<DialogTitle className="text-2xl font-black text-slate-900">Plaćanje</DialogTitle>
 							<DialogDescription>Unesite vaše podatke.</DialogDescription>
 						</DialogHeader>
-						<CheckoutForm ticketType={ticketType} quantity={quantity} eventId={eventId} onSuccess={onSuccess}/>
+						<CheckoutForm ticketType={ticketType} quantity={quantity} eventId={eventId}
+									  onSuccess={onSuccess}/>
 					</div>
 				</div>
 			</DialogContent>

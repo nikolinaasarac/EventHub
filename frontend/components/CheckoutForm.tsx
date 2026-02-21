@@ -82,13 +82,17 @@ export function CheckoutForm({ticketType, quantity, eventId, onSuccess}: Props) 
 								<CreditCard
 									className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"/>
 								<Input name="cardNumber" onChange={handleChange}
-									   className="pl-10 bg-white" placeholder="1234 5678 1234 5678"/>
+									   className="pl-10 bg-white" placeholder="1234 5678 1234 5678" maxLength={16}
+									   inputMode="numeric"
+									   pattern="\d*"/>
 							</div>
 							<div className="grid grid-cols-2 gap-3">
 								<Input name="expiry" onChange={handleChange} className="bg-white"
-									   placeholder="MM/GG"/>
+									   placeholder="MM/GG" maxLength={5}/>
 								<Input name="cvv" onChange={handleChange} className="bg-white"
-									   placeholder="CVV"/>
+									   placeholder="CVV" maxLength={3}
+									   inputMode="numeric"
+									   pattern="\d*"/>
 							</div>
 						</div>
 						<div className="text-red-500 text-sm h-2">
@@ -102,6 +106,11 @@ export function CheckoutForm({ticketType, quantity, eventId, onSuccess}: Props) 
 								component="p"
 								className="text-red-500 text-[10px]"
 							/>
+							<ErrorMessage
+								name={"cvv"}
+								component="p"
+								className="text-red-500 text-[10px]"
+							/>
 						</div>
 					</div>
 
@@ -109,13 +118,12 @@ export function CheckoutForm({ticketType, quantity, eventId, onSuccess}: Props) 
 						<LoadingButton
 							type="submit"
 							loading={isSubmitting}
-							className="w-full h-14 bg-indigo-600 hover:bg-indigo-700 text-lg font-bold rounded-2xl shadow-xl shadow-indigo-100"
+							className="w-full h-14 mt-4 bg-indigo-600 hover:bg-indigo-700 text-lg font-bold rounded-2xl shadow-xl shadow-indigo-100"
 						>
 							POTVRDI KUPOVINU
 						</LoadingButton>
 						<div className="flex items-center justify-center gap-2 mt-4 text-slate-400">
 							<ShieldCheck className="w-4 h-4"/>
-							<span className="text-[10px] font-bold uppercase tracking-widest">Sigurna enkriptovana naplata</span>
 						</div>
 					</div>
 				</Form>

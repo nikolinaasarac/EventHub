@@ -24,7 +24,6 @@ import {ReviewItem} from "@/components/ReviewItem";
 import {AddReviewForm} from "@/components/AddReviewForm";
 import {Ticket} from "@/components/Ticket";
 import {cn} from "@/lib/utils";
-import {useApp} from "@/context/app-context";
 import {useFavorites} from "@/context/favorite-context";
 import {useAuth} from "@/context/auth-context";
 import {TicketType} from "@/models/ticket-type.model";
