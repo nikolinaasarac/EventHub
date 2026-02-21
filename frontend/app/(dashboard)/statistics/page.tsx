@@ -75,7 +75,7 @@ export default function OrganizerStatsPage() {
 						</div>
 						<div
 							className="bg-indigo-50 text-indigo-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">
-							Poslednjih 30 dana
+							Posljednjih 30 dana
 						</div>
 					</div>
 
