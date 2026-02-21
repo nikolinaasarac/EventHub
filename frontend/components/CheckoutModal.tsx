@@ -33,7 +33,7 @@ export function CheckoutModal({isOpen, onClose, ticketType, eventId, onSuccess}:
 
 					<div className="md:col-span-2 bg-indigo-600 p-8 text-white flex flex-col justify-between">
 						<div>
-							<Badge className="bg-white/20 text-white border-none mb-4">Pregled narudžbe</Badge>
+							<Badge className="bg-white/20 text-white border-none mb-4">Kupovina karte</Badge>
 							<h3 className="text-2xl font-black mb-1">{ticketType.name}</h3>
 							<p className="text-indigo-100 text-sm italic">Cijena jedne karte: {ticketType.price} KM</p>
 							<p className="text-indigo-100 text-sm italic">Preostalo: {ticketType.totalQuantity - ticketType.soldQuantity}</p>
