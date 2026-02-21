@@ -3,7 +3,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
-import { Repository } from 'typeorm';
+import { LessThan, MoreThan, Repository } from 'typeorm';
 import { EventSubcategoriesService } from '../event-subcategories/event-subcategories.service';
 import { SUBCATEGORY_METADATA_CONFIG } from '../../shared/constants/event-metadata.registry';
 import { VenuesService } from '../venues/venues.service';
@@ -271,5 +271,29 @@ export class EventsService {
 
     const [data, total] = await qb.getManyAndCount();
     return paginate(data, total, paramsDto.page, paramsDto.limit);
+  }
+
+  async countByOrganizer(organizerId: number) {
+    return this.eventsRepository.count({
+      where: { organizer: { id: organizerId } },
+    });
+  }
+
+  async countActiveByOrganizer(organizerId: number) {
+    return this.eventsRepository.count({
+      where: {
+        organizer: { id: organizerId },
+        endDate: MoreThan(new Date()),
+      },
+    });
+  }
+
+  async countFinishedByOrganizer(organizerId: number) {
+    return this.eventsRepository.count({
+      where: {
+        organizer: { id: organizerId },
+        endDate: LessThan(new Date()),
+      },
+    });
   }
 }
