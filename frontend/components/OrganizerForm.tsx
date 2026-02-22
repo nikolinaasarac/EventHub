@@ -39,7 +39,6 @@ export function OrganizerForm() {
 				<Formik
 					initialValues={{
 						email: '',
-						password: '',
 						displayName: '',
 						description: '',
 						contactEmail: undefined,
@@ -75,16 +74,9 @@ export function OrganizerForm() {
 										placeholder="organizator@email.com"
 										labelIcon={<Mail className="w-4 h-4 text-slate-400"/>}
 									/>
-									<InputField
-										name="password"
-										label="Lozinka"
-										type="password"
-										placeholder="••••••••"
-										labelIcon={<Lock className="w-4 h-4 text-slate-400"/>}
-									/>
 								</div>
 								<p className="mt-4 text-xs text-slate-400 italic">
-									* Ovi podaci će se koristiti za pristup administratorskom panelu.
+									* Ovi podaci će se koristiti za pristup.
 								</p>
 							</Card>
 

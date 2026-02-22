@@ -9,6 +9,7 @@ interface InputFieldProps {
 	placeholder?: string;
 	className?: string;
 	as?: React.ElementType;
+	autoComplete?: string;
 }
 
 export function InputField({
@@ -18,6 +19,7 @@ export function InputField({
 							   type = "text",
 							   placeholder = "",
 							   className = "",
+							   autoComplete,
 							   as = "input",
 						   }: InputFieldProps) {
 	const [field, meta] = useField(name);
@@ -29,6 +31,7 @@ export function InputField({
 				type={type}
 				name={name}
 				placeholder={placeholder}
+				autoComplete={autoComplete}
 				className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 
           				${meta.touched && meta.error ? "border-red-500 focus:ring-red-400" : "border-indigo-300 focus:ring-indigo-400"}
 						${className}`}

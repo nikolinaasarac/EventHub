@@ -27,4 +27,8 @@ export default class UserService {
 	static async getAllUsers(): Promise<User[]> {
 		return BaseService.fetchList<User[]>(`/users`);
 	}
+
+	static async setPassword(token: string, password: string) {
+		return BaseService.create(`${this.ENDPOINT}/set-password?token=${token}`, {password});
+	}
 }

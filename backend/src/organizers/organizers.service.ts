@@ -13,6 +13,9 @@ import { UserRole } from '../../shared/enums/user-role.enum';
 import { EventsService } from '../events/events.service';
 import { TicketsService } from '../tickets/tickets.service';
 import { OrganizerStatisticsDto } from './dto/organizer-statistics.dto';
+import { randomBytes } from 'node:crypto';
+import { PasswordTokensService } from '../password-tokens/password-tokens.service';
+import { MailService } from '../email/mail.service';
 
 @Injectable()
 export class OrganizersService {
@@ -24,6 +27,8 @@ export class OrganizersService {
     private readonly eventsService: EventsService,
     @Inject(forwardRef(() => TicketsService))
     private readonly ticketsService: TicketsService,
+    private readonly passwordTokenService: PasswordTokensService,
+    private readonly mailService: MailService,
   ) {}
 
   private mapToOrganizerResponse(organizer: Organizer) {
@@ -43,9 +48,11 @@ export class OrganizersService {
   }
 
   async createOrganizer(createOrganizerDto: CreateOrganizerDto) {
+    const tempPassword = randomBytes(8).toString('hex');
+
     const createUserDto = {
       email: createOrganizerDto.email,
-      password: createOrganizerDto.password,
+      password: tempPassword,
       role: UserRole.ORGANIZER,
     };
     const user = await this.usersService.create(createUserDto);
@@ -58,7 +65,23 @@ export class OrganizersService {
       user,
     });
 
-    return this.organizersRepository.save(organizer);
+    await this.organizersRepository.save(organizer);
+
+    const token = randomBytes(32).toString('hex');
+    const expiry = new Date();
+    expiry.setHours(expiry.getHours() + 24);
+
+    await this.passwordTokenService.create({
+      token,
+      expiry,
+      isUsed: false,
+      userId: user.id,
+    });
+
+    const link = `${process.env.CLIENT_URL}/set-password?token=${token}`;
+    await this.mailService.sendSetPasswordEmail(user.email, link);
+
+    return organizer;
   }
 
   async getAllOrganizers() {
