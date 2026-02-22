@@ -4,19 +4,31 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PasswordToken } from './entity/password-token';
 import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class PasswordTokensService {
   constructor(
     @InjectRepository(PasswordToken)
     private readonly passwordTokenRepository: Repository<PasswordToken>,
+    private readonly userService: UsersService,
   ) {}
 
   async create(createPasswordTokenDto: CreatePasswordTokenDto) {
-    const passwordToken = this.passwordTokenRepository.create(
-      createPasswordTokenDto,
-    );
-    return await this.passwordTokenRepository.save(passwordToken);
+    const user = await this.userService.findOne(createPasswordTokenDto.userId);
+
+    if (!user) {
+      throw new BadRequestException('User not found for given userId');
+    }
+
+    const passwordToken = this.passwordTokenRepository.create({
+      token: createPasswordTokenDto.token,
+      expiry: createPasswordTokenDto.expiry,
+      isUsed: createPasswordTokenDto.isUsed,
+      user,
+    });
+
+    return this.passwordTokenRepository.save(passwordToken);
   }
 
   async validateToken(token: string): Promise<User> {

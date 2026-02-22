@@ -16,7 +16,6 @@ import { Review } from '../../reviews/entities/review.entity';
 import { Ticket } from '../../tickets/entities/ticket.entity';
 import { Organizer } from '../../organizers/entities/organizer.entity';
 import { FavoriteEvent } from '../../favorite-events/entities/favorite-event.entity';
-import { IsBoolean } from 'class-validator';
 import { PasswordToken } from '../../password-tokens/entity/password-token';
 
 @Entity('users')
