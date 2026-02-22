@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   Req,
   Res,
   UnauthorizedException,
@@ -14,6 +15,7 @@ import type { Response } from 'express';
 import type { AuthRequest } from './auth.types';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { SetPasswordDto } from './dto/set-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -137,5 +139,13 @@ export class AuthController {
       user: userResponse,
       accessToken,
     };
+  }
+
+  @Post('set-password')
+  async setPassword(
+    @Query('token') token: string,
+    @Body() dto: SetPasswordDto,
+  ) {
+    await this.authService.setPassword(token, dto);
   }
 }

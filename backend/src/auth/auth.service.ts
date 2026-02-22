@@ -12,6 +12,8 @@ import { RefreshToken } from './entities/refresh-token.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { SetPasswordDto } from './dto/set-password.dto';
+import { PasswordTokensService } from '../password-tokens/password-tokens.service';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +22,7 @@ export class AuthService {
     private usersService: UsersService,
     @InjectRepository(RefreshToken)
     private refreshTokenRepository: Repository<RefreshToken>,
+    private readonly passwordTokensService: PasswordTokensService,
   ) {}
 
   createToken(user: User) {
@@ -113,5 +116,15 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async setPassword(token: string, dto: SetPasswordDto) {
+    const user = await this.passwordTokensService.validateToken(token);
+    user.password = await bcrypt.hash(dto.password, 10);
+    await this.usersService.save(user);
+
+    await this.passwordTokensService.markAsUsed(token);
+
+    return { message: 'Password set successfully' };
   }
 }
