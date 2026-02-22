@@ -10,13 +10,22 @@ export function useQueryFilters(debounceDelay = 500) {
 		const categories = searchParams.get("categories")?.split(",") || [];
 		const cities = searchParams.get("cities")?.split(",") || [];
 		const venueTypes = searchParams.get("venueTypes")?.split(",") || [];
-		return {categories, cities, venueTypes};
+		const from = searchParams.get("from") || "";
+		const to = searchParams.get("to") || "";
+
+		return {categories, cities, venueTypes, from, to};
 	}, [searchParams]);
 
 	const [search, setSearch] = useState(searchParams.get("search") || "");
 	const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
 
-	const updateFilters = (newFilters: Partial<{ categories: string[]; cities: string[]; venueTypes: string[] }>) => {
+	const updateFilters = (newFilters: Partial<{
+		categories: string[];
+		cities: string[];
+		venueTypes: string[],
+		from: string | null,
+		to: string | null
+	}>) => {
 		const currentCategories = filters.categories;
 		const currentCities = filters.cities;
 		const currentVenueTypes = filters.venueTypes;
@@ -31,6 +40,8 @@ export function useQueryFilters(debounceDelay = 500) {
 			categories: normalizedFilters.categories.length ? normalizedFilters.categories.join(",") : null,
 			cities: normalizedFilters.cities.length ? normalizedFilters.cities.join(",") : null,
 			venueTypes: normalizedFilters.venueTypes.length ? normalizedFilters.venueTypes.join(",") : null,
+			from: newFilters.from !== undefined ? newFilters.from : filters.from,
+			to: newFilters.to !== undefined ? newFilters.to : filters.to,
 			page: 1,
 		});
 
@@ -42,6 +53,11 @@ export function useQueryFilters(debounceDelay = 500) {
 	const setCities = (cities: string[]) => updateFilters({cities});
 	const setVenueTypes = (venueTypes: string[]) =>
 		updateFilters({venueTypes});
+	const setFrom = (from: string | null) =>
+		updateFilters({from: from ? from : null});
+
+	const setTo = (to: string | null) =>
+		updateFilters({to: to ? to : null});
 
 	const createQueryString = useCallback(
 		(params: Record<string, string | number | null>) => {
@@ -89,5 +105,9 @@ export function useQueryFilters(debounceDelay = 500) {
 		updatePage,
 		urlSearch: searchParams.get("search") || "",
 		urlPage: Number(searchParams.get("page")) || 1,
+		setFrom,
+		setTo,
+		urlFrom: searchParams.get("from") || "",
+		urlTo: searchParams.get("to") || "",
 	};
 }

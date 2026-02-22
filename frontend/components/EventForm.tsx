@@ -238,21 +238,29 @@ export function EventForm({event}: Props) {
 								<Card className="p-8 rounded-[2rem] border-none shadow-lg">
 									<div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
 										<div className="space-y-2">
-											<Label className="flex items-center gap-2"><Calendar
-												className="w-4 h-4 text-indigo-600"/> Početak</Label>
+											<Label className="flex items-center gap-2">
+												<Calendar className="w-4 h-4 text-indigo-600"/>
+												Početak
+											</Label>
+
 											<DateTimePickerField
 												name="startDate"
 												label="Početak"
 												placeholder="Izaberi datum i vrijeme"
+												maxDate={values.endDate ? new Date(values.endDate) : undefined}
 											/>
 										</div>
 										<div className="space-y-2">
-											<Label className="flex items-center gap-2"><Clock
-												className="w-4 h-4 text-indigo-600"/> Kraj (opciono)</Label>
+											<Label className="flex items-center gap-2">
+												<Clock className="w-4 h-4 text-indigo-600"/>
+												Kraj (opciono)
+											</Label>
+
 											<DateTimePickerField
 												name="endDate"
 												label="Kraj"
 												placeholder="Izaberi datum i vrijeme"
+												minDate={values.startDate ? new Date(values.startDate) : undefined}
 											/>
 										</div>
 										<div className="space-y-2">
