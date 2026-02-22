@@ -22,6 +22,7 @@ import { TicketsModule } from './tickets/tickets.module';
 import { MailModule } from './email/mail.module';
 import { OrganizersModule } from './organizers/organizers.module';
 import { FavoriteEventsModule } from './favorite-events/favorite-events.module';
+import { PasswordTokensModule } from './password-tokens/password-tokens.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { FavoriteEventsModule } from './favorite-events/favorite-events.module';
     MailModule,
     OrganizersModule,
     FavoriteEventsModule,
+    PasswordTokensModule,
   ],
   controllers: [AppController],
   providers: [AppService],

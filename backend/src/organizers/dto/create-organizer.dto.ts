@@ -12,10 +12,6 @@ export class CreateOrganizerDto {
   @IsNotEmpty()
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
-  password: string;
-
   @IsOptional()
   @IsEnum(UserRole)
   role: UserRole;

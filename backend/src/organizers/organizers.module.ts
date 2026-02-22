@@ -6,6 +6,9 @@ import { Organizer } from './entities/organizer.entity';
 import { UsersModule } from '../users/users.module';
 import { EventsModule } from '../events/events.module';
 import { TicketsModule } from '../tickets/tickets.module';
+import { PasswordTokensModule } from '../password-tokens/password-tokens.module';
+import { MailModule } from '../email/mail.module';
+import { MailService } from '../email/mail.service';
 
 @Module({
   imports: [
@@ -13,9 +16,10 @@ import { TicketsModule } from '../tickets/tickets.module';
     UsersModule,
     TicketsModule,
     forwardRef(() => EventsModule),
+    PasswordTokensModule,
   ],
   controllers: [OrganizersController],
-  providers: [OrganizersService],
+  providers: [OrganizersService, MailService],
   exports: [OrganizersService],
 })
 export class OrganizersModule {}
