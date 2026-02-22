@@ -30,4 +30,13 @@ export class MailService {
       ],
     });
   }
+
+  async sendSetPasswordEmail(email: string, link: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Postavite lozinku za svoj Eventify nalog',
+      template: 'set-password',
+      context: { link },
+    });
+  }
 }
