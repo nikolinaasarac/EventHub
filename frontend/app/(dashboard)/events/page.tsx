@@ -14,6 +14,7 @@ import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {Calendar as CalendarIcon, TicketIcon} from "lucide-react";
 import PageHeader from "@/components/PageHeader";
+import {DateTimePicker} from "@/components/DateTimePicker";
 
 export default function EventsPage() {
 	const {
@@ -25,10 +26,14 @@ export default function EventsPage() {
 		urlPage,
 		filters,
 		setCategories,
-		setCities
+		setCities,
+		setFrom,
+		setTo
 	} = useQueryFilters();
 	const [events, setEvents] = useState<Event[]>([]);
 	const [totalPages, setTotalPages] = useState(1);
+	const fromDate = filters.from ? new Date(filters.from) : undefined;
+	const toDate = filters.to ? new Date(filters.to) : undefined;
 	const router = useRouter();
 
 
@@ -38,6 +43,8 @@ export default function EventsPage() {
 			cities: string[] = filters.cities
 		) => {
 			const params: QueryParams = {page: urlPage, limit: 10, search: urlSearch};
+			if (filters.from) params.from = filters.from;
+			if (filters.to) params.to = filters.to;
 			try {
 				if (eventCategories.length) params.categories = eventCategories.join(",");
 				if (cities.length > 0) params.cities = cities.join(",");
@@ -65,6 +72,25 @@ export default function EventsPage() {
 						<EventCategoriesMultiSelect handleSelectChange={setCategories}
 													selectedCategories={filters.categories}/>
 						<CitiesMultiSelect handleSelectChange={setCities} selectedCities={filters.cities}/>
+					</div>
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+						<DateTimePicker
+							value={fromDate}
+							maxDate={toDate}
+							onChange={(date) =>
+								setFrom(date ? date.toISOString() : null)
+							}
+							placeholder="Od datuma"
+						/>
+
+						<DateTimePicker
+							value={toDate}
+							minDate={fromDate}
+							onChange={(date) =>
+								setTo(date ? date.toISOString() : null)
+							}
+							placeholder="Do datuma"
+						/>
 					</div>
 					<div className="flex-1 min-w-[200px] mb-4">
 						<SearchInput value={search} onChange={setSearch} placeholder="Šta tražite?"/>
