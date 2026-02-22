@@ -104,6 +104,22 @@ export class EventsService {
         'venue.city.id': paramsDto.cities,
       },
     });
+
+    if (paramsDto.from && paramsDto.to) {
+      qb.andWhere('event.startDate <= :to AND event.endDate >= :from', {
+        from: new Date(paramsDto.from),
+        to: new Date(paramsDto.to),
+      });
+    } else if (paramsDto.from) {
+      qb.andWhere('event.endDate >= :from', {
+        from: new Date(paramsDto.from),
+      });
+    } else if (paramsDto.to) {
+      qb.andWhere('event.startDate <= :to', {
+        to: new Date(paramsDto.to),
+      });
+    }
+
     const [data, total] = await qb.getManyAndCount();
     return paginate(data, total, paramsDto.page, paramsDto.limit);
   }
