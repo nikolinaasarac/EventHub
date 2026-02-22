@@ -17,6 +17,7 @@ import { Ticket } from '../../tickets/entities/ticket.entity';
 import { Organizer } from '../../organizers/entities/organizer.entity';
 import { FavoriteEvent } from '../../favorite-events/entities/favorite-event.entity';
 import { IsBoolean } from 'class-validator';
+import { PasswordToken } from '../../password-tokens/entity/password-token';
 
 @Entity('users')
 export class User {
@@ -59,6 +60,6 @@ export class User {
   @OneToMany(() => FavoriteEvent, (favorite) => favorite.user)
   favoriteEvents: FavoriteEvent[];
 
-  @Column({ default: false })
-  mustChangePassword: boolean;
+  @OneToMany(() => PasswordToken, (token) => token.user)
+  passwordTokens: PasswordToken[];
 }
