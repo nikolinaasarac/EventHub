@@ -5,4 +5,6 @@ export interface QueryParams extends Pagination {
 	categories?: string;
 	cities?: string;
 	venueTypes?: string;
+	from?: string;
+	to?: string;
 }
