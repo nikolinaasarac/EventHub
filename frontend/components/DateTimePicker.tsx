@@ -18,9 +18,11 @@ type Props = {
 	value?: Date;
 	onChange: (date: Date | undefined) => void;
 	placeholder?: string;
+	minDate?: Date;
+	maxDate?: Date;
 };
 
-export function DateTimePicker({value, onChange, placeholder}: Props) {
+export function DateTimePicker({value, onChange, placeholder, minDate, maxDate}: Props) {
 	const hours = Array.from({length: 24}, (_, i) => i);
 	const minutes = Array.from({length: 60}, (_, i) => i);
 
@@ -53,6 +55,11 @@ export function DateTimePicker({value, onChange, placeholder}: Props) {
 					selected={value}
 					onSelect={(d) => onChange(d ?? value)}
 					initialFocus
+					disabled={(date) => {
+						if (minDate && date < minDate) return true;
+						if (maxDate && date > maxDate) return true;
+						return false;
+					}}
 				/>
 
 				<div className="flex gap-2">
