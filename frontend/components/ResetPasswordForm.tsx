@@ -7,12 +7,15 @@ import {LoadingButton} from "@/components/LoadingButton"
 import {InputField} from "@/components/InputField"
 import {toast} from "sonner"
 import {LockKeyhole, ShieldCheck} from "lucide-react"
+import UserService from "@/services/user.service";
+import {useRouter} from "next/navigation";
 
 interface Props extends React.ComponentProps<"form"> {
-	token?: string;
+	token: string;
 }
 
 export function ResetPasswordForm({className, token, ...props}: Props) {
+	const router = useRouter();
 	return (
 		<Formik
 			initialValues={{
@@ -22,10 +25,9 @@ export function ResetPasswordForm({className, token, ...props}: Props) {
 			validationSchema={resetPasswordSchema}
 			onSubmit={async (values) => {
 				try {
-					// Ovdje ide poziv tvog servisa, npr:
-					// await AuthService.resetPassword(token, values.password);
-					console.log("Nova lozinka:", values.password);
+					await UserService.setPassword(token, values.password);
 					toast.success("Lozinka je uspješno promijenjena!");
+					router.push("/login");
 				} catch (error) {
 					toast.error("Došlo je do greške. Pokušajte ponovo.");
 				}
@@ -45,6 +47,7 @@ export function ResetPasswordForm({className, token, ...props}: Props) {
 						label="Nova lozinka"
 						type="password"
 						placeholder="Unesite novu lozinku..."
+						autoComplete="new-password"
 						labelIcon={<LockKeyhole className="w-4 h-4 text-slate-400"/>}
 					/>
 
@@ -53,6 +56,7 @@ export function ResetPasswordForm({className, token, ...props}: Props) {
 						label="Potvrdite novu lozinku"
 						type="password"
 						placeholder="Ponovo unesite lozinku..."
+						autoComplete="new-password"
 						labelIcon={<LockKeyhole className="w-4 h-4 text-slate-400"/>}
 					/>
 
