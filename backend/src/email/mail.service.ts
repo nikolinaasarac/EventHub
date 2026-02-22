@@ -17,12 +17,11 @@ export class MailService {
     await this.mailerService.sendMail({
       to: user.email,
       subject: 'Uspješna kupovina karata 🎟️',
-      text: `Zdravo,
-
-Uspješno ste kupili karte za ${tickets[0].ticketType.event.title}. Broj kupljenih karata: ${tickets.length}.
-Karte u prilogu. 
-
-Hvala što koristite Eventify!`,
+      template: 'ticket-purchase',
+      context: {
+        eventTitle: tickets[0].ticketType.event.title,
+        ticketCount: tickets.length,
+      },
       attachments: [
         {
           filename: 'tickets.pdf',
