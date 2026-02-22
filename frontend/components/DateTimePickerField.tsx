@@ -8,9 +8,11 @@ type Props = {
 	name: string;
 	label?: string;
 	placeholder?: string;
+	minDate?: Date;
+	maxDate?: Date;
 };
 
-export function DateTimePickerField({name, label, placeholder}: Props) {
+export function DateTimePickerField({name, label, placeholder, minDate, maxDate}: Props) {
 	const [field, meta, helpers] = useField<Date | null>(name);
 
 	return (
@@ -19,6 +21,8 @@ export function DateTimePickerField({name, label, placeholder}: Props) {
 				value={field.value ?? undefined}
 				onChange={(date) => helpers.setValue(date ?? null)}
 				placeholder={placeholder}
+				minDate={minDate}
+				maxDate={maxDate}
 			/>
 			<div className="text-red-500 text-sm h-1">
 				<ErrorMessage
