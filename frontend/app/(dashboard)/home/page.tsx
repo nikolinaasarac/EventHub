@@ -136,6 +136,7 @@ export default function Page() {
 								category={event.eventSubcategory.eventCategory.name}
 								date={DateTimeHelper.formatDate(event.startDate)}
 								location={event.venue.name}
+								description={event.description}
 							/>
 						))}
 					</div>
