@@ -181,7 +181,7 @@ export function NavBar() {
 							</DropdownMenu>
 						</div>
 					) : (
-						<div className="hidden md:flex items-center gap-2">
+						<div className="hidden lg:flex items-center gap-2">
 							<Button variant="ghost" asChild
 									className="rounded-xl font-bold text-slate-600 hover:text-indigo-600">
 								<Link href="/login">Prijavi se</Link>
