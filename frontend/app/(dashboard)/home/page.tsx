@@ -1,8 +1,6 @@
 "use client"
 
 import {
-	Search,
-	MapPin,
 	Calendar as CalendarIcon,
 	ArrowRight
 } from 'lucide-react';
@@ -168,15 +166,6 @@ export default function Page() {
 						<h3 className="text-xl font-semibold mb-2">Uživaj</h3>
 						<p className="text-slate-500">Pokaži QR kod na ulazu!</p>
 					</div>
-				</div>
-			</section>
-			<section className="bg-indigo-600 py-16">
-				<div className="container mx-auto px-4 text-center text-white">
-					<h2 className="text-3xl font-bold mb-4">Organizujete sopstveni događaj?</h2>
-					<p className="mb-8 text-indigo-100">Postanite organizator i kreirajte događaj</p>
-					<Button size="lg" variant="secondary" className="bg-white text-indigo-600 hover:bg-slate-100">
-						Kreiraj događaj
-					</Button>
 				</div>
 			</section>
 		</div>
