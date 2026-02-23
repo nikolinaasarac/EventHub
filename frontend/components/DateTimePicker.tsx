@@ -13,6 +13,7 @@ import {
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {format} from "date-fns";
 import {Calendar} from "@/components/ui/calendar";
+import {srLatn} from "date-fns/locale";
 
 type Props = {
 	value?: Date;
@@ -53,6 +54,7 @@ export function DateTimePicker({value, onChange, placeholder, minDate, maxDate}:
 					<Calendar
 						mode="single"
 						selected={value}
+						locale={srLatn}
 						onSelect={(d) => onChange(d ?? value)}
 						initialFocus
 						disabled={(date) => {
