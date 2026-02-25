@@ -15,6 +15,7 @@ import {useRouter} from "next/navigation";
 import {Calendar as CalendarIcon, TicketIcon} from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import {DateTimePicker} from "@/components/DateTimePicker";
+import {EventStatusesMultiSelect} from "@/components/EventStatusesMultiSelect";
 
 export default function EventsPage() {
 	const {
@@ -28,7 +29,8 @@ export default function EventsPage() {
 		setCategories,
 		setCities,
 		setFrom,
-		setTo
+		setTo,
+		setStatuses
 	} = useQueryFilters();
 	const [events, setEvents] = useState<Event[]>([]);
 	const [totalPages, setTotalPages] = useState(1);
@@ -40,7 +42,8 @@ export default function EventsPage() {
 	useEffect(() => {
 		const fetchEvents = async (
 			eventCategories: string[] = filters.categories,
-			cities: string[] = filters.cities
+			cities: string[] = filters.cities,
+			status: string[] = filters.status
 		) => {
 			const params: QueryParams = {page: urlPage, limit: 10, search: urlSearch};
 			if (filters.from) params.from = filters.from;
@@ -48,6 +51,7 @@ export default function EventsPage() {
 			try {
 				if (eventCategories.length) params.categories = eventCategories.join(",");
 				if (cities.length > 0) params.cities = cities.join(",");
+				if (status.length > 0) params.status = status.join(",");
 				const response = await EventService.getEvents(params);
 				setEvents(response.data);
 				setTotalPages(response.meta.totalPages);
@@ -56,7 +60,7 @@ export default function EventsPage() {
 			}
 		}
 		fetchEvents();
-	}, [urlPage, urlSearch, filters.categories, filters.cities])
+	}, [urlPage, urlSearch, filters.categories, filters.cities, filters.status, filters.from, filters.to])
 	return (
 		<section className="min-h-screen bg-white py-12">
 			<div className="container mx-auto px-4">
@@ -72,6 +76,10 @@ export default function EventsPage() {
 						<EventCategoriesMultiSelect handleSelectChange={setCategories}
 													selectedCategories={filters.categories}/>
 						<CitiesMultiSelect handleSelectChange={setCities} selectedCities={filters.cities}/>
+						<EventStatusesMultiSelect
+							selectedStatuses={filters.status}
+							handleSelectChange={setStatuses}
+						/>
 					</div>
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
 						<DateTimePicker

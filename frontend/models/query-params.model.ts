@@ -7,4 +7,5 @@ export interface QueryParams extends Pagination {
 	venueTypes?: string;
 	from?: string;
 	to?: string;
+	status?: string;
 }
