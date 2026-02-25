@@ -14,6 +14,9 @@ import { join } from 'path';
 import { unlink } from 'node:fs/promises';
 import { OrganizersService } from '../organizers/organizers.service';
 import { User } from '../users/entities/user.entity';
+import { StatusEngineService } from '../../shared/status-engine/services/status-engine.service';
+import { EventStatus } from '../../shared/enums/event-status.enum';
+import { eventStatusRules } from './constants/event-status.rules';
 
 @Injectable()
 export class EventsService {
@@ -311,5 +314,30 @@ export class EventsService {
         endDate: LessThan(new Date()),
       },
     });
+  }
+
+  async updateEventStatuses() {
+    const statusEngine = new StatusEngineService();
+
+    const events = await this.getAllEvents();
+
+    for (const event of events) {
+      await statusEngine.applyRules<Event, EventStatus>(
+        event,
+        eventStatusRules,
+        async (e, newStatus) => {
+          await this.updateEventStatus(e.id, newStatus);
+        },
+      );
+    }
+  }
+
+  async updateEventStatus(eventId: number, newStatus: EventStatus) {
+    const event = await this.findOne(eventId);
+    if (!event) return;
+
+    event.status = newStatus;
+
+    await this.eventsRepository.save(event);
   }
 }
