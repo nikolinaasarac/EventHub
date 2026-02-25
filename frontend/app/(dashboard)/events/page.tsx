@@ -15,6 +15,7 @@ import {useRouter} from "next/navigation";
 import {Calendar as CalendarIcon, TicketIcon} from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import {DateTimePicker} from "@/components/DateTimePicker";
+import {EventStatusesMultiSelect} from "@/components/EventStatusesMultiSelect";
 
 export default function EventsPage() {
 	const {
@@ -75,6 +76,10 @@ export default function EventsPage() {
 						<EventCategoriesMultiSelect handleSelectChange={setCategories}
 													selectedCategories={filters.categories}/>
 						<CitiesMultiSelect handleSelectChange={setCities} selectedCities={filters.cities}/>
+						<EventStatusesMultiSelect
+							selectedStatuses={filters.status}
+							handleSelectChange={setStatuses}
+						/>
 					</div>
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
 						<DateTimePicker
