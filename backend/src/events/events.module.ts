@@ -6,6 +6,7 @@ import { Event } from './entities/event.entity';
 import { EventSubcategoriesModule } from '../event-subcategories/event-subcategories.module';
 import { VenuesModule } from '../venues/venues.module';
 import { OrganizersModule } from '../organizers/organizers.module';
+import { EventsCron } from './events.cron';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { OrganizersModule } from '../organizers/organizers.module';
     OrganizersModule,
   ],
   controllers: [EventsController],
-  providers: [EventsService],
+  providers: [EventsService, EventsCron],
   exports: [EventsService],
 })
 export class EventsModule {}
