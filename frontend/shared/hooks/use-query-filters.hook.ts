@@ -9,11 +9,12 @@ export function useQueryFilters(debounceDelay = 500) {
 	const filters = useMemo(() => {
 		const categories = searchParams.get("categories")?.split(",") || [];
 		const cities = searchParams.get("cities")?.split(",") || [];
+		const status = searchParams.get("status")?.split(",") || [];
 		const venueTypes = searchParams.get("venueTypes")?.split(",") || [];
 		const from = searchParams.get("from") || "";
 		const to = searchParams.get("to") || "";
 
-		return {categories, cities, venueTypes, from, to};
+		return {categories, cities, status, venueTypes, from, to};
 	}, [searchParams]);
 
 	const [search, setSearch] = useState(searchParams.get("search") || "");
@@ -22,6 +23,7 @@ export function useQueryFilters(debounceDelay = 500) {
 	const updateFilters = (newFilters: Partial<{
 		categories: string[];
 		cities: string[];
+		status: string[];
 		venueTypes: string[],
 		from: string | null,
 		to: string | null
@@ -33,12 +35,14 @@ export function useQueryFilters(debounceDelay = 500) {
 		const normalizedFilters = {
 			categories: newFilters.categories !== undefined ? [...newFilters.categories].sort() : currentCategories,
 			cities: newFilters.cities !== undefined ? [...newFilters.cities].sort() : currentCities,
+			status: newFilters.status !== undefined ? [...newFilters.status].sort() : filters.status,
 			venueTypes: newFilters.venueTypes !== undefined ? [...newFilters.venueTypes].sort() : currentVenueTypes,
 		};
 
 		const query = createQueryString({
 			categories: normalizedFilters.categories.length ? normalizedFilters.categories.join(",") : null,
 			cities: normalizedFilters.cities.length ? normalizedFilters.cities.join(",") : null,
+			status: normalizedFilters.status.length ? normalizedFilters.status.join(",") : null,
 			venueTypes: normalizedFilters.venueTypes.length ? normalizedFilters.venueTypes.join(",") : null,
 			from: newFilters.from !== undefined ? newFilters.from : filters.from,
 			to: newFilters.to !== undefined ? newFilters.to : filters.to,
@@ -51,6 +55,8 @@ export function useQueryFilters(debounceDelay = 500) {
 	const setCategories = (categories: string[]) =>
 		updateFilters({categories});
 	const setCities = (cities: string[]) => updateFilters({cities});
+	const setStatuses = (status: string[]) =>
+		updateFilters({status});
 	const setVenueTypes = (venueTypes: string[]) =>
 		updateFilters({venueTypes});
 	const setFrom = (from: string | null) =>
@@ -100,6 +106,7 @@ export function useQueryFilters(debounceDelay = 500) {
 		filters,
 		setCategories,
 		setCities,
+		setStatuses,
 		setVenueTypes,
 		page,
 		updatePage,

@@ -23,9 +23,11 @@ import { MailModule } from './email/mail.module';
 import { OrganizersModule } from './organizers/organizers.module';
 import { FavoriteEventsModule } from './favorite-events/favorite-events.module';
 import { PasswordTokensModule } from './password-tokens/password-tokens.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     MailModule,
     ConfigModule.forRoot({
       isGlobal: true,
