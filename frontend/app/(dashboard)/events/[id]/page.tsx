@@ -7,7 +7,7 @@ import {
 	Clock,
 	Heart,
 	Info,
-	CheckCircle2, ChevronLeft, Trash, MessageSquare
+	CheckCircle2, ChevronLeft, Trash, MessageSquare, ShieldCheck
 } from 'lucide-react';
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
@@ -28,6 +28,7 @@ import {useFavorites} from "@/context/favorite-context";
 import {useAuth} from "@/context/auth-context";
 import {TicketType} from "@/models/ticket-type.model";
 import {CheckoutModal} from "@/components/CheckoutModal";
+import {Card} from "@/components/ui/card";
 
 export default function EventDetailsPage() {
 	const {id} = useParams();
@@ -119,165 +120,175 @@ export default function EventDetailsPage() {
 	const isExpired = now > eventEndTime;
 
 	return (
-		<div className="min-h-screen bg-white">
-			<div className="bg-white top-0 z-40">
-				<div className="container mx-auto px-4 py-3 flex justify-between items-center">
-					<Button onClick={() => router.back()} variant="ghost" size="sm" className="gap-2 text-slate-500">
-						<ChevronLeft className="w-4 h-4"/> Nazad
-					</Button>
-					<Button variant="outline" size="icon" className="rounded-full w-9 h-9 bg-red-500 hover:bg-red-600"
-							onClick={() => setShowDeleteModal(true)}>
-						<Trash className="w-4 h-4 text-white"/>
-					</Button>
-				</div>
-			</div>
+		<div className="min-h-screen bg-[#FDFDFF]">
 
-			<main className="container mx-auto px-4 pb-20">
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+			{/* --- 1. HERO SEKCIJA (Eduker stil) --- */}
+			<section className="relative h-[300px] md:h-[500px] w-full overflow-hidden bg-slate-900">
+				<img
+					src={`${process.env.NEXT_PUBLIC_API_BASE_URL}public/${event.imageUrl}`}
+					className="w-full h-full object-cover opacity-60"
+					alt={event.title}
+				/>
+				<div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent"/>
 
-					<div className="lg:col-span-2 space-y-8">
-
-						<div className="relative h-[350px] md:h-[500px] overflow-hidden shadow-xl">
-							<img
-								src={`${process.env.NEXT_PUBLIC_API_BASE_URL}public/${event.imageUrl}`}
-								className="w-full h-full object-cover"
-								alt={event.title}
-							/>
-							<div className="absolute top-4 right-4 flex gap-2">
-								<Button
-									size="icon"
-									variant="secondary"
-									onClick={handleToggleFavorite}
-									disabled={loadingFavorite}
-									className={cn(
-										"rounded-full shadow-lg bg-white/90",
-										isFavorite(Number(eventId))
-											? "text-red-500"
-											: "text-slate-400 hover:text-red-500"
-									)}
-								>
-									<Heart
-										className={cn(
-											"w-4 h-4",
-											isFavorite(Number(eventId)) && "fill-current"
-										)}
-									/>
-								</Button>
-							</div>
-						</div>
-						<div className="space-y-4">
-							<div className="flex items-center justify-between space-x-4">
-								<Badge
-									className="bg-indigo-100 text-indigo-700 hover:bg-indigo-100 border-none px-4 py-1">
-									{event.eventSubcategory.eventCategory.name}
-								</Badge>
-								{event.organizer && (
-									<Badge
-										className="bg-indigo-100 text-indigo-700 hover:bg-indigo-100 border-none px-4 py-1">
-										Organizator: {event.organizer.displayName}
-									</Badge>)}
-							</div>
-							<h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight">
-								{event.title}
-							</h1>
-
-							<div className="flex flex-wrap gap-6 pt-4 text-slate-600">
-								<div className="flex items-center gap-2">
-									<Calendar className="w-5 h-5 text-indigo-600"/>
-									<span
-										className="font-medium">{DateTimeHelper.formatOnlyDate(event.startDate)}</span>
-								</div>
-								<div className="flex items-center gap-2">
-									<Clock className="w-5 h-5 text-indigo-600"/>
-									<span
-										className="font-medium">{DateTimeHelper.formatOnlyTime(event.startDate)}</span>
-								</div>
-								<div className="flex items-center gap-2">
-									<MapPin className="w-5 h-5 text-indigo-600"/>
-									<span className="font-medium">{event.venue.name}</span>
-								</div>
-							</div>
-						</div>
-
-						<hr className="border-slate-100"/>
-						<div className="space-y-4">
-							<h2 className="text-2xl font-bold flex items-center gap-2">
-								<Info className="w-5 h-5 text-indigo-600"/> O događaju
-							</h2>
-							<p className="text-slate-600 leading-relaxed text-lg text-justify">
-								{event.description}
-							</p>
-						</div>
-						<div className="space-y-4">
-							<h2 className="text-2xl font-bold flex items-center gap-2">
-								<CheckCircle2 className="w-5 h-5 text-indigo-600"/> Detalji
-							</h2>
-							<EventMetadataComponent metadata={event.metadata}/>
-						</div>
-						<hr className="border-slate-100"/>
-						<div className="space-y-8">
-							<div className="flex items-center justify-between">
-								<h2 className="text-2xl font-bold flex items-center gap-2">
-									<MessageSquare className="w-5 h-5 text-indigo-600"/> Utisci posjetilaca
-								</h2>
-								<Badge variant="secondary" className="bg-slate-100 text-slate-600">
-									{reviews.length} {reviews.length === 1 ? 'komentar' : 'komentara'}
-								</Badge>
-							</div>
-							<AddReviewForm
-								eventId={Number(eventId)}
-								onReviewAdded={refreshReviews}
-							/>
-
-							{reviews.length > 0 ? (
-								<div className="grid gap-6">
-									{reviews.map((review) => (
-										<ReviewItem key={review.id} review={review}/>
-									))}
-								</div>
-							) : (
-								<div
-									className="text-center py-12 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
-									<div
-										className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
-										<MessageSquare className="w-6 h-6 text-slate-300"/>
-									</div>
-									<p className="text-slate-500 font-medium">Još uvijek nema komentara za ovaj
-										događaj.</p>
-									<p className="text-sm text-slate-400">Budite prvi koji će podijeliti utiske!</p>
-								</div>
-							)}
+				{/* Top Actions Overlay */}
+				<div className="absolute top-0 left-0 w-full z-20">
+					<div className="container mx-auto px-4 py-4 md:py-6 flex justify-between items-center">
+						<Button onClick={() => router.back()} variant="ghost"
+								className="text-white hover:bg-white/10 gap-2 font-bold px-2 md:px-4">
+							<ChevronLeft className="w-5 h-5"/> <span className="hidden sm:inline">Nazad</span>
+						</Button>
+						<div className="flex gap-2 md:gap-3">
+							<Button variant="outline" size="icon"
+									className="rounded-full bg-white/10 border-white/20 text-white hover:bg-red-500 hover:text-white transition-all w-9 h-9 md:w-11 md:h-11"
+									onClick={() => setShowDeleteModal(true)}>
+								<Trash className="w-4 h-4 md:w-5 md:h-5"/>
+							</Button>
+							<Button
+								size="icon"
+								variant="secondary"
+								onClick={handleToggleFavorite}
+								className={cn("rounded-full shadow-lg transition-all w-9 h-9 md:w-11 md:h-11", isFavorite(Number(eventId)) ? "bg-white text-red-500" : "bg-white/10 border-white/20 text-white")}
+							>
+								<Heart
+									className={cn("w-4 h-4 md:w-5 md:h-5", isFavorite(Number(eventId)) && "fill-current")}/>
+							</Button>
 						</div>
 					</div>
-					{event.ticketTypes && event.ticketTypes.length > 0 ? (
-						<div className="lg:col-span-1">
-							<div
-								className="sticky top-24 p-8 rounded-3xl shadow-slate-200/50 space-y-6">
-								{event.ticketTypes.map(ticketType => {
-									const isSoldOut = ticketType.soldQuantity >= ticketType.totalQuantity;
-									return (
+				</div>
+
+				<div className="absolute bottom-12 md:bottom-20 w-full z-10 px-4">
+					<div className="container mx-auto">
+						<div className="max-w-4xl space-y-4 md:space-y-6">
+							<div className="flex items-center gap-3">
+								<Badge
+									className="bg-indigo-600 text-white border-none px-4 py-1 font-black uppercase tracking-widest text-[10px]">
+									{event.eventSubcategory.eventCategory.name}
+								</Badge>
+								<div className="h-[1px] w-8 md:w-12 bg-white/30"/>
+								<span
+									className="text-white/80 text-[10px] md:text-xs font-bold uppercase tracking-widest truncate">
+									{event.organizer?.displayName}
+								</span>
+							</div>
+							<h1 className="text-3xl md:text-6xl font-black text-white leading-[1.1] tracking-tighter uppercase italic drop-shadow-2xl">
+								{event.title}
+							</h1>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<div className="container mx-auto px-4 relative z-30 -mt-8 md:-mt-10">
+				<Card
+					className="p-2 md:p-4 rounded-[1.5rem] md:rounded-[2rem] border-none shadow-2xl bg-white overflow-hidden">
+					<div
+						className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+						<div className="flex items-center gap-4 p-4 md:p-6">
+							<div className="bg-indigo-50 p-2 md:p-3 rounded-2xl text-indigo-600"><Calendar
+								className="w-5 h-5 md:w-6 md:h-6"/></div>
+							<div>
+								<p className="text-[9px] md:text-[10px] font-black uppercase text-slate-400 tracking-widest">Datum</p>
+								<p className="text-sm md:text-base font-bold text-slate-900">{DateTimeHelper.formatOnlyDate(event.startDate)}</p>
+							</div>
+						</div>
+						<div className="flex items-center gap-4 p-4 md:p-6">
+							<div className="bg-emerald-50 p-2 md:p-3 rounded-2xl text-emerald-600"><Clock
+								className="w-5 h-5 md:w-6 md:h-6"/></div>
+							<div>
+								<p className="text-[9px] md:text-[10px] font-black uppercase text-slate-400 tracking-widest">Vrijeme</p>
+								<p className="text-sm md:text-base font-bold text-slate-900">{DateTimeHelper.formatOnlyTime(event.startDate)} h</p>
+							</div>
+						</div>
+						<div className="flex items-center gap-4 p-4 md:p-6">
+							<div className="bg-rose-50 p-2 md:p-3 rounded-2xl text-rose-600"><MapPin
+								className="w-5 h-5 md:w-6 md:h-6"/></div>
+							<div>
+								<p className="text-[9px] md:text-[10px] font-black uppercase text-slate-400 tracking-widest">Lokacija</p>
+								<p className="text-sm md:text-base font-bold text-slate-900 truncate">{event.venue.name}</p>
+							</div>
+						</div>
+					</div>
+				</Card>
+			</div>
+
+			<main className="container mx-auto px-4 py-12 md:py-20">
+				<div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16">
+
+					<div className="lg:col-span-8 space-y-12 md:space-y-16">
+						<section className="space-y-6">
+							<div className="flex items-center gap-3">
+								<div className="w-1.5 h-8 bg-indigo-600 rounded-full"/>
+								<h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight">O
+									događaju</h2>
+							</div>
+							<p className="text-slate-600 text-base md:text-xl leading-relaxed font-light text-justify">
+								{event.description}
+							</p>
+						</section>
+
+						<section
+							className="p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] bg-slate-50 border border-slate-100 space-y-8">
+							<div className="flex items-center justify-between">
+								<h2 className="text-xl md:text-2xl font-black text-slate-900 uppercase tracking-tight">Detalji</h2>
+								<ShieldCheck className="hidden sm:block w-8 h-8 text-indigo-600 opacity-20"/>
+							</div>
+							<div className="w-full overflow-hidden">
+								<EventMetadataComponent metadata={event.metadata}/>
+							</div>
+						</section>
+
+						<section className="space-y-10 pt-10 border-t border-slate-100">
+							<div className="flex items-center justify-between">
+								<h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+									<MessageSquare className="w-6 h-6 md:w-8 md:h-8 text-indigo-600"/>
+									Utisci
+								</h2>
+								<Badge className="bg-slate-900 text-white rounded-lg px-3">{reviews.length}</Badge>
+							</div>
+
+							<AddReviewForm eventId={Number(eventId)} onReviewAdded={refreshReviews}/>
+
+							<div className="grid grid-cols-1 gap-4 md:gap-6">
+								{reviews.length > 0 ? (
+									reviews.map((review) => <ReviewItem key={review.id} review={review}/>)
+								) : (
+									<p className="text-slate-400 italic text-center py-10">Još uvijek nema
+										komentara.</p>
+								)}
+							</div>
+						</section>
+					</div>
+
+					<div className="lg:col-span-4">
+						<aside className="lg:sticky lg:top-28 space-y-6">
+							<h2 className="text-lg md:text-xl font-black text-slate-900 uppercase tracking-widest ml-2">Dostupne
+								ulaznice</h2>
+							{event.ticketTypes && event.ticketTypes.length > 0 ? (
+								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+									{event.ticketTypes.map(ticketType => (
 										<Ticket
 											key={ticketType.id}
 											ticketType={ticketType}
 											onBuy={handleBuyClick}
 											isExpired={isExpired}
-											isSoldOut={isSoldOut}
+											isSoldOut={ticketType.soldQuantity >= ticketType.totalQuantity}
 										/>
-									);
-								})}
-							</div>
-						</div>
-					) : (
-						<div className="lg:col-span-1">
-							<div
-								className="sticky top-24 p-8 rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/50 text-center text-slate-700 font-medium space-y-2">
-								<p>Događaj je besplatan!</p>
-								<p>Nema dostupnih ulaznica za kupovinu.</p>
-							</div>
-						</div>
-					)}
+									))}
+								</div>
+							) : (
+								<Card className="p-8 rounded-[2rem] bg-indigo-600 text-white text-center shadow-2xl">
+									<p className="font-black text-xl italic uppercase tracking-tighter">Ulaz
+										Slobodan</p>
+									<p className="text-indigo-100 text-xs mt-2 font-medium">Za ovaj događaj nije
+										potrebna ulaznica.</p>
+								</Card>
+							)}
+						</aside>
+					</div>
 				</div>
 			</main>
+
 			<ConfirmDialog
 				open={showDeleteModal}
 				title="Želite li da obrišete ovaj događaj?"
@@ -296,7 +307,6 @@ export default function EventDetailsPage() {
 					eventId={Number(eventId)}
 					onSuccess={() => {
 						setIsCheckoutOpen(false);
-						toast.success("Uspješno ste kupili kartu!");
 						refreshData();
 					}}
 				/>
