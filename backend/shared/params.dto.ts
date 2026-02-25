@@ -1,6 +1,7 @@
 import { PaginationDto } from './pagination/pagination.dto';
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { CommaSeparatedStringArray } from './decorators/comma-separated-string.decorator';
+import { EventStatus } from './enums/event-status.enum';
 
 export class ParamsDto extends PaginationDto {
   @IsOptional()
@@ -24,4 +25,9 @@ export class ParamsDto extends PaginationDto {
 
   @IsOptional()
   to?: Date;
+
+  @IsOptional()
+  @CommaSeparatedStringArray()
+  @IsEnum(EventStatus, { each: true })
+  status?: EventStatus[];
 }

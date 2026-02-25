@@ -105,6 +105,7 @@ export class EventsService {
       filters: {
         'eventSubcategory.eventCategory.id': paramsDto.categories,
         'venue.city.id': paramsDto.cities,
+        'event.status': paramsDto.status,
       },
     });
 
