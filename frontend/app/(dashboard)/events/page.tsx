@@ -104,66 +104,75 @@ export default function EventsPage() {
 			<div className="container mx-auto px-4 -mt-12 relative z-20">
 				<Card className="p-6 rounded-[2rem] border-none shadow-2xl bg-white">
 					<div className="flex flex-col gap-6">
-						<div className="flex flex-col md:flex-row gap-4 items-center">
-							<div className="flex-1 w-full">
+						<div className="grid grid-cols-12 gap-4">
+							<div className="col-span-12 sm:col-span-6 space-y-1.5">
+								<Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+									Pretraga
+								</Label>
 								<SearchInput
 									value={search}
 									onChange={setSearch}
 									placeholder="Pretražite događaje po nazivu..."
-									className="h-14 border-slate-100 bg-slate-50/50 rounded-2xl focus:ring-indigo-500/20 transition-all"
+									className="h-14 border-slate-100 bg-slate-50/50 rounded-2xl focus:ring-indigo-500/20 transition-all w-full"
 								/>
 							</div>
-							<Button
-								variant="ghost"
-								onClick={() => {
-									setCategories([]);
-									setCities([]);
-									setSearch("");
-									setFrom(null);
-									setTo(null);
-								}}
-								className="h-14 px-6 rounded-2xl text-slate-400 hover:text-red-500 hover:bg-red-50 font-bold gap-2"
-							>
-								<FilterX className="w-5 h-5"/>
-								Očisti
-							</Button>
-						</div>
 
-						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-							<div className="space-y-1.5">
-								<Label
-									className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Kategorija</Label>
-								<EventCategoriesMultiSelect handleSelectChange={setCategories}
-															selectedCategories={filters.categories}/>
+							<div className="col-span-6 sm:col-span-3 space-y-1.5">
+								<Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+									Od datuma
+								</Label>
+								<DateTimePicker
+									value={fromDate}
+									maxDate={toDate}
+									onChange={(d) => setFrom(d?.toISOString() || null)}
+									placeholder="Izaberite datum"
+								/>
 							</div>
-							<div className="space-y-1.5">
-								<Label
-									className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Lokacija</Label>
-								<CitiesMultiSelect handleSelectChange={setCities} selectedCities={filters.cities}/>
+
+							<div className="col-span-6 sm:col-span-3 space-y-1.5">
+								<Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+									Do datuma
+								</Label>
+								<DateTimePicker
+									value={toDate}
+									minDate={fromDate}
+									onChange={(d) => setTo(d?.toISOString() || null)}
+									placeholder="Izaberite datum"
+								/>
 							</div>
-							<div>
-								<Label
-									className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Status događaja</Label>
+						</div>
+						<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+							<div className="space-y-1.5">
+								<Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+									Kategorija
+								</Label>
+								<EventCategoriesMultiSelect
+									handleSelectChange={setCategories}
+									selectedCategories={filters.categories}
+								/>
+							</div>
+
+							<div className="space-y-1.5">
+								<Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+									Lokacija
+								</Label>
+								<CitiesMultiSelect
+									handleSelectChange={setCities}
+									selectedCities={filters.cities}
+								/>
+							</div>
+
+							<div className="space-y-1.5">
+								<Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+									Status događaja
+								</Label>
 								<EventStatusesMultiSelect
 									selectedStatuses={filters.status}
 									handleSelectChange={setStatuses}
 								/>
 							</div>
-							<div className="space-y-1.5">
-								<Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Od
-									datuma</Label>
-								<DateTimePicker value={fromDate} maxDate={toDate}
-												onChange={(d) => setFrom(d?.toISOString() || null)}
-												placeholder="Izaberite datum"/>
-							</div>
-							<div className="space-y-1.5">
-								<Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Do
-									datuma</Label>
-								<DateTimePicker value={toDate} minDate={fromDate}
-												onChange={(d) => setTo(d?.toISOString() || null)}
-												placeholder="Izaberite datum"/>
-							</div>
 						</div>
+
 					</div>
 				</Card>
 			</div>
