@@ -35,6 +35,34 @@ export const SUBCATEGORY_METADATA_CONFIG: Record<
       },
     ],
   },
+  kosarka: {
+    fields: [
+      {
+        key: 'homeTeam',
+        label: 'Domaći tim',
+        type: 'string',
+        required: true,
+      },
+      {
+        key: 'awayTeam',
+        label: 'Gostujući tim',
+        type: 'string',
+        required: true,
+      },
+      {
+        key: 'referee',
+        label: 'Sudija',
+        type: 'string',
+        required: false,
+      },
+      {
+        key: 'competition',
+        label: 'Takmičenje',
+        type: 'string',
+        required: false,
+      },
+    ],
+  },
   koncert: {
     fields: [
       {
@@ -48,6 +76,22 @@ export const SUBCATEGORY_METADATA_CONFIG: Record<
         label: 'Žanr',
         type: 'string',
         required: false,
+      },
+    ],
+  },
+  konferencija: {
+    fields: [
+      {
+        key: 'speaker',
+        label: 'Predavači',
+        type: 'string',
+        required: true,
+      },
+      {
+        key: 'topic',
+        label: 'Tema',
+        type: 'string',
+        required: true,
       },
     ],
   },

@@ -1,7 +1,7 @@
 import {
 	Music,
 	Trophy,
-	LucideIcon,
+	LucideIcon, PencilIcon,
 } from "lucide-react";
 import {EventCategory} from "@/shared/enums/event-categories.enum"
 
@@ -27,4 +27,9 @@ export const CATEGORY_UI_MAP: Record<EventCategory, CategoryUIConfig> = {
 		icon: Trophy,
 		color: "bg-orange-100 text-orange-600",
 	},
+	[EventCategory.EDUKACIJA]: {
+		icon: PencilIcon,
+		color: "bg-green-100 text-green-600",
+	},
+
 };
