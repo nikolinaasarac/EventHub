@@ -380,6 +380,7 @@ export function EventForm({event}: Props) {
 														name={`metadata.${field.name}`}
 														label={field.label}
 														type={field.type}
+														labelClassName="text-white"
 														placeholder={field.placeholder}
 														className="bg-white/10 border-white/20 text-white placeholder:text-white/30 rounded-xl"
 													/>

@@ -10,6 +10,7 @@ interface InputFieldProps {
 	className?: string;
 	as?: React.ElementType;
 	autoComplete?: string;
+	labelClassName?: string;
 }
 
 export function InputField({
@@ -18,6 +19,7 @@ export function InputField({
 							   labelIcon = null,
 							   type = "text",
 							   placeholder = "",
+							   labelClassName,
 							   className = "",
 							   autoComplete,
 							   as = "input",
@@ -25,11 +27,17 @@ export function InputField({
 	const [field, meta] = useField(name);
 	return (
 		<Field>
-			<FieldLabel htmlFor={name} className="font-bold text-slate-700">{label}</FieldLabel>
+			<FieldLabel
+				htmlFor={name}
+				className={`font-bold ${labelClassName || "text-slate-700"}`}
+			>
+				{label}
+			</FieldLabel>
 			<FormikField
 				as={as}
 				type={type}
 				name={name}
+				value={field.value || ""}
 				placeholder={placeholder}
 				autoComplete={autoComplete}
 				className={`w-full bg-white border rounded-md h-9 px-4 py-2 focus:outline-none focus:ring-2 

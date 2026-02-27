@@ -83,7 +83,7 @@ export const SUBCATEGORY_METADATA_CONFIG: Record<
     fields: [
       {
         key: 'speaker',
-        label: 'Predavač',
+        label: 'Predavači',
         type: 'string',
         required: true,
       },
