@@ -5,7 +5,7 @@ import {Form, Formik, ErrorMessage} from "formik";
 import {venueSchema} from '@/schemas/venue.schema';
 import {Label} from "@/components/ui/label";
 import {Card} from "@/components/ui/card";
-import {MapPin, Globe, Instagram, Facebook, Phone, Mail, X} from 'lucide-react';
+import {MapPin, Globe, Instagram, Facebook, Phone, Mail} from 'lucide-react';
 import dynamic from 'next/dynamic';
 import {InputField} from "@/components/InputField";
 import {SelectBox} from "@/components/SelectBox";
