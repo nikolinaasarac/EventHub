@@ -8,4 +8,5 @@ export interface QueryParams extends Pagination {
 	from?: string;
 	to?: string;
 	status?: string;
+	roles?: string;
 }

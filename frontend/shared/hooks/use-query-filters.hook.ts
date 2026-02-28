@@ -13,8 +13,9 @@ export function useQueryFilters(debounceDelay = 500) {
 		const venueTypes = searchParams.get("venueTypes")?.split(",") || [];
 		const from = searchParams.get("from") || "";
 		const to = searchParams.get("to") || "";
+		const roles = searchParams.get("roles")?.split(",") || [];
 
-		return {categories, cities, status, venueTypes, from, to};
+		return {categories, cities, status, venueTypes, from, to, roles};
 	}, [searchParams]);
 
 	const [search, setSearch] = useState(searchParams.get("search") || "");
@@ -27,16 +28,19 @@ export function useQueryFilters(debounceDelay = 500) {
 		venueTypes: string[],
 		from: string | null,
 		to: string | null
+		roles: string[];
 	}>) => {
 		const currentCategories = filters.categories;
 		const currentCities = filters.cities;
 		const currentVenueTypes = filters.venueTypes;
+		const currentRoles = filters.roles;
 
 		const normalizedFilters = {
 			categories: newFilters.categories !== undefined ? [...newFilters.categories].sort() : currentCategories,
 			cities: newFilters.cities !== undefined ? [...newFilters.cities].sort() : currentCities,
 			status: newFilters.status !== undefined ? [...newFilters.status].sort() : filters.status,
 			venueTypes: newFilters.venueTypes !== undefined ? [...newFilters.venueTypes].sort() : currentVenueTypes,
+			roles: newFilters.roles !== undefined ? [...newFilters.roles].sort() : currentRoles,
 		};
 
 		const query = createQueryString({
@@ -44,6 +48,7 @@ export function useQueryFilters(debounceDelay = 500) {
 			cities: normalizedFilters.cities.length ? normalizedFilters.cities.join(",") : null,
 			status: normalizedFilters.status.length ? normalizedFilters.status.join(",") : null,
 			venueTypes: normalizedFilters.venueTypes.length ? normalizedFilters.venueTypes.join(",") : null,
+			roles: normalizedFilters.roles.length ? normalizedFilters.roles.join(",") : null,
 			from: newFilters.from !== undefined ? newFilters.from : filters.from,
 			to: newFilters.to !== undefined ? newFilters.to : filters.to,
 			page: 1,
@@ -64,6 +69,8 @@ export function useQueryFilters(debounceDelay = 500) {
 
 	const setTo = (to: string | null) =>
 		updateFilters({to: to ? to : null});
+	const setRoles = (roles: string[]) =>
+		updateFilters({roles});
 
 	const createQueryString = useCallback(
 		(params: Record<string, string | number | null>) => {
@@ -108,6 +115,7 @@ export function useQueryFilters(debounceDelay = 500) {
 		setCities,
 		setStatuses,
 		setVenueTypes,
+		setRoles,
 		page,
 		updatePage,
 		urlSearch: searchParams.get("search") || "",
