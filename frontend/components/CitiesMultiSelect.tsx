@@ -1,9 +1,7 @@
 "use client"
 
 import {MultiSelect} from "@/components/MultiSelect";
-import {useEffect, useState} from "react";
-import CitiesService from "@/services/cities.service";
-import {City} from "@/models/city.model";
+import {useApp} from "@/context/app-context";
 
 interface Props {
 	handleSelectChange: (selectedValue: string[]) => void,
@@ -12,19 +10,7 @@ interface Props {
 }
 
 export function CitiesMultiSelect({handleSelectChange, selectedCities, title = "Opština"}: Props) {
-	const [cities, setCities] = useState<City[]>([]);
-
-	useEffect(() => {
-		const fetchCities = async () => {
-			try {
-				const response = await CitiesService.getCities();
-				setCities(response);
-			} catch (e) {
-				console.error(e);
-			}
-		}
-		fetchCities();
-	}, [])
+	const {cities} = useApp();
 
 	const handleCitiesSelected = (selectedCities: string[]) => {
 		handleSelectChange(selectedCities);
