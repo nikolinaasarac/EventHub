@@ -381,7 +381,7 @@ export function EventForm({event}: Props) {
 											</div>
 											<div
 												className="mt-8 p-4 bg-white/5 rounded-2xl border border-white/10 italic text-[10px] text-indigo-100">
-												* Specifični podaci za tip: {selectedSubRef?.name}
+												* Dodatni podaci za: {selectedSubRef?.name}
 											</div>
 										</Card>
 									)}
