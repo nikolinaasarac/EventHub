@@ -247,6 +247,7 @@ export function EventForm({event}: Props) {
 												name="startDate"
 												label="Početak"
 												placeholder="Izaberi datum i vrijeme"
+												minDate={new Date()}
 												maxDate={values.endDate ? new Date(values.endDate) : undefined}
 											/>
 										</div>
