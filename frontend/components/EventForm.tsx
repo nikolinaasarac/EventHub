@@ -23,6 +23,7 @@ import {Plus, Trash} from "lucide-react";
 import TicketTypeService from "@/services/ticket-type.service";
 import {DateTimePickerField} from "@/components/DateTimePickerField";
 import {useRouter} from "next/navigation";
+import {useApp} from "@/context/app-context";
 
 type EventFormValues = {
 	title: string;
@@ -47,8 +48,7 @@ interface Props {
 }
 
 export function EventForm({event}: Props) {
-	const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);
-	const [eventSubcategories, setEventSubcategories] = useState<EventSubcategory[]>([]);
+	const {eventCategories, eventSubcategories} = useApp();
 	const [venues, setVenues] = useState<Venue[]>([]);
 
 	const router = useRouter();
@@ -56,11 +56,7 @@ export function EventForm({event}: Props) {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const responseCategory = await EventCategoryService.getEventCategories();
-				const responseSubcategory = await EventSubcategoryService.getEventSubcategories();
 				const responseVenue = await VenueService.getAllVenues();
-				setEventCategories(responseCategory);
-				setEventSubcategories(responseSubcategory);
 				setVenues(responseVenue);
 			} catch (e) {
 				console.error(e);

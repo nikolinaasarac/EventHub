@@ -6,9 +6,12 @@ import {City} from "@/models/city.model";
 import CitiesService from "@/services/cities.service";
 import {VenueType} from "@/models/venue-type.model";
 import VenueTypesService from "@/services/venue-types.service";
+import {EventSubcategory} from "@/models/event-subcategory.model";
+import EventSubcategoryService from "@/services/event-subcategory.service";
 
 interface AppContextProps {
 	eventCategories: EventCategory[];
+	eventSubcategories: EventSubcategory[];
 	cities: City[];
 	venueTypes: VenueType[];
 	loading: boolean;
@@ -18,6 +21,7 @@ const AppContext = createContext<AppContextProps | undefined>(undefined);
 
 export function AppProvider({children}: { children: React.ReactNode }) {
 	const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);
+	const [eventSubcategories, setEventSubcategories] = useState<EventSubcategory[]>([]);
 	const [cities, setCities] = useState<City[]>([]);
 	const [venueTypes, setVenueTypes] = useState<VenueType[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -30,6 +34,8 @@ export function AppProvider({children}: { children: React.ReactNode }) {
 				setEventCategories(categoriesRes);
 				setCities(citiesRes);
 				setVenueTypes(venueTypesRes);
+				const subcategoriesRes = await EventSubcategoryService.getEventSubcategories();
+				setEventSubcategories(subcategoriesRes);
 			} catch (error) {
 				console.error(error);
 			} finally {
@@ -39,8 +45,8 @@ export function AppProvider({children}: { children: React.ReactNode }) {
 		fetchData();
 	}, [])
 
-	const value = useMemo(() => ({loading, eventCategories, cities, venueTypes}),
-		[loading, eventCategories, cities, venueTypes]
+	const value = useMemo(() => ({loading, eventCategories, cities, venueTypes, eventSubcategories}),
+		[loading, eventCategories, cities, venueTypes, eventSubcategories]
 	);
 
 	return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
