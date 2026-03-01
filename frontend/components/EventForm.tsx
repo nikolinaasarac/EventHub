@@ -9,10 +9,6 @@ import {AlignLeft, Calendar, Clock, Info, MapPin} from "lucide-react";
 import {LoadingButton} from "@/components/LoadingButton";
 import React, {useEffect, useState} from "react";
 import {Event} from "@/models/event.model";
-import {EventCategory} from "@/models/event-category.model";
-import {EventSubcategory} from "@/models/event-subcategory.model";
-import EventCategoryService from "@/services/event-category.service";
-import EventSubcategoryService from "@/services/event-subcategory.service";
 import {toast} from "sonner";
 import {Venue} from "@/models/venue.model";
 import VenueService from "@/services/venue.service";
@@ -23,6 +19,7 @@ import {Plus, Trash} from "lucide-react";
 import TicketTypeService from "@/services/ticket-type.service";
 import {DateTimePickerField} from "@/components/DateTimePickerField";
 import {useRouter} from "next/navigation";
+import {useApp} from "@/context/app-context";
 
 type EventFormValues = {
 	title: string;
@@ -47,8 +44,7 @@ interface Props {
 }
 
 export function EventForm({event}: Props) {
-	const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);
-	const [eventSubcategories, setEventSubcategories] = useState<EventSubcategory[]>([]);
+	const {eventCategories, eventSubcategories} = useApp();
 	const [venues, setVenues] = useState<Venue[]>([]);
 
 	const router = useRouter();
@@ -56,11 +52,7 @@ export function EventForm({event}: Props) {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const responseCategory = await EventCategoryService.getEventCategories();
-				const responseSubcategory = await EventSubcategoryService.getEventSubcategories();
 				const responseVenue = await VenueService.getAllVenues();
-				setEventCategories(responseCategory);
-				setEventSubcategories(responseSubcategory);
 				setVenues(responseVenue);
 			} catch (e) {
 				console.error(e);
@@ -247,6 +239,7 @@ export function EventForm({event}: Props) {
 												name="startDate"
 												label="Početak"
 												placeholder="Izaberi datum i vrijeme"
+												minDate={new Date()}
 												maxDate={values.endDate ? new Date(values.endDate) : undefined}
 											/>
 										</div>
@@ -388,7 +381,7 @@ export function EventForm({event}: Props) {
 											</div>
 											<div
 												className="mt-8 p-4 bg-white/5 rounded-2xl border border-white/10 italic text-[10px] text-indigo-100">
-												* Specifični podaci za tip: {selectedSubRef?.name}
+												* Dodatni podaci za: {selectedSubRef?.name}
 											</div>
 										</Card>
 									)}

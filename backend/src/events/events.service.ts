@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -44,6 +48,18 @@ export class EventsService {
     userId: string,
     imageUrl?: string,
   ) {
+    const now = new Date();
+    const startDate = new Date(createEventDto.startDate);
+    const endDate = new Date(createEventDto.endDate);
+
+    if (startDate < now) {
+      throw new BadRequestException('Event cannot start in the past');
+    }
+
+    if (endDate < startDate) {
+      throw new BadRequestException('End date cannot be before start date');
+    }
+
     const organizer = await this.organizersService.getOrganizerByUserId(userId);
 
     if (!organizer) {

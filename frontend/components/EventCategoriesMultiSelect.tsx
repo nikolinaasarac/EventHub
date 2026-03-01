@@ -1,7 +1,5 @@
 import {MultiSelect} from "@/components/MultiSelect";
-import {useEffect, useState} from "react";
-import {EventCategory} from "@/models/event-category.model";
-import EventCategoryService from "@/services/event-category.service";
+import {useApp} from "@/context/app-context";
 
 interface Props {
 	handleSelectChange: (selectedValue: string[]) => void,
@@ -9,19 +7,7 @@ interface Props {
 }
 
 export function EventCategoriesMultiSelect({handleSelectChange, selectedCategories}: Props) {
-	const [eventCategories, setEventCategories] = useState<EventCategory[]>([]);
-
-	useEffect(() => {
-		const fetchEventCategories = async () => {
-			try {
-				const response = await EventCategoryService.getEventCategories();
-				setEventCategories(response);
-			} catch (e) {
-				console.error(e);
-			}
-		}
-		fetchEventCategories();
-	}, [])
+	const {eventCategories} = useApp();
 
 	const handleCategoriesSelected = (selectedCategories: string[]) => {
 		handleSelectChange(selectedCategories);

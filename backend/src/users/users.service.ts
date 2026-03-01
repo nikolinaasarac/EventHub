@@ -7,6 +7,9 @@ import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { RolesService } from '../roles/roles.service';
 import { Role } from '../roles/entities/role.entity';
+import { UsersParamsDto } from './dto/user-params.dto';
+import { applyQueryOptions } from '../../shared/query-builder.helper';
+import { paginate } from '../../shared/pagination/pagination-helper';
 
 @Injectable()
 export class UsersService {
@@ -85,10 +88,26 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async findAll() {
-    return this.usersRepository.find({
-      relations: ['organizerProfile', 'roles'],
+  async findAll(paramsDto: UsersParamsDto) {
+    const qb = this.usersRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'role')
+      .leftJoinAndSelect('user.organizerProfile', 'organizerProfile');
+
+    applyQueryOptions(qb, {
+      search: paramsDto.search,
+      searchFields: ['user.email'],
+      page: paramsDto.page,
+      limit: paramsDto.limit,
+      order: { 'user.createdAt': 'DESC' },
+      filters: {
+        'role.name': paramsDto.roles,
+      },
     });
+
+    const [data, total] = await qb.getManyAndCount();
+
+    return paginate(data, total, paramsDto.page, paramsDto.limit);
   }
 
   async findOne(id: string) {

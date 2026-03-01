@@ -1,5 +1,9 @@
 import BaseService from "@/services/base.service";
 import {LoginResponse, User} from "@/models/user.model";
+import {UserParams} from "@/models/user-params.model";
+import {PaginatedResponse} from "@/models/paginated.model";
+import {Event} from "@/models/event.model";
+import {QueryParams} from "@/models/query-params.model";
 
 export default class UserService {
 	static readonly ENDPOINT = "/auth"
@@ -24,8 +28,8 @@ export default class UserService {
 		return BaseService.create(`${this.ENDPOINT}/register`, {email, password});
 	}
 
-	static async getAllUsers(): Promise<User[]> {
-		return BaseService.fetchList<User[]>(`/users`);
+	static async getUsers(params: QueryParams): Promise<PaginatedResponse<User>> {
+		return BaseService.fetchList(`/users`, params);
 	}
 
 	static async setPassword(token: string, password: string) {

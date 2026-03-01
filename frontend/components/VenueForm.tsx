@@ -1,18 +1,13 @@
 "use client"
 
-import React, {useEffect, useState} from 'react';
 import {Form, Formik, ErrorMessage} from "formik";
 import {venueSchema} from '@/schemas/venue.schema';
 import {Label} from "@/components/ui/label";
 import {Card} from "@/components/ui/card";
-import {MapPin, Globe, Instagram, Facebook, Phone, Mail, X} from 'lucide-react';
+import {MapPin, Globe, Instagram, Facebook, Phone, Mail} from 'lucide-react';
 import dynamic from 'next/dynamic';
 import {InputField} from "@/components/InputField";
 import {SelectBox} from "@/components/SelectBox";
-import {City} from "@/models/city.model";
-import {VenueType} from "@/models/venue-type.model";
-import CitiesService from "@/services/cities.service";
-import VenueTypesService from "@/services/venue-types.service";
 import VenueService from "@/services/venue.service";
 import {LoadingButton} from "@/components/LoadingButton";
 import {Field} from "@/components/ui/field";
@@ -20,6 +15,7 @@ import {ImageUpload} from "@/components/ImageUpload";
 import {toast} from "sonner";
 import {Venue} from "@/models/venue.model";
 import {useRouter} from "next/navigation";
+import {useApp} from "@/context/app-context";
 
 const MapPicker = dynamic(() => import("./MapPicker").then(mod => mod.MapPicker), {ssr: false});
 
@@ -28,8 +24,7 @@ interface Props extends React.ComponentProps<"form"> {
 }
 
 export function VenueForm({venue}: Props) {
-	const [cities, setCities] = useState<City[]>([]);
-	const [venueTypes, setVenueTypes] = useState<VenueType[]>([])
+	const {venueTypes, cities} = useApp();
 	const router = useRouter();
 
 	const isEdit = !!venue;
@@ -38,19 +33,6 @@ export function VenueForm({venue}: Props) {
 		? "Izmijenite podatke o lokaciji."
 		: "Unesite podatke o novoj lokaciji.";
 	const submitText = isEdit ? "Sačuvaj izmjene" : "Dodaj lokaciju";
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const [citiesRes, venueTypesRes] = await Promise.all([CitiesService.getCities(), VenueTypesService.getVenueTypes()]);
-				setVenueTypes(venueTypesRes);
-				setCities(citiesRes);
-			} catch (e) {
-				console.error(e);
-			}
-		}
-		fetchData();
-	}, []);
 
 	return (
 		<>

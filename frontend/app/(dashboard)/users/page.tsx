@@ -12,33 +12,56 @@ import {User} from "@/models/user.model";
 import {UserRole} from "@/shared/enums/user-role.enum";
 import {organizerColumns} from "@/columns/organizer.columns";
 import {useRouter} from "next/navigation";
+import {useQueryFilters} from "@/shared/hooks/use-query-filters.hook";
+import {QueryParams} from "@/models/query-params.model";
+import {PaginationComponent} from "@/components/Pagination";
 
 export default function UsersPage() {
-	const [users, setUsers] = useState<User[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
+	const {updatePage, filters, setRoles, urlSearch, urlPage
+	} = useQueryFilters();
 
+	const [users, setUsers] = useState<User[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [totalPages, setTotalPages] = useState(1);
 	const router = useRouter();
 
+	const getCurrentTabValue = () => {
+		if (filters.roles.includes(UserRole.VISITOR)) return "visitors";
+		if (filters.roles.includes(UserRole.ORGANIZER)) return "organizers";
+		if (filters.roles.includes(UserRole.ADMIN)) return "admins";
+		return "all";
+	};
+
+	const handleTabChange = (newTab: string) => {
+		if (newTab === "all") setRoles([]);
+		else if (newTab === "visitors") setRoles([UserRole.VISITOR]);
+		else if (newTab === "organizers") setRoles([UserRole.ORGANIZER]);
+		else if (newTab === "admins") setRoles([UserRole.ADMIN]);
+	};
+
 	useEffect(() => {
-		const fetchUsers = async () => {
+		const fetchUsers = async (
+			roles: string[] = filters.roles,
+		) => {
+			setLoading(true);
+			const params: QueryParams = {
+				page: urlPage,
+				limit: 10,
+				search: urlSearch,
+			};
 			try {
-				setIsLoading(true);
-				const response = await UserService.getAllUsers();
-				setUsers(response);
+				if (roles.length) params.roles = roles.join(",")
+				const response = await UserService.getUsers(params);
+				setUsers(response.data);
+				setTotalPages(response.meta.totalPages);
 			} catch (e) {
 				console.error(e);
 			} finally {
-				setIsLoading(false);
+				setLoading(false);
 			}
-		};
+		}
 		fetchUsers();
-	}, []);
-
-	console.log(users);
-
-	const visitors = users.filter(u => u.roles?.some(r => r.name === UserRole.VISITOR));
-	const organizers = users.filter(u => u.roles?.some(r => r.name === UserRole.ORGANIZER));
-	const admins = users.filter(u => u.roles?.some(r => r.name === UserRole.ADMIN));
+	}, [urlPage, urlSearch, filters.roles]);
 
 	const userTabs: TabItem[] = [
 		{
@@ -51,19 +74,19 @@ export default function UsersPage() {
 			value: "visitors",
 			label: "Posjetioci",
 			icon: <UserCircle className="w-4 h-4"/>,
-			content: <DataTable columns={userColumns} data={visitors}/>
+			content: <DataTable columns={userColumns} data={users}/>
 		},
 		{
 			value: "organizers",
 			label: "Organizatori",
 			icon: <Briefcase className="w-4 h-4"/>,
-			content: <DataTable columns={organizerColumns} data={organizers}/>
+			content: <DataTable columns={organizerColumns} data={users}/>
 		},
 		{
 			value: "admins",
 			label: "Administratori",
 			icon: <ShieldCheck className="w-4 h-4"/>,
-			content: <DataTable columns={userColumns} data={admins}/>
+			content: <DataTable columns={userColumns} data={users}/>
 		}
 	];
 
@@ -85,14 +108,27 @@ export default function UsersPage() {
 					</Button>
 				</div>
 
-				{isLoading ? (
+				{loading ? (
 					<div className="h-64 flex flex-col items-center justify-center gap-4">
 						<div
 							className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"/>
 						<p className="text-slate-400 font-medium italic text-sm">Priprema podataka...</p>
 					</div>
 				) : (
-					<TabsComponent tabs={userTabs} defaultValue="all"/>
+					<TabsComponent
+						tabs={userTabs}
+						value={getCurrentTabValue()}
+						onValueChange={handleTabChange}
+					/>
+				)}
+
+				{!loading && users.length > 0 && (
+					<div className="mt-24 flex justify-center">
+						<div className="bg-slate-50 p-2 rounded-2xl border border-slate-100 shadow-sm">
+							<PaginationComponent currentPage={urlPage} totalPages={totalPages}
+												 onPageChange={updatePage}/>
+						</div>
+					</div>
 				)}
 			</div>
 		</div>
