@@ -16,11 +16,15 @@ import { ParamsDto } from '../../shared/params.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { CreateVenueDto } from './dto/create-venue.dto';
+import { Roles } from '../../shared/decorators/roles.decorator';
+import { UserRole } from '../../shared/enums/user-role.enum';
+import { Public } from '../../shared/decorators/public.decorator';
 
 @Controller('venues')
 export class VenuesController {
   constructor(private readonly venuesService: VenuesService) {}
 
+  @Roles(UserRole.ADMIN)
   @Post()
   @UseInterceptors(
     FileInterceptor('image', {
@@ -43,21 +47,25 @@ export class VenuesController {
     return this.venuesService.create(body, imageUrl);
   }
 
+  @Public()
   @Get()
   findAll(@Query() paramsDto: ParamsDto) {
     return this.venuesService.findAll(paramsDto);
   }
 
+  @Public()
   @Get('get-all')
   findAllVenues() {
     return this.venuesService.findAllVenues();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.venuesService.findOne(+id);
   }
 
+  @Roles(UserRole.ADMIN)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('image', {
@@ -80,6 +88,7 @@ export class VenuesController {
     return this.venuesService.update(+id, updateVenueDto, file);
   }
 
+  @Roles(UserRole.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.venuesService.remove(+id);

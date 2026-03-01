@@ -11,6 +11,8 @@ import { EventSubcategoriesService } from './event-subcategories.service';
 import { CreateEventSubcategoryDto } from './dto/create-event-subcategory.dto';
 import { UpdateEventSubcategoryDto } from './dto/update-event-subcategory.dto';
 import { Public } from '../../shared/decorators/public.decorator';
+import { Roles } from '../../shared/decorators/roles.decorator';
+import { UserRole } from '../../shared/enums/user-role.enum';
 
 @Controller('event-subcategories')
 export class EventSubcategoriesController {
@@ -18,6 +20,7 @@ export class EventSubcategoriesController {
     private readonly subcategoriesService: EventSubcategoriesService,
   ) {}
 
+  @Roles(UserRole.ADMIN)
   @Post()
   create(@Body() createEventSubcategoryDto: CreateEventSubcategoryDto) {
     return this.subcategoriesService.create(createEventSubcategoryDto);
@@ -35,6 +38,7 @@ export class EventSubcategoriesController {
     return this.subcategoriesService.findOne(+id);
   }
 
+  @Roles(UserRole.ADMIN)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -43,6 +47,7 @@ export class EventSubcategoriesController {
     return this.subcategoriesService.update(+id, updateEventSubcategoryDto);
   }
 
+  @Roles(UserRole.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.subcategoriesService.remove(+id);

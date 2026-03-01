@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventTypesModule } from './event-types/event-types.module';
 import { CitiesModule } from './cities/cities.module';
 import { VenuesModule } from './venues/venues.module';
 import { VenueTypesModule } from './venue-types/venue-types.module';
@@ -40,7 +39,6 @@ import { ScheduleModule } from '@nestjs/schedule';
       useFactory: async (configService: ConfigService) =>
         configService.get('typeorm')!,
     }),
-    EventTypesModule,
     CitiesModule,
     VenuesModule,
     VenueTypesModule,
