@@ -81,6 +81,7 @@ export class AuthController {
     return { message: 'Logged out successfully' };
   }
 
+  @Public()
   @Post('refresh-token')
   async refresh(
     @Req() req: AuthRequest,
