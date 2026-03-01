@@ -12,18 +12,18 @@ import {QueryParams} from "@/models/query-params.model";
 import {CitiesMultiSelect} from "@/components/CitiesMultiSelect";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
-import {Calendar as CalendarIcon, ChevronRight, FilterX, Plus, TicketIcon} from "lucide-react";
-import PageHeader from "@/components/PageHeader";
+import {ChevronRight, Plus, TicketIcon} from "lucide-react";
 import {DateTimePicker} from "@/components/DateTimePicker";
 import {EventStatusesMultiSelect} from "@/components/EventStatusesMultiSelect";
 import {Card} from "@/components/ui/card";
 import {Label} from "@/components/ui/label";
+import {useAuth} from "@/context/auth-context";
+import {UserRole} from "@/shared/enums/user-role.enum";
 
 export default function EventsPage() {
 	const {
 		search,
 		setSearch,
-		page,
 		updatePage,
 		urlSearch,
 		urlPage,
@@ -34,6 +34,7 @@ export default function EventsPage() {
 		setTo,
 		setStatuses
 	} = useQueryFilters();
+	const {user} = useAuth();
 	const [events, setEvents] = useState<Event[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [totalPages, setTotalPages] = useState(1);
@@ -56,9 +57,16 @@ export default function EventsPage() {
 				if (eventCategories.length) params.categories = eventCategories.join(",");
 				if (cities.length > 0) params.cities = cities.join(",");
 				if (status.length > 0) params.status = status.join(",");
-				const response = await EventService.getEvents(params);
-				setEvents(response.data);
-				setTotalPages(response.meta.totalPages);
+				if (user?.roles?.some(role => role.name === UserRole.ORGANIZER)) {
+					const response = await EventService.getMyOrganizedEvents(params);
+					setEvents(response.data);
+					setTotalPages(response.meta.totalPages);
+				} else {
+					const response = await EventService.getEvents(params);
+					setEvents(response.data);
+					setTotalPages(response.meta.totalPages);
+				}
+
 			} catch (e) {
 				console.error(e);
 			} finally {
@@ -90,13 +98,15 @@ export default function EventsPage() {
 						<h1 className="text-5xl md:text-7xl font-black text-white uppercase italic tracking-tighter mb-6">
 							Događaji
 						</h1>
-						<Button
-							onClick={() => router.push('/events/add-event')}
-							className="bg-indigo-600 hover:bg-indigo-700 h-12 px-8 rounded-full font-bold gap-2 shadow-lg shadow-indigo-500/20"
-						>
-							<Plus className="w-5 h-5"/>
-							Dodaj novi događaj
-						</Button>
+						{user && user.roles.some(role => role.name === UserRole.ORGANIZER) && (
+							<Button
+								onClick={() => router.push('/events/add-event')}
+								className="bg-indigo-600 hover:bg-indigo-700 h-12 px-8 rounded-full font-bold gap-2 shadow-lg shadow-indigo-500/20"
+							>
+								<Plus className="w-5 h-5"/>
+								Dodaj novi događaj
+							</Button>
+						)}
 					</div>
 				</div>
 			</section>

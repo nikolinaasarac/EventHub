@@ -113,6 +113,12 @@ export class EventsController {
   }
 
   @Roles(UserRole.ORGANIZER, UserRole.ADMIN)
+  @Patch(':id/cancel')
+  cancelEvent(@Param('id') id: string) {
+    return this.eventsService.cancelEvent(+id);
+  }
+
+  @Roles(UserRole.ORGANIZER, UserRole.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.eventsService.remove(+id);

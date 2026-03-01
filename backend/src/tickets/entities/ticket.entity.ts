@@ -15,13 +15,11 @@ export class Ticket {
 
   @ManyToOne(() => User, (user) => user.tickets, {
     nullable: false,
-    onDelete: 'CASCADE',
   })
   user: User;
 
   @ManyToOne(() => Event, (event) => event.tickets, {
     nullable: false,
-    onDelete: 'CASCADE',
   })
   event: Event;
 

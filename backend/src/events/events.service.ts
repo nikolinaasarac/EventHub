@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -243,6 +244,11 @@ export class EventsService {
   async remove(id: number) {
     const event = await this.findOne(id);
     if (!event) throw new NotFoundException(`Event with id ${id} not found`);
+    if (event.ticketTypes.length) {
+      throw new ConflictException(
+        'Cannot delete event: tickets already exist for this event',
+      );
+    }
     if (event.imageUrl) {
       const imagePath = join(process.cwd(), 'public', event.imageUrl);
       try {
@@ -287,6 +293,7 @@ export class EventsService {
     const organizer = await this.organizersService.getOrganizerByUserId(
       user.id,
     );
+
     const qb = this.eventsRepository
       .createQueryBuilder('event')
       .leftJoinAndSelect('event.venue', 'venue')
@@ -303,7 +310,23 @@ export class EventsService {
       page: paramsDto.page,
       limit: paramsDto.limit,
       order: { 'event.createdAt': 'DESC' },
+      filters: {
+        'eventSubcategory.eventCategory.id': paramsDto.categories,
+        'venue.city.id': paramsDto.cities,
+        'event.status': paramsDto.status,
+      },
     });
+
+    if (paramsDto.from && paramsDto.to) {
+      qb.andWhere('event.startDate <= :to AND event.endDate >= :from', {
+        from: new Date(paramsDto.from),
+        to: new Date(paramsDto.to),
+      });
+    } else if (paramsDto.from) {
+      qb.andWhere('event.endDate >= :from', { from: new Date(paramsDto.from) });
+    } else if (paramsDto.to) {
+      qb.andWhere('event.startDate <= :to', { to: new Date(paramsDto.to) });
+    }
 
     const [data, total] = await qb.getManyAndCount();
     return paginate(data, total, paramsDto.page, paramsDto.limit);
@@ -356,5 +379,17 @@ export class EventsService {
     event.status = newStatus;
 
     await this.eventsRepository.save(event);
+  }
+
+  async cancelEvent(id: number) {
+    const event = await this.findOne(id);
+    if (!event) throw new NotFoundException('Event not found');
+    const now = new Date();
+    if (event.endDate < now) {
+      throw new BadRequestException('Past events cannot be canceled');
+    }
+    event.status = EventStatus.OTKAZAN;
+    await this.eventsRepository.save(event);
+    return { message: 'Event has been canceled', event };
   }
 }
