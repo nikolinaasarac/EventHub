@@ -10,6 +10,7 @@ import {
 import { EventCategoriesService } from './event-categories.service';
 import { CreateEventCategoryDto } from './dto/create-event-category.dto';
 import { UpdateEventCategoryDto } from './dto/update-event-category.dto';
+import { Public } from '../../shared/decorators/public.decorator';
 
 @Controller('event-categories')
 export class EventCategoriesController {
@@ -20,6 +21,7 @@ export class EventCategoriesController {
     return this.eventCategories.create(createEventCategoryDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.eventCategories.findAll();

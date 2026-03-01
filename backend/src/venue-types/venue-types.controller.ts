@@ -10,6 +10,7 @@ import {
 import { VenueTypesService } from './venue-types.service';
 import { CreateVenueTypeDto } from './dto/create-venue-type.dto';
 import { UpdateVenueTypeDto } from './dto/update-venue-type.dto';
+import { Public } from '../../shared/decorators/public.decorator';
 
 @Controller('venue-types')
 export class VenueTypesController {
@@ -20,11 +21,13 @@ export class VenueTypesController {
     return this.venueTypesService.create(createVenueTypeDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.venueTypesService.findAll();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.venueTypesService.findOne(+id);

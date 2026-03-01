@@ -22,13 +22,16 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { AuthRequest } from '../auth/auth.types';
 import { CurrentUser } from '../../shared/decorators/current-user.decorator';
 import { User } from '../users/entities/user.entity';
+import { Roles } from '../../shared/decorators/roles.decorator';
+import { UserRole } from '../../shared/enums/user-role.enum';
+import { Public } from '../../shared/decorators/public.decorator';
 
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
+  @Roles(UserRole.ORGANIZER)
   @Post()
-  @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -51,27 +54,32 @@ export class EventsController {
     return this.eventsService.create(createEventDto, req.user['id'], imageUrl);
   }
 
+  @Public()
   @Get()
   findAll(@Query() paramsDto: ParamsDto) {
     return this.eventsService.findAll(paramsDto);
   }
 
+  @Public()
   @Get('all-events')
   getAllEvents() {
     return this.eventsService.getAllEvents();
   }
 
+  @Roles(UserRole.ORGANIZER)
   @Get('my-events')
   @UseGuards(JwtAuthGuard)
   getMyOrganizedEvents(@CurrentUser() user: User, @Query() params: ParamsDto) {
     return this.eventsService.getMyOrganizedEvents(user, params);
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.eventsService.findOne(+id);
   }
 
+  @Public()
   @Get('my-events/:organizerId')
   @UseGuards(JwtAuthGuard)
   getEventsByOrganizer(
@@ -81,6 +89,7 @@ export class EventsController {
     return this.eventsService.getOrganizerEvents(organizerId, params);
   }
 
+  @Roles(UserRole.ORGANIZER)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('image', {
@@ -103,6 +112,7 @@ export class EventsController {
     return this.eventsService.update(+id, updateEventDto, file);
   }
 
+  @Roles(UserRole.ORGANIZER, UserRole.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.eventsService.remove(+id);

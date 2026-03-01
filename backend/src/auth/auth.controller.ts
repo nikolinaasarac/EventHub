@@ -7,20 +7,20 @@ import {
   Req,
   Res,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import type { Response } from 'express';
 import type { AuthRequest } from './auth.types';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { SetPasswordDto } from './dto/set-password.dto';
+import { Public } from '../../shared/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('login')
   async login(
     @Body() dto: LoginDto,
@@ -107,12 +107,12 @@ export class AuthController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('me')
   getMe(@Req() req: AuthRequest) {
     return req.user;
   }
 
+  @Public()
   @Post('register')
   async register(
     @Body() createUserDto: CreateUserDto,
