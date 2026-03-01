@@ -32,6 +32,10 @@ export default class UserService {
 		return BaseService.fetchList(`/users`, params);
 	}
 
+	static async toggleStatus(id: string) {
+		return BaseService.update(`/users/${id}/toggle-status`, {});
+	}
+
 	static async setPassword(token: string, password: string) {
 		return BaseService.create(`${this.ENDPOINT}/set-password?token=${token}`, {password});
 	}
