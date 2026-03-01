@@ -74,8 +74,13 @@ export class AuthService {
   async login(email: string, password: string) {
     const user = await this.usersService.findOneByEmail(email);
     if (!user) throw new NotFoundException('Invalid credentials');
+    if (!user.isActive) {
+      throw new UnauthorizedException('Account is deactivated');
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) throw new NotFoundException('Invalid credentials');
+    if (!isPasswordValid)
+      throw new UnauthorizedException('Invalid credentials');
 
     const accessToken = this.createToken(user);
     const refreshToken = await this.generateAndSaveRefreshToken(user);
