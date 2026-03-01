@@ -14,28 +14,43 @@ import {organizerColumns} from "@/columns/organizer.columns";
 import {useRouter} from "next/navigation";
 import {useQueryFilters} from "@/shared/hooks/use-query-filters.hook";
 import {QueryParams} from "@/models/query-params.model";
-import EventService from "@/services/event.service";
 import {PaginationComponent} from "@/components/Pagination";
 
 export default function UsersPage() {
-	const {
-		search, setSearch, page, updatePage, filters, setRoles, urlSearch,
-		urlPage
+	const {updatePage, filters, setRoles, urlSearch, urlPage
 	} = useQueryFilters();
+
 	const [users, setUsers] = useState<User[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [totalPages, setTotalPages] = useState(1);
-
 	const router = useRouter();
+
+	const getCurrentTabValue = () => {
+		if (filters.roles.includes(UserRole.VISITOR)) return "visitors";
+		if (filters.roles.includes(UserRole.ORGANIZER)) return "organizers";
+		if (filters.roles.includes(UserRole.ADMIN)) return "admins";
+		return "all";
+	};
+
+	const handleTabChange = (newTab: string) => {
+		if (newTab === "all") setRoles([]);
+		else if (newTab === "visitors") setRoles([UserRole.VISITOR]);
+		else if (newTab === "organizers") setRoles([UserRole.ORGANIZER]);
+		else if (newTab === "admins") setRoles([UserRole.ADMIN]);
+	};
 
 	useEffect(() => {
 		const fetchUsers = async (
-			roles: string[] = filters.roles
+			roles: string[] = filters.roles,
 		) => {
 			setLoading(true);
-			const params: QueryParams = {page: urlPage, limit: 5, search: urlSearch};
+			const params: QueryParams = {
+				page: urlPage,
+				limit: 10,
+				search: urlSearch,
+			};
 			try {
-				if (roles.length > 0) params.roles = roles.join(",");
+				if (roles.length) params.roles = roles.join(",")
 				const response = await UserService.getUsers(params);
 				setUsers(response.data);
 				setTotalPages(response.meta.totalPages);
@@ -46,9 +61,7 @@ export default function UsersPage() {
 			}
 		}
 		fetchUsers();
-	}, [urlPage, urlSearch, filters.roles])
-
-	console.log(users);
+	}, [urlPage, urlSearch, filters.roles]);
 
 	const userTabs: TabItem[] = [
 		{
@@ -102,7 +115,11 @@ export default function UsersPage() {
 						<p className="text-slate-400 font-medium italic text-sm">Priprema podataka...</p>
 					</div>
 				) : (
-					<TabsComponent tabs={userTabs} defaultValue="all"/>
+					<TabsComponent
+						tabs={userTabs}
+						value={getCurrentTabValue()}
+						onValueChange={handleTabChange}
+					/>
 				)}
 
 				{!loading && users.length > 0 && (
