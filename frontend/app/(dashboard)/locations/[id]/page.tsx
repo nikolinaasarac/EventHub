@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {
-	MapPin, Users, Phone, Globe, Mail, ChevronLeft, Share2, Facebook,
+	MapPin, Users, Phone, Globe, Mail, ChevronLeft, Facebook,
 	Instagram, ExternalLink, Building2, Trash, Edit
 } from 'lucide-react';
 import {Button} from "@/components/ui/button";
@@ -15,12 +15,14 @@ import dynamic from "next/dynamic";
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {ConfirmDialog} from "@/components/ConfirmDialog";
 import {toast} from "sonner";
+import {useAuth} from "@/context/auth-context";
 
 const VenueMap = dynamic(
 	() => import("@/components/VenueMap"),
 	{ssr: false}
 );
 export default function VenueDetailsPage() {
+	const {user} = useAuth();
 	const [venue, setVenue] = useState<Venue | null>(null);
 	const [showMapModal, setShowMapModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -64,25 +66,27 @@ export default function VenueDetailsPage() {
 							className="gap-2 text-slate-500 hover:text-indigo-600 transition-colors">
 						<ChevronLeft className="w-4 h-4"/> Nazad
 					</Button>
+					{user && user.roles?.some(role => role.name === 'Admin') && (
+						<div className="flex items-center gap-3">
+							<Button
+								variant="outline"
+								className="rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 gap-2 font-bold text-xs uppercase tracking-wider"
+								onClick={() => router.push(`/locations/edit-location/${venueId}`)}
+							>
+								<Edit className="w-4 h-4 text-indigo-600"/>
+								Uredi podatke
+							</Button>
 
-					<div className="flex items-center gap-3">
-						<Button
-							variant="outline"
-							className="rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 gap-2 font-bold text-xs uppercase tracking-wider"
-							onClick={() => router.push(`/locations/edit-location/${venueId}`)}
-						>
-							<Edit className="w-4 h-4 text-indigo-600"/>
-							Uredi podatke
-						</Button>
-						<Button
-							variant="destructive"
-							className="rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border-none gap-2 font-bold text-xs uppercase tracking-wider shadow-none"
-							onClick={() => setShowDeleteModal(true)}
-						>
-							<Trash className="w-4 h-4"/>
-							Obriši lokaciju
-						</Button>
-					</div>
+							<Button
+								variant="destructive"
+								className="rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border-none gap-2 font-bold text-xs uppercase tracking-wider shadow-none"
+								onClick={() => setShowDeleteModal(true)}
+							>
+								<Trash className="w-4 h-4"/>
+								Obriši lokaciju
+							</Button>
+						</div>
+					)}
 				</div>
 			</div>
 
