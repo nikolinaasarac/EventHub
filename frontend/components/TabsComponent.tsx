@@ -62,7 +62,7 @@ export function TabsComponent({tabs, value, onValueChange, className}: TabbedCon
 							<TabsTrigger
 								key={tab.value}
 								value={tab.value}
-								className="rounded-xl px-6 py-2.5 data-[state=active]:bg-indigo-600 data-[state=active]:text-white gap-2 transition-all"
+								className="rounded-xl px-6 py-2.5 data-[state=active]:bg-indigo-600 data-[state=active]:text-white gap-2 transition-all  hover:cursor-pointer"
 							>
 								{tab.icon} {tab.label}
 							</TabsTrigger>
