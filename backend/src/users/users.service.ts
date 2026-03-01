@@ -139,4 +139,12 @@ export class UsersService {
   async save(user: User): Promise<User> {
     return this.usersRepository.save(user);
   }
+
+  async toggleStatus(id: string) {
+    const user = await this.findOne(id);
+    if (!user) throw new NotFoundException('User not found');
+
+    user.isActive = !user.isActive;
+    return await this.usersRepository.save(user);
+  }
 }

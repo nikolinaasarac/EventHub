@@ -29,22 +29,24 @@ import {
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
 	data: TData[]
+	meta?: any
 }
 
 export function DataTable<TData, TValue>({
 											 columns,
 											 data,
+											 meta,
 										 }: DataTableProps<TData, TValue>) {
 	const table = useReactTable({
 		data,
 		columns,
+		meta,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 	})
 
 	return (
 		<div className="w-full space-y-4">
-			{/* TOOLBAR - IZBOR KOLONA */}
 			<div className="flex justify-end">
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
@@ -82,7 +84,6 @@ export function DataTable<TData, TValue>({
 				</DropdownMenu>
 			</div>
 
-			{/* KONTEJNER TABELE */}
 			<div
 				className="rounded-[2rem] border border-slate-200 bg-white shadow-2xl shadow-slate-200/50 overflow-hidden">
 				<div className="overflow-x-auto">

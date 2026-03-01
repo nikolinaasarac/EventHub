@@ -10,11 +10,14 @@ import {
 import { TicketTypesService } from './ticket-types.service';
 import { CreateTicketTypeDto } from './dto/create-ticket-type.dto';
 import { UpdateTicketTypeDto } from './dto/update-ticket-type.dto';
+import { Roles } from '../../shared/decorators/roles.decorator';
+import { UserRole } from '../../shared/enums/user-role.enum';
 
 @Controller('ticket-types')
 export class TicketTypesController {
   constructor(private readonly ticketTypesService: TicketTypesService) {}
 
+  @Roles(UserRole.ORGANIZER)
   @Post()
   create(@Body() createTicketTypeDto: CreateTicketTypeDto) {
     return this.ticketTypesService.create(createTicketTypeDto);
@@ -30,6 +33,7 @@ export class TicketTypesController {
     return this.ticketTypesService.findOne(+id);
   }
 
+  @Roles(UserRole.ORGANIZER)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -38,6 +42,7 @@ export class TicketTypesController {
     return this.ticketTypesService.update(+id, updateTicketTypeDto);
   }
 
+  @Roles(UserRole.ORGANIZER)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.ticketTypesService.remove(+id);

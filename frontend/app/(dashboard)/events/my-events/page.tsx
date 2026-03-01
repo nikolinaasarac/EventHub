@@ -93,6 +93,7 @@ export default function MyEventsPage() {
 							date={DateTimeHelper.formatDate(event.startDate)}
 							location={event.venue.name}
 							description={event.description}
+							status={event.status}
 						/>
 					))}
 				</div>

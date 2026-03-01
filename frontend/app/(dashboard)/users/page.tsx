@@ -17,7 +17,8 @@ import {QueryParams} from "@/models/query-params.model";
 import {PaginationComponent} from "@/components/Pagination";
 
 export default function UsersPage() {
-	const {updatePage, filters, setRoles, urlSearch, urlPage
+	const {
+		updatePage, filters, setRoles, urlSearch, urlPage
 	} = useQueryFilters();
 
 	const [users, setUsers] = useState<User[]>([]);
@@ -39,27 +40,27 @@ export default function UsersPage() {
 		else if (newTab === "admins") setRoles([UserRole.ADMIN]);
 	};
 
-	useEffect(() => {
-		const fetchUsers = async (
-			roles: string[] = filters.roles,
-		) => {
-			setLoading(true);
+	const fetchUsers = async () => {
+		setLoading(true);
+		try {
 			const params: QueryParams = {
 				page: urlPage,
 				limit: 10,
 				search: urlSearch,
 			};
-			try {
-				if (roles.length) params.roles = roles.join(",")
-				const response = await UserService.getUsers(params);
-				setUsers(response.data);
-				setTotalPages(response.meta.totalPages);
-			} catch (e) {
-				console.error(e);
-			} finally {
-				setLoading(false);
+
+			if (filters.roles.length) {
+				params.roles = filters.roles.join(",");
 			}
+
+			const response = await UserService.getUsers(params);
+			setUsers(response.data);
+			setTotalPages(response.meta.totalPages);
+		} finally {
+			setLoading(false);
 		}
+	};
+	useEffect(() => {
 		fetchUsers();
 	}, [urlPage, urlSearch, filters.roles]);
 
@@ -68,25 +69,25 @@ export default function UsersPage() {
 			value: "all",
 			label: "Svi korisnici",
 			icon: <UserCircle className="w-4 h-4"/>,
-			content: <DataTable columns={userColumns} data={users}/>
+			content: <DataTable columns={userColumns} data={users} meta={{refreshData: fetchUsers}}/>
 		},
 		{
 			value: "visitors",
 			label: "Posjetioci",
 			icon: <UserCircle className="w-4 h-4"/>,
-			content: <DataTable columns={userColumns} data={users}/>
+			content: <DataTable columns={userColumns} data={users} meta={{refreshData: fetchUsers}}/>
 		},
 		{
 			value: "organizers",
 			label: "Organizatori",
 			icon: <Briefcase className="w-4 h-4"/>,
-			content: <DataTable columns={organizerColumns} data={users}/>
+			content: <DataTable columns={organizerColumns} data={users} meta={{refreshData: fetchUsers}}/>
 		},
 		{
 			value: "admins",
 			label: "Administratori",
 			icon: <ShieldCheck className="w-4 h-4"/>,
-			content: <DataTable columns={userColumns} data={users}/>
+			content: <DataTable columns={userColumns} data={users} meta={{refreshData: fetchUsers}}/>
 		}
 	];
 

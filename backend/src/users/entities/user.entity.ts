@@ -61,4 +61,7 @@ export class User {
 
   @OneToMany(() => PasswordToken, (token) => token.user)
   passwordTokens: PasswordToken[];
+
+  @Column({ default: true })
+  isActive: boolean;
 }
