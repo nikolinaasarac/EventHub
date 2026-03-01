@@ -4,6 +4,7 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import type { AuthRequest } from '../auth/auth.types';
 import { Roles } from '../../shared/decorators/roles.decorator';
 import { UserRole } from '../../shared/enums/user-role.enum';
+import { Public } from '../../shared/decorators/public.decorator';
 
 @Controller('reviews')
 export class ReviewsController {
@@ -15,11 +16,13 @@ export class ReviewsController {
     return this.reviewsService.create(createReviewDto, req.user);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.reviewsService.findAll();
   }
 
+  @Public()
   @Get('event/:eventId')
   async findByEvent(@Param('eventId') eventId: number) {
     return this.reviewsService.findByEvent(eventId);

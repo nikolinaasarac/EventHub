@@ -137,6 +137,7 @@ export default function Page() {
 								date={DateTimeHelper.formatDate(event.startDate)}
 								location={event.venue.name}
 								description={event.description}
+								status={event.status}
 							/>
 						))}
 					</div>

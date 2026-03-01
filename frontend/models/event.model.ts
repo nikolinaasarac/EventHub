@@ -3,6 +3,7 @@ import {Venue} from "@/models/venue.model";
 import {EventSubcategory} from "@/models/event-subcategory.model";
 import {TicketType} from "@/models/ticket-type.model";
 import {Organizer} from "@/models/organizer.model";
+import {EventStatus} from "@/shared/enums/event-status.enum";
 
 export interface Event {
 	id: number;
@@ -11,7 +12,7 @@ export interface Event {
 	startDate: string;
 	endDate: string;
 	imageUrl: string;
-	status: 'Zakazan' | 'Otkazan' | 'Zavrsen';
+	status: EventStatus;
 	venue: Venue;
 	eventSubcategory: EventSubcategory;
 	metadata: EventMetadata;
