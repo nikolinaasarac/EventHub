@@ -58,21 +58,29 @@ export default function VenueDetailsPage() {
 
 	return (
 		<div className="min-h-screen flex flex-col bg-slate-50/50">
-			<div className="bg-white top-0 z-40">
-				<div className="container mx-auto px-4 py-3 flex justify-between items-center">
-					<Button onClick={() => router.back()} variant="ghost" size="sm" className="gap-2 text-slate-500">
+			<div className="bg-white border-b sticky top-0 z-40 shadow-sm">
+				<div className="container mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
+					<Button onClick={() => router.back()} variant="ghost" size="sm"
+							className="gap-2 text-slate-500 hover:text-indigo-600 transition-colors">
 						<ChevronLeft className="w-4 h-4"/> Nazad
 					</Button>
-					<div>
-						<Button variant="outline" size="icon"
-								className="rounded-full w-9 h-9 bg-red-500 hover:bg-red-600"
-								onClick={() => setShowDeleteModal(true)}>
-							<Trash className="w-4 h-4 text-white"/>
+
+					<div className="flex items-center gap-3">
+						<Button
+							variant="outline"
+							className="rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 gap-2 font-bold text-xs uppercase tracking-wider"
+							onClick={() => router.push(`/locations/edit-location/${venueId}`)}
+						>
+							<Edit className="w-4 h-4 text-indigo-600"/>
+							Uredi podatke
 						</Button>
-						<Button variant="outline" size="icon"
-								className="rounded-full w-9 h-9 bg-green-900 hover:bg-green-700"
-								onClick={() => router.push(`/locations/edit-location/${venueId}`)}>
-							<Edit className="w-4 h-4 text-white"/>
+						<Button
+							variant="destructive"
+							className="rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border-none gap-2 font-bold text-xs uppercase tracking-wider shadow-none"
+							onClick={() => setShowDeleteModal(true)}
+						>
+							<Trash className="w-4 h-4"/>
+							Obriši lokaciju
 						</Button>
 					</div>
 				</div>
@@ -141,13 +149,13 @@ export default function VenueDetailsPage() {
 
 					<div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-2">
 
-						<div className="lg:col-span-2 space-y-6">
+						<div className="lg:col-span-3 space-y-6">
 							<div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
 								<h2 className="text-xl font-black text-slate-900 flex items-center gap-2 mb-6">
 									<Building2 className="w-5 h-5 text-indigo-600"/>
 									Osnovne informacije o lokaciji
 								</h2>
-								<p className="text-justify text-slate-600 text-lg leading-relaxed">
+								<p className="text-slate-600 text-xl leading-relaxed text-justify font-light italic border-l-4 border-indigo-100 pl-8">
 									{venue.description}
 								</p>
 							</div>
