@@ -12,7 +12,6 @@ import typeormConfig from './config/typeorm';
 import Joi from 'joi';
 import { EventCategoriesModule } from './event-categories/event-categories.module';
 import { EventSubcategoriesModule } from './event-subcategories/event-subcategories.module';
-import { AmenitiesModule } from './amenities/amenities.module';
 import { TicketTypesModule } from './ticket-types/ticket-types.module';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
@@ -48,7 +47,6 @@ import { ScheduleModule } from '@nestjs/schedule';
     EventsModule,
     EventCategoriesModule,
     EventSubcategoriesModule,
-    AmenitiesModule,
     TicketTypesModule,
     UsersModule,
     RolesModule,
