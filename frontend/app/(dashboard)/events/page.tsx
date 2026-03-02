@@ -80,7 +80,7 @@ export default function EventsPage() {
 			<section className="relative h-[300px] md:h-[400px] flex items-center bg-slate-900 overflow-hidden">
 				<div className="absolute inset-0 z-0">
 					<img
-						src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=1600"
+						src="/event.png"
 						className="w-full h-full object-cover opacity-40"
 						alt="Hero background"
 					/>
@@ -91,9 +91,8 @@ export default function EventsPage() {
 					<div className="max-w-2xl">
 						<div
 							className="flex items-center gap-2 text-indigo-400 text-xs font-black uppercase tracking-[0.3em] mb-4">
-							<span>Početna</span>
 							<ChevronRight className="w-3 h-3"/>
-							<span className="text-white">Događaji</span>
+							<span>Događaji</span>
 						</div>
 						<h1 className="text-5xl md:text-7xl font-black text-white uppercase italic tracking-tighter mb-6">
 							Događaji
