@@ -66,7 +66,8 @@ export default function Page() {
 				</div>
 				<div className="relative z-10 container mx-auto px-4 text-center">
 					<h1 className="text-4xl md:text-6xl font-bold mb-6">Tražiš događaj?</h1>
-					<p className="text-lg md:text-xl mb-10 text-slate-200">Moram smisliti neki podnaslov ovdje</p>
+					<p className="text-lg md:text-xl mb-10 text-slate-200">Pretvorite slobodno vrijeme u uspomene koje
+						se pamte.</p>
 
 					<div
 						className="bg-white shadow-2xl p-2 md:p-4 rounded-xl flex flex-col md:flex-row gap-2 max-w-4xl mx-auto items-center">
@@ -74,14 +75,6 @@ export default function Page() {
 							<SearchInput value={localSearch} onChange={setLocalSearch} placeholder="Šta tražiš?"
 										 onEnter={handleSearch}/>
 						</div>
-						<div className="hidden md:block w-[1px] h-8 bg-slate-200"/>
-						{/*<div className="relative w-full flex-1">
-							<CitiesMultiSelect
-								selectedCities={filters.cities}
-								handleSelectChange={setCities}
-								title="Gdje?"
-							/>
-						</div>*/}
 						<div className="hidden md:block w-[1px] h-8 bg-slate-200"/>
 						<div className="relative w-full flex-1">
 							<CalendarIcon className="absolute left-3 top-3 text-slate-400 w-5 h-5"/>
