@@ -1,6 +1,6 @@
 "use client"
 
-import {MapPin as MapPinIcon, ChevronRight, Plus, TicketIcon, FilterX} from "lucide-react";
+import {MapPin as MapPinIcon, ChevronRight, Plus} from "lucide-react";
 import {LocationCard} from "@/components/LocationCard";
 import React, {useEffect, useState} from "react";
 import {Venue} from "@/models/venue.model";
