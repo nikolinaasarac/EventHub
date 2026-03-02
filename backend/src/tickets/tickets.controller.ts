@@ -1,4 +1,4 @@
-import { Body, Controller, Post} from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { BuyTicketsDto } from './dto/buy-ticket.dto';
 import { CurrentUser } from '../../shared/decorators/current-user.decorator';

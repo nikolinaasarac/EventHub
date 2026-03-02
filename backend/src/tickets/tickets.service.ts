@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -16,6 +17,7 @@ import {
   TicketPerDay,
   TicketPerEvent,
 } from '../organizers/dto/organizer-statistics.dto';
+import { NON_PURCHASABLE_EVENT_STATUSES } from '../events/constants/event.constants';
 
 @Injectable()
 export class TicketsService {
@@ -31,6 +33,18 @@ export class TicketsService {
   async buyTickets(dto: BuyTicketsDto, user: User) {
     const event = await this.eventsService.findOne(dto.eventId);
     if (!event) throw new NotFoundException('Event not found');
+
+    if (NON_PURCHASABLE_EVENT_STATUSES.includes(event.status)) {
+      throw new BadRequestException(
+        'Tickets cannot be purchased for this event',
+      );
+    }
+
+    if (event.endDate && new Date(event.endDate) < new Date()) {
+      throw new BadRequestException(
+        'Tickets cannot be purchased for events that have already ended',
+      );
+    }
 
     const ticketType = await this.ticketTypesService.findOne(dto.ticketTypeId);
     if (!ticketType) throw new NotFoundException('Ticket type not found');
