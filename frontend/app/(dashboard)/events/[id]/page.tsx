@@ -1,17 +1,10 @@
 "use client"
 
 import React, {useEffect, useState} from 'react';
-import {
-	Calendar,
-	MapPin,
-	Clock,
-	Heart,
-	Info,
-	CheckCircle2, ChevronLeft, Trash, MessageSquare, ShieldCheck
-} from 'lucide-react';
+import {Calendar, ChevronLeft, Clock, Heart, Info, MapPin, MessageSquare, ShieldCheck, Trash} from 'lucide-react';
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
-import {useParams, useRouter} from "next/navigation";
+import {useParams, usePathname, useRouter} from "next/navigation";
 import {Event} from '@/models/event.model'
 import EventService from "@/services/event.service";
 import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
@@ -29,19 +22,24 @@ import {useAuth} from "@/context/auth-context";
 import {TicketType} from "@/models/ticket-type.model";
 import {CheckoutModal} from "@/components/CheckoutModal";
 import {Card} from "@/components/ui/card";
+import {EventStatus} from "@/shared/enums/event-status.enum";
+import {UserRole} from "@/shared/enums/user-role.enum";
 
 export default function EventDetailsPage() {
 	const {id} = useParams();
 	const [event, setEvent] = useState<Event | null>(null);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const [showCancelModal, setShowCancelModal] = useState(false);
 	const router = useRouter();
 	const eventId = Array.isArray(id) ? id[0] : id;
 	const [reviews, setReviews] = useState<Review[]>([])
 
 	const {isFavorite, toggleFavorite, loading: loadingFavorite} = useFavorites();
 	const {user} = useAuth();
+	const isVisitor = user?.roles?.some(role => role.name === UserRole.VISITOR);
 	const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 	const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
+	const pathname = usePathname();
 
 	const handleBuyClick = (ticket: TicketType) => {
 		setSelectedTicket(ticket);
@@ -103,6 +101,19 @@ export default function EventDetailsPage() {
 		}
 	}
 
+	const handleCancel = async () => {
+		if (!eventId) return;
+		try {
+			await EventService.cancelEvent(eventId);
+			toast.success("Događaj uspješno otkazan!")
+		} catch (e) {
+			console.error(e);
+			toast.error("Greška prilikom otkazivanja događaja!")
+		} finally {
+			router.back();
+		}
+	}
+
 	const refreshReviews = async () => {
 		try {
 			const response = await ReviewsService.getReviewsByEventId(Number(id));
@@ -122,7 +133,6 @@ export default function EventDetailsPage() {
 	return (
 		<div className="min-h-screen bg-[#FDFDFF]">
 
-			{/* --- 1. HERO SEKCIJA (Eduker stil) --- */}
 			<section className="relative h-[300px] md:h-[500px] w-full overflow-hidden bg-slate-900">
 				<img
 					src={`${process.env.NEXT_PUBLIC_API_BASE_URL}public/${event.imageUrl}`}
@@ -131,7 +141,6 @@ export default function EventDetailsPage() {
 				/>
 				<div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent"/>
 
-				{/* Top Actions Overlay */}
 				<div className="absolute top-0 left-0 w-full z-20">
 					<div className="container mx-auto px-4 py-4 md:py-6 flex justify-between items-center">
 						<Button onClick={() => router.back()} variant="ghost"
@@ -143,6 +152,11 @@ export default function EventDetailsPage() {
 									className="rounded-full bg-white/10 border-white/20 text-white hover:bg-red-500 hover:text-white transition-all w-9 h-9 md:w-11 md:h-11"
 									onClick={() => setShowDeleteModal(true)}>
 								<Trash className="w-4 h-4 md:w-5 md:h-5"/>
+							</Button>
+							<Button variant="outline"
+									className="rounded-full bg-white/10 border-white/20 text-white hover:bg-red-500 hover:text-white transition-all"
+									onClick={() => setShowCancelModal(true)}>
+								Otkaži događaj
 							</Button>
 							<Button
 								size="icon"
@@ -247,7 +261,32 @@ export default function EventDetailsPage() {
 								<Badge className="bg-slate-900 text-white rounded-lg px-3">{reviews.length}</Badge>
 							</div>
 
-							<AddReviewForm eventId={Number(eventId)} onReviewAdded={refreshReviews}/>
+							{isVisitor ? (
+								<AddReviewForm eventId={Number(eventId)} onReviewAdded={refreshReviews}/>
+							) : (
+								<div
+									className="bg-indigo-50/50 border border-indigo-100 rounded-[2rem] p-8 text-center">
+									{!user ? (
+										<div className="space-y-4">
+											<p className="text-slate-600 font-medium text-lg">
+												Želite da podijelite svoje iskustvo?
+											</p>
+											<Button
+												onClick={() => router.replace(`/login?redirect=${encodeURIComponent(pathname)}`)}
+												className="bg-indigo-600 hover:bg-indigo-700 rounded-xl px-8"
+											>
+												Prijavite se da ostavite komentar
+											</Button>
+										</div>
+									) : (
+										<div
+											className="flex items-center justify-center gap-3 text-indigo-600 font-medium italic">
+											<Info className="w-5 h-5"/>
+											<span>Samo posjetioci događaja mogu ostavljati recenzije.</span>
+										</div>
+									)}
+								</div>
+							)}
 
 							<div className="grid grid-cols-1 gap-4 md:gap-6">
 								{reviews.length > 0 ? (
@@ -262,8 +301,8 @@ export default function EventDetailsPage() {
 
 					<div className="lg:col-span-4">
 						<aside className="lg:sticky lg:top-28 space-y-6">
-							<h2 className="text-lg md:text-xl font-black text-slate-900 uppercase tracking-widest ml-2">Dostupne
-								ulaznice</h2>
+							<h2 className="text-lg md:text-xl font-black text-slate-900 uppercase tracking-widest justify-center">
+								Ulaznice</h2>
 							{event.ticketTypes && event.ticketTypes.length > 0 ? (
 								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
 									{event.ticketTypes.map(ticketType => (
@@ -272,6 +311,7 @@ export default function EventDetailsPage() {
 											ticketType={ticketType}
 											onBuy={handleBuyClick}
 											isExpired={isExpired}
+											isCancelled={event.status === EventStatus.OTKAZAN}
 											isSoldOut={ticketType.soldQuantity >= ticketType.totalQuantity}
 										/>
 									))}
@@ -298,6 +338,16 @@ export default function EventDetailsPage() {
 				confirmColor="bg-red-600 hover:bg-red-700"
 				onConfirm={handleDelete}
 				onCancel={() => setShowDeleteModal(false)}
+			/>
+			<ConfirmDialog
+				open={showCancelModal}
+				title="Želite li da otkažete ovaj događaj?"
+				description="Nakon što otkažete događaj nećete ga moći ponovo aktivirati."
+				confirmText="Otkaži"
+				cancelText="Odustani"
+				confirmColor="bg-red-600 hover:bg-red-700"
+				onConfirm={handleCancel}
+				onCancel={() => setShowCancelModal(false)}
 			/>
 			{selectedTicket && (
 				<CheckoutModal

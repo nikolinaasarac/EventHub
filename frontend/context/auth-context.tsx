@@ -31,15 +31,19 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
 		try {
 			const params = new URLSearchParams(window.location.search);
 			const redirect = params.get("redirect");
+			console.log(redirect)
 			setIsLoggingIn(true);
 			const response = await AuthService.login(email, password);
 			setUser(response.user);
 			authToken.set(response.accessToken);
 			toast.success('Prijava uspješna');
-			if (redirect === '' || redirect === null)
+			if (redirect === '' || redirect === null) {
+				console.log('redirect is empty');
 				router.push('/home');
-			else
-				router.push(redirect)
+			} else {
+				console.log('redirect is not empty', redirect)
+				router.replace(redirect)
+			}
 		} catch (error) {
 			console.error('Prijava neuspješna: ', error);
 			toast.error('Prijava neuspješna');
