@@ -82,7 +82,7 @@ export const SUBCATEGORY_METADATA_CONFIG: Record<
   konferencija: {
     fields: [
       {
-        key: 'speaker',
+        key: 'speakers',
         label: 'Predavači',
         type: 'string',
         required: true,
@@ -92,6 +92,51 @@ export const SUBCATEGORY_METADATA_CONFIG: Record<
         label: 'Tema',
         type: 'string',
         required: true,
+      },
+    ],
+  },
+  degustacija_vina: {
+    fields: [
+      {
+        key: 'winery',
+        label: 'Vinarija / Proizvođač',
+        type: 'string',
+        required: true,
+      },
+      {
+        key: 'sommelier',
+        label: 'Somelijer (Predavač)',
+        type: 'string',
+        required: false,
+      },
+      {
+        key: 'wineCount',
+        label: 'Broj uzoraka za degustaciju',
+        type: 'number',
+        required: false,
+      },
+    ],
+  },
+
+  kulinarska_radionica: {
+    fields: [
+      {
+        key: 'chef',
+        label: 'Glavni šef',
+        type: 'string',
+        required: true,
+      },
+      {
+        key: 'cuisineType',
+        label: 'Tip kuhinje (npr. Italijanska)',
+        type: 'string',
+        required: true,
+      },
+      {
+        key: 'difficulty',
+        label: 'Težina (1-5)',
+        type: 'number',
+        required: false,
       },
     ],
   },
