@@ -23,7 +23,7 @@ export const metadataConfig: Record<
 		performer: {label: 'Izvođač', icon: <Music className="text-slate-500"/>},
 		genre: {label: 'Žanr', icon: <Guitar className="text-slate-500"/>},
 		gatesOpen: {label: 'Ulaz od', icon: <DoorOpen className="text-slate-500"/>},
-		speakers: {label: 'Predavač', icon: <Users className="text-slate-500"/>},
+		speakers: {label: 'Predavači', icon: <Users className="text-slate-500"/>},
 		topic: {label: 'Tema', icon: <BookOpen className="text-slate-500"/>},
 		winery: {label: 'Vinarija', icon: <Grape className="text-slate-500"/>},
 		sommelier: {label: 'Somelijer', icon: <Users className="text-slate-500"/>},
