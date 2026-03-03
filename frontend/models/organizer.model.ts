@@ -1,3 +1,5 @@
+import {User} from "@/models/user.model";
+
 export interface Organizer {
 	id: number
 	displayName: string
@@ -5,4 +7,5 @@ export interface Organizer {
 	contactEmail: string
 	phone: string
 	createdAt: string
+	user: User
 }

@@ -166,6 +166,7 @@ export class EventsService {
         'eventSubcategory.eventCategory',
         'ticketTypes',
         'organizer',
+        'organizer.user',
       ],
     });
   }
