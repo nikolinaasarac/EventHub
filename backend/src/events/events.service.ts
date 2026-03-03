@@ -174,12 +174,18 @@ export class EventsService {
   async update(
     id: number,
     updateEventDto: UpdateEventDto,
+    user: User,
     file?: Express.Multer.File,
   ) {
     const event = await this.findOne(id);
     if (!event) {
       throw new NotFoundException(`Event with id ${id} not found`);
     }
+
+    if (event.organizer.user.id !== user.id)
+      throw new BadRequestException(
+        'You are not authorized to edit this event',
+      );
 
     if (file) {
       await this.deleteImage(event.imageUrl);
