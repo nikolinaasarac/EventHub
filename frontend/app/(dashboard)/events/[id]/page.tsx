@@ -20,7 +20,6 @@ import {DateTimeHelper} from "@/shared/helpers/date-time.helper";
 import {EventMetadataComponent} from "@/components/EventMetadataComponent";
 import {ConfirmDialog} from "@/components/ConfirmDialog";
 import {toast} from "sonner";
-import {Review} from "@/models/review.model";
 import ReviewsService from "@/services/reviews.service";
 import {ReviewItem} from "@/components/ReviewItem";
 import {AddReviewForm} from "@/components/AddReviewForm";
@@ -36,6 +35,7 @@ import {UserRole} from "@/shared/enums/user-role.enum";
 import {EVENT_STATUS_STYLES} from "@/shared/constants/event-status-ui";
 import {AlertMessage} from "@/components/AlertMessage";
 import {ReviewData} from "@/models/review-data.model";
+import {EventInfoItem} from "@/components/EventInfoItem";
 
 
 export default function EventDetailsPage() {
@@ -159,7 +159,6 @@ export default function EventDetailsPage() {
 
 	return (
 		<div className="min-h-screen bg-[#FDFDFF]">
-
 			<section className="relative h-[300px] md:h-[500px] w-full overflow-hidden bg-slate-900">
 				<img
 					src={`${process.env.NEXT_PUBLIC_API_BASE_URL}public/${event.imageUrl}`}
@@ -225,31 +224,24 @@ export default function EventDetailsPage() {
 					className="p-2 md:p-4 rounded-[1.5rem] md:rounded-[2rem] border-none shadow-2xl bg-white overflow-hidden">
 					<div
 						className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
-						<div className="flex items-center gap-4 p-4 md:p-6">
-							<div className="bg-indigo-50 p-2 md:p-3 rounded-2xl text-indigo-600"><Calendar
-								className="w-5 h-5 md:w-6 md:h-6"/></div>
-							<div>
-								<p className="text-[9px] md:text-[10px] font-black uppercase text-slate-400 tracking-widest">Datum</p>
-								<p className="text-sm md:text-base font-bold text-slate-900">{DateTimeHelper.formatOnlyDate(event.startDate)}</p>
-
-							</div>
-						</div>
-						<div className="flex items-center gap-4 p-4 md:p-6">
-							<div className="bg-emerald-50 p-2 md:p-3 rounded-2xl text-emerald-600"><Clock
-								className="w-5 h-5 md:w-6 md:h-6"/></div>
-							<div>
-								<p className="text-[9px] md:text-[10px] font-black uppercase text-slate-400 tracking-widest">Vrijeme</p>
-								<p className="text-sm md:text-base font-bold text-slate-900">{DateTimeHelper.formatOnlyTime(event.startDate)} h</p>
-							</div>
-						</div>
-						<div className="flex items-center gap-4 p-4 md:p-6">
-							<div className="bg-rose-50 p-2 md:p-3 rounded-2xl text-rose-600"><MapPin
-								className="w-5 h-5 md:w-6 md:h-6"/></div>
-							<div>
-								<p className="text-[9px] md:text-[10px] font-black uppercase text-slate-400 tracking-widest">Lokacija</p>
-								<p className="text-sm md:text-base font-bold text-slate-900 truncate">{event.venue.name}</p>
-							</div>
-						</div>
+						<EventInfoItem
+							icon={<Calendar className="w-5 h-5 md:w-6 md:h-6"/>}
+							label="Datum"
+							value={DateTimeHelper.formatOnlyDate(event.startDate)}
+							variant="default"
+						/>
+						<EventInfoItem
+							icon={<Clock className="w-5 h-5 md:w-6 md:h-6"/>}
+							label="Vrijeme"
+							value={`${DateTimeHelper.formatOnlyTime(event.startDate)} h`}
+							variant="success"
+						/>
+						<EventInfoItem
+							icon={<MapPin className="w-5 h-5 md:w-6 md:h-6"/>}
+							label="Lokacija"
+							value={event.venue.name}
+							variant="error"
+						/>
 					</div>
 				</Card>
 			</div>
@@ -332,8 +324,8 @@ export default function EventDetailsPage() {
 												/>
 											</div>
 											<span className="w-10 text-right text-[10px] text-slate-400">
-            {Math.round(getStarPercentage(star))}%
-        </span>
+												{Math.round(getStarPercentage(star))}%
+											</span>
 										</div>
 									))}
 								</div>
@@ -407,9 +399,7 @@ export default function EventDetailsPage() {
 							) : (
 								<Card className="p-8 rounded-[2rem] bg-indigo-600 text-white text-center shadow-2xl">
 									<p className="font-black text-xl italic uppercase tracking-tighter">Ulaz
-										Slobodan</p>
-									<p className="text-indigo-100 text-xs mt-2 font-medium">Za ovaj događaj nije
-										potrebna ulaznica.</p>
+										slobodan</p>
 								</Card>
 							)}
 						</aside>

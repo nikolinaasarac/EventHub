@@ -107,9 +107,10 @@ export class EventsController {
   update(
     @Param('id') id: string,
     @Body() updateEventDto: UpdateEventDto,
+    @CurrentUser() user: User,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.eventsService.update(+id, updateEventDto, file);
+    return this.eventsService.update(+id, updateEventDto, user, file);
   }
 
   @Roles(UserRole.ORGANIZER, UserRole.ADMIN)
