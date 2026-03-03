@@ -10,6 +10,7 @@ import {cn} from "@/lib/utils"
 import {useAuth} from "@/context/auth-context";
 import {useFavorites} from "@/context/favorite-context";
 import {EventStatus} from "@/shared/enums/event-status.enum";
+import {EVENT_STATUS_STYLES} from "@/shared/constants/event-status-ui";
 
 type Props = {
 	id: string | number;
@@ -20,12 +21,6 @@ type Props = {
 	location: string;
 	description: string;
 	status: EventStatus;
-};
-
-const STATUS_CONFIG = {
-	[EventStatus.ZAKAZAN]: {label: "Zakazan", color: "bg-blue-500/90"},
-	[EventStatus.OTKAZAN]: {label: "Otkazan", color: "bg-red-500/90"},
-	[EventStatus.ZAVRSEN]: {label: "Završen", color: "bg-slate-600/90"},
 };
 
 export function EventCard({id, title, image, category, date, location, description, status}: Props) {
@@ -81,9 +76,9 @@ export function EventCard({id, title, image, category, date, location, descripti
 					</Badge>
 					<Badge className={cn(
 						"w-fit text-white border-none px-4 py-1.5 font-bold rounded-xl shadow-lg uppercase text-[10px] tracking-wider",
-						STATUS_CONFIG[status].color
+						EVENT_STATUS_STYLES[status].color
 					)}>
-						{STATUS_CONFIG[status].label}
+						{EVENT_STATUS_STYLES[status].label}
 					</Badge>
 				</div>
 

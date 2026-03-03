@@ -53,11 +53,32 @@ export class ReviewsService {
   }
 
   async findByEvent(eventId: number) {
-    return this.reviewRepository.find({
+    const reviews = await this.reviewRepository.find({
       where: { event: { id: eventId } },
-      relations: ['user', 'event'],
+      relations: ['user'],
       order: { createdAt: 'DESC' },
     });
+
+    const averageRating =
+      reviews.length === 0
+        ? 0
+        : Number(
+            (
+              reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
+            ).toFixed(1),
+          );
+
+    const starsCount: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    reviews.forEach((r) => {
+      const star = Math.round(r.rating);
+      starsCount[star] = (starsCount[star] || 0) + 1;
+    });
+
+    return {
+      reviews,
+      averageRating,
+      starsCount,
+    };
   }
 
   async update(id: string, dto: UpdateReviewDto) {

@@ -1,7 +1,16 @@
 "use client"
 
 import React, {useEffect, useState} from 'react';
-import {Calendar, ChevronLeft, Clock, Heart, Info, MapPin, MessageSquare, ShieldCheck, Trash} from 'lucide-react';
+import {
+	Calendar,
+	ChevronLeft,
+	Clock,
+	Heart,
+	MapPin,
+	MessageSquare,
+	ShieldCheck, Star,
+	Trash
+} from 'lucide-react';
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
 import {useParams, usePathname, useRouter} from "next/navigation";
@@ -24,6 +33,10 @@ import {CheckoutModal} from "@/components/CheckoutModal";
 import {Card} from "@/components/ui/card";
 import {EventStatus} from "@/shared/enums/event-status.enum";
 import {UserRole} from "@/shared/enums/user-role.enum";
+import {EVENT_STATUS_STYLES} from "@/shared/constants/event-status-ui";
+import {AlertMessage} from "@/components/AlertMessage";
+import {ReviewData} from "@/models/review-data.model";
+
 
 export default function EventDetailsPage() {
 	const {id} = useParams();
@@ -32,7 +45,12 @@ export default function EventDetailsPage() {
 	const [showCancelModal, setShowCancelModal] = useState(false);
 	const router = useRouter();
 	const eventId = Array.isArray(id) ? id[0] : id;
-	const [reviews, setReviews] = useState<Review[]>([])
+
+	const [reviewsData, setReviewsData] = useState<ReviewData>({
+		reviews: [],
+		averageRating: 0,
+		starsCount: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0},
+	});
 
 	const {isFavorite, toggleFavorite, loading: loadingFavorite} = useFavorites();
 	const {user} = useAuth();
@@ -56,6 +74,11 @@ export default function EventDetailsPage() {
 	};
 
 
+	const getStarPercentage = (star: number) => {
+		const count = reviewsData.starsCount[star] || 0;
+		return reviewsData.reviews.length ? (count / reviewsData.reviews.length) * 100 : 0;
+	};
+
 	useEffect(() => {
 		if (!id || Array.isArray(id)) return;
 		const fetchEvent = async () => {
@@ -69,7 +92,8 @@ export default function EventDetailsPage() {
 		const fetchReviews = async () => {
 			try {
 				const response = await ReviewsService.getReviewsByEventId(Number(id));
-				setReviews(response);
+				setReviewsData(response);
+				console.log(response);
 			} catch (e) {
 				console.error(e);
 			}
@@ -117,7 +141,7 @@ export default function EventDetailsPage() {
 	const refreshReviews = async () => {
 		try {
 			const response = await ReviewsService.getReviewsByEventId(Number(id));
-			setReviews(response);
+			setReviewsData(response);
 		} catch (e) {
 			console.error(e);
 		}
@@ -125,6 +149,9 @@ export default function EventDetailsPage() {
 
 
 	if (!event) return null;
+
+	const hasAlreadyReviewed = reviewsData.reviews.some(r => r.user.id === user?.id);
+	const hasStarted = new Date() > new Date(event.startDate);
 
 	const now = new Date();
 	const eventEndTime = event.endDate ? new Date(event.endDate) : new Date(event.startDate);
@@ -204,6 +231,7 @@ export default function EventDetailsPage() {
 							<div>
 								<p className="text-[9px] md:text-[10px] font-black uppercase text-slate-400 tracking-widest">Datum</p>
 								<p className="text-sm md:text-base font-bold text-slate-900">{DateTimeHelper.formatOnlyDate(event.startDate)}</p>
+
 							</div>
 						</div>
 						<div className="flex items-center gap-4 p-4 md:p-6">
@@ -236,6 +264,12 @@ export default function EventDetailsPage() {
 								<h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight">O
 									događaju</h2>
 							</div>
+							<Badge className={cn(
+								"border-none px-4 py-1 font-black uppercase tracking-widest text-[10px] shadow-lg",
+								EVENT_STATUS_STYLES[event.status].color
+							)}>
+								{EVENT_STATUS_STYLES[event.status].label}
+							</Badge>
 							<p className="text-slate-600 text-base md:text-xl leading-relaxed font-light text-justify">
 								{event.description}
 							</p>
@@ -256,46 +290,100 @@ export default function EventDetailsPage() {
 							<div className="flex items-center justify-between">
 								<h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
 									<MessageSquare className="w-6 h-6 md:w-8 md:h-8 text-indigo-600"/>
-									Utisci
+									Utisci posjetilaca
 								</h2>
-								<Badge className="bg-slate-900 text-white rounded-lg px-3">{reviews.length}</Badge>
+								<Badge
+									className="bg-slate-900 text-white rounded-lg px-3">{reviewsData.reviews.length}</Badge>
 							</div>
 
-							{isVisitor ? (
-								<AddReviewForm eventId={Number(eventId)} onReviewAdded={refreshReviews}/>
-							) : (
+							<div
+								className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-slate-50/50 p-8 rounded-[2.5rem] border border-slate-100">
 								<div
-									className="bg-indigo-50/50 border border-indigo-100 rounded-[2rem] p-8 text-center">
-									{!user ? (
-										<div className="space-y-4">
-											<p className="text-slate-600 font-medium text-lg">
-												Želite da podijelite svoje iskustvo?
-											</p>
-											<Button
-												onClick={() => router.replace(`/login?redirect=${encodeURIComponent(pathname)}`)}
-												className="bg-indigo-600 hover:bg-indigo-700 rounded-xl px-8"
-											>
-												Prijavite se da ostavite komentar
-											</Button>
-										</div>
-									) : (
-										<div
-											className="flex items-center justify-center gap-3 text-indigo-600 font-medium italic">
-											<Info className="w-5 h-5"/>
-											<span>Samo posjetioci događaja mogu ostavljati recenzije.</span>
-										</div>
-									)}
+									className="md:col-span-4 text-center md:text-left space-y-2 border-r-0 md:border-r border-slate-200">
+									<h3 className="text-6xl font-black text-slate-900 tracking-tighter">
+										{reviewsData.averageRating ? reviewsData.averageRating.toFixed(1) : "0.0"}
+									</h3>
+									<div className="flex justify-center md:justify-start gap-1 text-yellow-400">
+										{[...Array(5)].map((_, i) => (
+											<Star
+												key={i}
+												className={cn(
+													"w-5 h-5",
+													i < Math.round(reviewsData.averageRating) ? "fill-current" : "text-slate-200"
+												)}
+											/>
+										))}
+									</div>
+									<p className="text-slate-400 text-xs font-bold uppercase tracking-widest pt-2">
+										Ostavljeno {reviewsData.reviews.length} ocjena
+									</p>
 								</div>
-							)}
 
-							<div className="grid grid-cols-1 gap-4 md:gap-6">
-								{reviews.length > 0 ? (
-									reviews.map((review) => <ReviewItem key={review.id} review={review}/>)
+								<div className="md:col-span-8 space-y-3">
+									{[5, 4, 3, 2, 1].map((star) => (
+										<div key={star}
+											 className="flex items-center gap-4 text-sm font-bold text-slate-500">
+											<span className="w-4">{star}</span>
+											<Star className="w-3 h-3 fill-slate-300 text-slate-300"/>
+											<div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+												<div
+													className="h-full bg-indigo-600 rounded-full transition-all duration-1000"
+													style={{width: `${getStarPercentage(star)}%`}}
+												/>
+											</div>
+											<span className="w-10 text-right text-[10px] text-slate-400">
+            {Math.round(getStarPercentage(star))}%
+        </span>
+										</div>
+									))}
+								</div>
+							</div>
+							<div className="grid grid-cols-1 gap-6">
+								{reviewsData.reviews.length > 0 ? (
+									reviewsData.reviews.map((review) => <ReviewItem key={review.id} review={review}/>)
 								) : (
-									<p className="text-slate-400 italic text-center py-10">Još uvijek nema
-										komentara.</p>
+									hasStarted && (
+										<p className="text-slate-400 italic text-center py-10 border-2 border-dashed rounded-[2rem]">
+											Još uvijek nema komentara. Budite prvi koji će ostaviti utisak!
+										</p>
+									)
 								)}
 							</div>
+
+							{isVisitor && hasStarted && !hasAlreadyReviewed && event.status !== EventStatus.OTKAZAN ? (
+								<AddReviewForm eventId={Number(eventId)} onReviewAdded={refreshReviews}/>
+							) : isVisitor && event.status === EventStatus.OTKAZAN ? (
+								<AlertMessage
+									variant="error"
+									description="Ne možete ostaviti recenziju jer je događaj otkazan."
+								/>
+							) : isVisitor && !hasStarted ? (
+								<AlertMessage
+									variant="warning"
+									description="Ostavljanje recenzija će biti dostupno nakon početka događaja."
+								/>
+							) : hasAlreadyReviewed ? (
+								<AlertMessage
+									variant="success"
+									description="Hvala vam što ste podijelili svoje mišljenje!"
+								/>
+							) : !user ? (
+								<div
+									className="p-10 rounded-[2.5rem] bg-indigo-600 text-white text-center shadow-xl shadow-indigo-100 relative overflow-hidden group">
+									<div
+										className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10"/>
+									<h4 className="text-xl font-black mb-2 uppercase italic">Vaše iskustvo nam je
+										bitno</h4>
+									<p className="text-indigo-100 mb-6 text-sm">Prijavite se kao posjetilac da biste
+										ocijenili događaje.</p>
+									<Button
+										onClick={() => router.push(`/login?redirect=${encodeURIComponent(pathname)}`)}
+										className="bg-white text-indigo-600 hover:bg-slate-50 font-black px-10 rounded-xl uppercase tracking-widest text-xs"
+									>
+										Prijavite se
+									</Button>
+								</div>
+							) : null}
 						</section>
 					</div>
 
