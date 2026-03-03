@@ -140,4 +140,32 @@ export const SUBCATEGORY_METADATA_CONFIG: Record<
       },
     ],
   },
+  festival: {
+    fields: [
+      {
+        key: 'headliners',
+        label: 'Glavni izvođači',
+        type: 'string',
+        required: true,
+      },
+      {
+        key: 'festivalType',
+        label: 'Tip festivala (Muzički, Filmski, Gastro...)',
+        type: 'string',
+        required: true,
+      },
+      {
+        key: 'durationDays',
+        label: 'Trajanje (broj dana)',
+        type: 'number',
+        required: true,
+      },
+      {
+        key: 'stageCount',
+        label: 'Broj bina / zona',
+        type: 'number',
+        required: false,
+      },
+    ],
+  },
 };
