@@ -1,4 +1,16 @@
-import {Activity, BookOpen, DoorOpen, Guitar, Home, Music, Square, Users} from "lucide-react";
+import {
+	Activity,
+	BookOpen,
+	ChefHat,
+	DoorOpen,
+	Grape,
+	Guitar,
+	Home,
+	Music,
+	Square,
+	Users,
+	UtensilsCrossed, Wine
+} from "lucide-react";
 import {JSX} from "react";
 
 export const metadataConfig: Record<
@@ -11,8 +23,17 @@ export const metadataConfig: Record<
 		performer: {label: 'Izvođač', icon: <Music className="text-slate-500"/>},
 		genre: {label: 'Žanr', icon: <Guitar className="text-slate-500"/>},
 		gatesOpen: {label: 'Ulaz od', icon: <DoorOpen className="text-slate-500"/>},
-		speaker: {label: 'Predavač', icon: <Users className="text-slate-500"/>},
-		topic: {label: 'Tema', icon: <BookOpen className="text-slate-500"/>}
+		speakers: {label: 'Predavač', icon: <Users className="text-slate-500"/>},
+		topic: {label: 'Tema', icon: <BookOpen className="text-slate-500"/>},
+		winery: {label: 'Vinarija', icon: <Grape className="text-slate-500"/>},
+		sommelier: {label: 'Somelijer', icon: <Users className="text-slate-500"/>},
+		wineCount: {label: 'Broj uzoraka', icon: <Wine className="text-slate-500"/>},
+		chef: {label: 'Glavni šef', icon: <ChefHat className="text-slate-500"/>},
+		cuisineType: {label: 'Kuhinja', icon: <UtensilsCrossed className="text-slate-500"/>},
+		headliners: {label: 'Glavni izvođači', icon: <Music className="text-slate-500"/>},
+		festivalType: {label: 'Tip festivala', icon: <Square className="text-slate-500"/>},
+		durationDays: {label: 'Trajanje (dana)', icon: <Activity className="text-slate-500"/>},
+		stageCount: {label: 'Broj bina', icon: <Guitar className="text-slate-500"/>},
 	}
 ;
 
@@ -83,7 +104,7 @@ export const METADATA_FIELDS_BY_SUBCATEGORY: Record<string, MetadataField[]> = {
 	],
 	"Konferencija": [
 		{
-			name: "speaker",
+			name: "speakers",
 			label: "Predavač",
 			placeholder: "Ime i prezime",
 			type: "text",
@@ -119,5 +140,74 @@ export const METADATA_FIELDS_BY_SUBCATEGORY: Record<string, MetadataField[]> = {
 			type: "text",
 			icon: <Users className="text-slate-500"/>
 		}
-	]
+	],
+	"Degustacija vina": [
+		{
+			name: "winery",
+			label: "Vinarija",
+			placeholder: "Naziv vinarije",
+			type: "text",
+			icon: <Grape className="text-slate-500"/>
+		},
+		{
+			name: "sommelier",
+			label: "Somelijer",
+			placeholder: "Ime i prezime",
+			type: "text",
+			icon: <Users className="text-slate-500"/>
+		},
+		{
+			name: "wineCount",
+			label: "Broj uzoraka",
+			placeholder: "npr. 5",
+			type: "number",
+			icon: <Wine className="text-slate-500"/>
+		}
+	],
+	"Kulinarska radionica": [
+		{
+			name: "chef",
+			label: "Glavni šef",
+			placeholder: "Ime instruktora",
+			type: "text",
+			icon: <ChefHat className="text-slate-500"/>
+		},
+		{
+			name: "cuisineType",
+			label: "Tip kuhinje",
+			placeholder: "npr. Italijanska",
+			type: "text",
+			icon: <UtensilsCrossed className="text-slate-500"/>
+		}
+	],
+	"Festival": [
+		{
+			name: "headliners",
+			label: "Glavni izvođači",
+			placeholder: "npr. Who See...",
+			type: "text",
+			icon: <Music className="text-slate-500"/>
+		},
+		{
+			name: "festivalType",
+			label: "Tip festivala",
+			placeholder: "Muzički, Filmski, Gastro...",
+			type: "text",
+			icon: <Square className="text-slate-500"/>
+		},
+		{
+			name: "durationDays",
+			label: "Trajanje (dana)",
+			placeholder: "npr. 3",
+			type: "number",
+			icon: <Activity className="text-slate-500"/>
+		},
+		{
+			name: "stageCount",
+			label: "Broj bina / zona",
+			placeholder: "npr. 2",
+			type: "number",
+			icon: <Guitar className="text-slate-500"/>
+		}
+	],
 };

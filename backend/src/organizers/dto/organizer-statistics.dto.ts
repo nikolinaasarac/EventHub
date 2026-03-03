@@ -2,6 +2,7 @@ export class OrganizerStatisticsDto {
   totalEvents: number;
   activeEvents: number;
   finishedEvents: number;
+  canceledEvents: number;
   totalTicketsSold: number;
   totalRevenue: number;
 

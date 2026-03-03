@@ -2,7 +2,7 @@
 
 import {Button} from "@/components/ui/button";
 import React from "react";
-import {Ticket as TicketIcon, Zap, Clock, Ban} from "lucide-react";
+import {Ticket as TicketIcon, Zap, Clock, Ban, XCircle} from "lucide-react";
 import {TicketType} from "@/models/ticket-type.model";
 import {cn} from "@/lib/utils";
 
@@ -10,20 +10,32 @@ interface Props {
 	ticketType: TicketType
 	isExpired?: boolean;
 	isSoldOut?: boolean;
+	isCancelled?: boolean;
 	onBuy: (ticket: TicketType) => void;
 }
 
-export function Ticket({ticketType, isExpired = false, isSoldOut = false, onBuy}: Props) {
+export function Ticket({ticketType, isExpired = false, isSoldOut = false, onBuy, isCancelled = false}: Props) {
 
-	const isDisabled = isExpired || isSoldOut;
+	const isDisabled = isExpired || isSoldOut || isCancelled;
 
 	return (
 		<div className={cn(
 			"group relative w-full max-w-sm mx-auto transition-all duration-300",
 			!isDisabled && "hover:-translate-y-2"
 		)}>
+			{isCancelled && (
+				<div
+					className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none overflow-hidden rounded-3xl bg-slate-900/10 backdrop-blur-[2px]">
+					<div
+						className="border-8 border-red-600 px-6 py-2 rounded-2xl rotate-[15deg] scale-125 bg-white/90 shadow-2xl">
+                        <span className="text-4xl font-black text-red-600 tracking-tighter uppercase italic">
+                            OTKAZANO
+                        </span>
+					</div>
+				</div>
+			)}
 
-			{isSoldOut && !isExpired && (
+			{isSoldOut && !isExpired && !isCancelled && (
 				<div
 					className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none overflow-hidden rounded-3xl">
 					<div
@@ -58,7 +70,7 @@ export function Ticket({ticketType, isExpired = false, isSoldOut = false, onBuy}
 									isExpired ? "bg-slate-200 text-slate-500" :
 										isSoldOut ? "bg-red-50 text-red-600" : "bg-indigo-50 text-indigo-600"
 								)}>
-								{isExpired ? "Završeno" : isSoldOut ? "Nema zaliha" : "Dostupno"}
+								{isExpired ? "Završeno" : isCancelled ? "Otkazano" : isSoldOut ? "Nema zaliha" : "Dostupno"}
 							</span>
 						</div>
 					</div>
@@ -66,7 +78,7 @@ export function Ticket({ticketType, isExpired = false, isSoldOut = false, onBuy}
 						{ticketType.name}
 					</h3>
 					<p className="text-slate-400 text-xs mt-1 font-medium italic">
-						{isExpired ? "Događaj je prošao" : isSoldOut ? "Sva mjesta su popunjena" : "Pristup odabranim zonama"}
+						{isExpired ? "Događaj je prošao" : isCancelled ? "Događaj neće biti održan" : isSoldOut ? "Sva mjesta su popunjena" : "Pristup odabranim zonama"}
 					</p>
 				</div>
 
@@ -81,16 +93,16 @@ export function Ticket({ticketType, isExpired = false, isSoldOut = false, onBuy}
 				<div className="p-6 pt-4 space-y-6">
 					<div className="flex flex-col items-center text-center">
 						<span className="text-slate-400 text-[10px] font-bold uppercase tracking-tighter">
-                            Cijena
+                            {isCancelled ? "Povrat novca u toku" : "Cijena"}
                         </span>
 						<div className="flex items-baseline gap-1">
 							<span className={cn(
 								"text-4xl font-black",
-								isSoldOut && !isExpired ? "text-red-500/50" : "text-slate-900"
+								(isSoldOut || isCancelled) && !isExpired ? "text-red-500/50" : "text-slate-900"
 							)}>{ticketType.price}</span>
 							<span className={cn(
 								"text-xl font-bold uppercase",
-								isExpired ? "text-slate-400" : isSoldOut ? "text-red-400" : "text-indigo-600"
+								isExpired ? "text-slate-400" : (isSoldOut || isCancelled) ? "text-red-400" : "text-indigo-600"
 							)}>KM</span>
 						</div>
 					</div>
@@ -101,14 +113,17 @@ export function Ticket({ticketType, isExpired = false, isSoldOut = false, onBuy}
 						className={cn(
 							"w-full h-14 text-lg font-black rounded-2xl shadow-lg transition-all flex gap-2",
 							isExpired && "bg-slate-200 text-slate-500 cursor-not-allowed",
-							isSoldOut && !isExpired && "bg-red-50 text-red-500 border-2 border-red-100 hover:bg-red-50 cursor-not-allowed shadow-none",
+							isCancelled && "bg-red-50 text-red-600 border-2 border-red-200 cursor-not-allowed shadow-none",
+							isSoldOut && !isExpired && !isCancelled && "bg-red-50 text-red-500 border-2 border-red-100 hover:bg-red-50 cursor-not-allowed shadow-none",
 							!isDisabled && "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-100 group-hover:scale-[1.02]"
 						)}
 					>
 						{isExpired ? (
 							<> <Clock className="w-5 h-5"/> ZAVRŠENO </>
+						) : isCancelled ? (
+							<> <XCircle className="w-5 h-5"/> OTKAZANO </>
 						) : isSoldOut ? (
-							<> <Ban className="w-5 h-5"/></>
+							<> <Ban className="w-5 h-5"/> RASPRODANO </>
 						) : (
 							<> <Zap className="w-5 h-5 fill-white"/> KUPI KARTU </>
 						)}
