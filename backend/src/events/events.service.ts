@@ -343,6 +343,7 @@ export class EventsService {
       where: {
         organizer: { id: organizerId },
         endDate: MoreThan(new Date()),
+        status: EventStatus.ZAKAZAN,
       },
     });
   }
@@ -352,6 +353,7 @@ export class EventsService {
       where: {
         organizer: { id: organizerId },
         endDate: LessThan(new Date()),
+        status: EventStatus.ZAVRSEN,
       },
     });
   }
