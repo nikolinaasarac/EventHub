@@ -1,7 +1,7 @@
 "use client"
 
 import React, {useEffect, useState} from 'react';
-import {TrendingUp, Ticket, DollarSign, Calendar, CheckCircle2} from 'lucide-react';
+import {TrendingUp, Ticket, DollarSign, Calendar, CheckCircle2, CircleX} from 'lucide-react';
 import {Card, CardContent, CardTitle} from "@/components/ui/card";
 import PageHeader from "@/components/PageHeader";
 import {XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area} from 'recharts';
@@ -62,6 +62,8 @@ export default function OrganizerStatsPage() {
 							  icon={<Calendar/>}/>
 					<StatCard title="Završeni" value={stats.finishedEvents.toString()} variant="rose" change="Arhiva"
 							  icon={<CheckCircle2/>}/>
+					<StatCard title="Otkazani" value={stats.canceledEvents.toString()} variant="rose" change="Otkazano"
+							  icon={<CircleX/>}/>
 				</div>
 
 				<Card

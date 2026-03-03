@@ -2,6 +2,7 @@ export interface OrganizerStatistics {
 	totalEvents: number;
 	activeEvents: number;
 	finishedEvents: number;
+	canceledEvents: number;
 	totalTicketsSold: number;
 	totalRevenue: number;
 

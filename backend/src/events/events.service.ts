@@ -356,6 +356,15 @@ export class EventsService {
     });
   }
 
+  async countCanceledByOrganizer(organizerId: number) {
+    return this.eventsRepository.count({
+      where: {
+        organizer: { id: organizerId },
+        status: EventStatus.OTKAZAN,
+      },
+    });
+  }
+
   async updateEventStatuses() {
     const statusEngine = new StatusEngineService();
 
