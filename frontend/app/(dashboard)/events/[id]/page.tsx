@@ -60,6 +60,12 @@ export default function EventDetailsPage() {
 	const pathname = usePathname();
 
 	const handleBuyClick = (ticket: TicketType) => {
+		if (!user)
+			router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+		if (!isVisitor) {
+			toast.error("Kupovina ulaznica je omogućena samo posjetiocima.");
+			return;
+		}
 		setSelectedTicket(ticket);
 		setIsCheckoutOpen(true);
 	};
