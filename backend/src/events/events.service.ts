@@ -399,9 +399,13 @@ export class EventsService {
     await this.eventsRepository.save(event);
   }
 
-  async cancelEvent(id: number) {
+  async cancelEvent(id: number, user: User) {
     const event = await this.findOne(id);
     if (!event) throw new NotFoundException('Event not found');
+    if (event.organizer.user.id !== user.id)
+      throw new BadRequestException(
+        'You are not authorized to edit this event',
+      );
     const now = new Date();
     if (event.endDate < now) {
       throw new BadRequestException('Past events cannot be canceled');
