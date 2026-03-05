@@ -189,7 +189,7 @@ export default function EventDetailsPage() {
                                     <Trash className="w-4 h-4 md:w-5 md:h-5"/>
                                 </Button>
 							}
-							{isOrganizer && (
+							{isOrganizer && event.status !== EventStatus.OTKAZAN && (
 								<Button variant="outline"
 										className="rounded-full bg-white/10 border-white/20 text-white hover:bg-red-500 hover:text-white transition-all"
 										onClick={() => setShowCancelModal(true)}>
