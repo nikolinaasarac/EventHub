@@ -55,11 +55,19 @@ export default function EventDetailsPage() {
 	const {isFavorite, toggleFavorite, loading: loadingFavorite} = useFavorites();
 	const {user} = useAuth();
 	const isVisitor = user?.roles?.some(role => role.name === UserRole.VISITOR);
+	const isAdmin = user?.roles?.some(role => role.name === UserRole.ADMIN);
+	const isOrganizer = user?.roles?.some(role => role.name === UserRole.ORGANIZER);
 	const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 	const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
 	const pathname = usePathname();
 
 	const handleBuyClick = (ticket: TicketType) => {
+		if (!user)
+			router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+		if (!isVisitor) {
+			toast.error("Kupovina ulaznica je omogućena samo posjetiocima.");
+			return;
+		}
 		setSelectedTicket(ticket);
 		setIsCheckoutOpen(true);
 	};
@@ -174,16 +182,21 @@ export default function EventDetailsPage() {
 							<ChevronLeft className="w-5 h-5"/> <span className="hidden sm:inline">Nazad</span>
 						</Button>
 						<div className="flex gap-2 md:gap-3">
-							<Button variant="outline" size="icon"
-									className="rounded-full bg-white/10 border-white/20 text-white hover:bg-red-500 hover:text-white transition-all w-9 h-9 md:w-11 md:h-11"
-									onClick={() => setShowDeleteModal(true)}>
-								<Trash className="w-4 h-4 md:w-5 md:h-5"/>
-							</Button>
-							<Button variant="outline"
-									className="rounded-full bg-white/10 border-white/20 text-white hover:bg-red-500 hover:text-white transition-all"
-									onClick={() => setShowCancelModal(true)}>
-								Otkaži događaj
-							</Button>
+							{isAdmin &&
+                                <Button variant="outline" size="icon"
+                                        className="rounded-full bg-white/10 border-white/20 text-white hover:bg-red-500 hover:text-white transition-all w-9 h-9 md:w-11 md:h-11"
+                                        onClick={() => setShowDeleteModal(true)}>
+                                    <Trash className="w-4 h-4 md:w-5 md:h-5"/>
+                                </Button>
+							}
+							{isOrganizer && event.status !== EventStatus.OTKAZAN && (
+								<Button variant="outline"
+										className="rounded-full bg-white/10 border-white/20 text-white hover:bg-red-500 hover:text-white transition-all"
+										onClick={() => setShowCancelModal(true)}>
+									Otkaži događaj
+								</Button>
+							)}
+
 							<Button
 								size="icon"
 								variant="secondary"
