@@ -448,6 +448,7 @@ export default function EventDetailsPage() {
 					eventId={Number(eventId)}
 					onSuccess={() => {
 						setIsCheckoutOpen(false);
+						toast.success("Uspješna kupovina! Provjerite svoj email.")
 						refreshData();
 					}}
 				/>
