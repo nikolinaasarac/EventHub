@@ -15,10 +15,11 @@ import {useRouter} from "next/navigation";
 import {useQueryFilters} from "@/shared/hooks/use-query-filters.hook";
 import {QueryParams} from "@/models/query-params.model";
 import {PaginationComponent} from "@/components/Pagination";
+import {SearchInput} from "@/components/SearchInput";
 
 export default function UsersPage() {
 	const {
-		updatePage, filters, setRoles, urlSearch, urlPage
+		updatePage, filters, setRoles, urlSearch, urlPage, search, setSearch
 	} = useQueryFilters();
 
 	const [users, setUsers] = useState<User[]>([]);
@@ -98,7 +99,7 @@ export default function UsersPage() {
 				<div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
 					<PageHeader
 						title="Upravljanje korisnicima"
-						subtitle="Pregledajte i administrirajte sve naloge na sistemu."
+						subtitle="Pregledajte sve naloge u sistemu."
 						icon={UsersIcon}
 					/>
 					<Button
@@ -108,6 +109,14 @@ export default function UsersPage() {
 						Dodaj organizatora
 					</Button>
 				</div>
+
+
+				<SearchInput
+					value={search}
+					onChange={setSearch}
+					placeholder="Pretražite korisnike po mejlu..."
+					className="h-14 border-slate-100 bg-slate-50/50 rounded-2xl focus:ring-indigo-500/20 transition-all w-full"
+				/>
 
 				{loading ? (
 					<div className="h-64 flex flex-col items-center justify-center gap-4">
@@ -122,7 +131,6 @@ export default function UsersPage() {
 						onValueChange={handleTabChange}
 					/>
 				)}
-
 				{!loading && users.length > 0 && (
 					<div className="mt-24 flex justify-center">
 						<div className="bg-slate-50 p-2 rounded-2xl border border-slate-100 shadow-sm">
